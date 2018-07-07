@@ -1,7 +1,7 @@
 {
     "name": "ergonext",
     "displayName": "ErgonExt",
-    "description": "Log e debug do sistema Ergon",
+    "description": "Extensão usada para navegar pelos arquivos de log e debug do sistema Ergon",
     "version": "0.0.1",
     "publisher": "ViniciusJardim",
     "engines": {
@@ -11,14 +11,14 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.carregarArquivos"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "extension.sayHello",
-                "title": "Hello World"
+                "command": "extension.carregarArquivos",
+                "title": "Ergon: Carregar arquivos"
             }
         ]
     },

@@ -14,9 +14,29 @@ import * as assert from 'assert';
 // Defines a Mocha test suite to group tests of similar kind together
 suite("Extension Tests", function () {
 
-    // Defines a Mocha unit test
-    test("Something 1", function() {
-        assert.equal(-1, [1, 2, 3].indexOf(5));
-        assert.equal(-1, [1, 2, 3].indexOf(0));
+    test("JSON comparsion", function() {
+        
+        let j1: any = {
+            vaca: 6,
+            bota: 10
+        };
+        let j2: any = {
+            juba: 7,
+            bota: "Leviatã"
+        };
+        let j3: any = {
+            juba:       7,
+            "bota": 'Leviatã'
+        };
+        let j4: any = {
+            juba: 7,
+            bota: "Leviatã"
+        };
+
+        assert.notEqual(j1, j2);
+        assert.notEqual(j2, j3);
+        assert.notEqual(j2, j4);
+        assert.notEqual(JSON.stringify(j1), JSON.stringify(j2));
+        assert.equal(JSON.stringify(j2), JSON.stringify(j3));
     });
 });
