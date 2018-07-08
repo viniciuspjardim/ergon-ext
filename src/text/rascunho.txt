@@ -3,7 +3,7 @@
 ==== Indice de rubricas ====
 
 # Indice
-{func: 85409, vinc: 1, ano: 2016, mes: 6, seq_vinc: 2, rubrica: 1001, complemento: null, periodo: 2, tipo: "ini"}
+{func: 85409, vinc: 1, ano: 2016, mes: 6, seq_func: 2, seq_vinc: 2, rubrica: 1001, complemento: null, periodo: 2, tipo: "ini"}
 
 # Campos
 {
