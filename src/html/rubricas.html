@@ -1,41 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rubricas Periodo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
     <style>
-        body {
-            margin: 10px 5px 0px 0px;
-        }
-        .arquivo {
-            font-size: 16px;
-        }
+            body { padding-top: 60px; }
     </style>
 </head>
 <body>
-    <form>
-        <div>
-            <span>Ambiente<input id="ambiente"/></span>
-            <span>ServCalc<input id="servidorCalculo"/></span>
-            <span>TipoCalc<input id="tipoCalculo"/></span>
-            <span>MesAnoFol<input id="mesAnoFol"/></span>
-            <span>NumFol<input id="numFol"/></span>
-            <span>Exec<input id="execucao"/></span>
-            <span>Func<input id="numFunc"/></span>
-            <span>Vinc<input id="numVinc"/></span>
-            <span>MesAno<input id="mesAnoRub"/></span>
-            <span>SeqFunc<input id="seqFunc"/></span>
-            <span>SeqVinc<input id="seqVinc"/></span>
-            <span>Rub<input id="rubrica"/></span>
-            <span>Cpl<input id="complemento"/></span>
-            <span>Per<input id="periodo"/></span>
-            <span>Tipo<input id="tipo"/></span>
-            <button id="buscar" type="button">Ok</button>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">ErgonExt</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Página Atual</a></li>
+                <li><a href="#">Página B</a></li>
+                <li><a href="#">Página C</a></li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Buscar">
+                </div>
+                <button type="submit" class="btn btn-default">Ok</button>
+            </form>
         </div>
-    </form>
-    <div class="arquivo">
-        <pre id="conteudo">Nada para exibir</pre>
+    </nav>
+    <div class="container-fluid">
+        <form>
+            <div>
+                <span>Ambiente<input id="ambiente"/></span>
+                <span>ServCalc<input id="servidorCalculo"/></span>
+                <span>TipoCalc<input id="tipoCalculo"/></span>
+                <span>MesAnoFol<input id="mesAnoFol"/></span>
+                <span>NumFol<input id="numFol"/></span>
+                <span>Exec<input id="execucao"/></span>
+                <span>Func<input id="numFunc"/></span>
+                <span>Vinc<input id="numVinc"/></span>
+                <span>MesAno<input id="mesAnoRub"/></span>
+                <span>SeqFunc<input id="seqFunc"/></span>
+                <span>SeqVinc<input id="seqVinc"/></span>
+                <span>Rub<input id="rubrica"/></span>
+                <span>Cpl<input id="complemento"/></span>
+                <span>Per<input id="periodo"/></span>
+                <span>Tipo<input id="tipo"/></span>
+                <button id="buscar" type="submit" class="btn btn-default">Ok</button>
+            </div>
+        </form>
+        <pre id="conteudoArquivo">Nada para exibir</pre>
     </div>
     <script>
 
@@ -51,7 +66,7 @@
             let m = event.data;
             switch(m.acao) {
                 case 'arquivo_carregado':
-                    document.getElementById("conteudo").innerHTML    = m.conteudo; 
+                    document.getElementById("conteudoArquivo").innerHTML    = m.conteudo; 
                     break;
                 case 'filtro':
                     document.getElementById("ambiente").value        = m.filtro.ambiente;
@@ -101,5 +116,10 @@
             })
         });
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!--<script src="vscode-resource:/D:/Dropbox/projetos/ergonext/src/html/js/bootstrap.min.js"></script>-->
 </body>
 </html>

@@ -32,12 +32,13 @@ export function activate(context: vscode.ExtensionContext) {
         panel.webview.html = carregarWebView(caminho.fsPath);
 
         // Caso os campos padrões existam são enviados para o webview
+        setTimeout(function(){
         if(camposPadrao !== undefined) {
             panel.webview.postMessage({
                 acao: "filtro",
                 filtro: camposPadrao
             });
-        }
+        } }, 12000);
 
         // Cadastrando um listener para mensagens recebidas do webview.
         // Quando a mensagem chegar vai chamar a função parseArqRubricas(...)
