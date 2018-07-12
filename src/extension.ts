@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { parseArqRubricas} from './rubricas';
+import { lerArqRubricas} from './rubricas';
 
 
 let fs = require('fs');
@@ -38,14 +38,14 @@ export function activate(context: vscode.ExtensionContext) {
                 acao: "filtro",
                 filtro: camposPadrao
             });
-        } }, 12000);
+        } }, 6000);
 
         // Cadastrando um listener para mensagens recebidas do webview.
         // Quando a mensagem chegar vai chamar a função parseArqRubricas(...)
         panel.webview.onDidReceiveMessage(mensagem => {
             switch (mensagem.acao) {
                 case 'buscar_rubrica':
-                    parseArqRubricas(pastaExecucao, mensagem.filtro);
+                    lerArqRubricas(pastaExecucao, mensagem.filtro);
                     return;
             }
         }, undefined, context.subscriptions);
