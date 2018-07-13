@@ -69,21 +69,21 @@
                     document.getElementById("conteudoArquivo").innerHTML    = m.conteudo; 
                     break;
                 case 'filtro':
-                    document.getElementById("ambiente").value        = m.filtro.ambiente;
-                    document.getElementById("servidorCalculo").value = m.filtro.servidorCalculo;
-                    document.getElementById("tipoCalculo").value     = m.filtro.tipoCalculo;
-                    document.getElementById("mesAnoFol").value       = m.filtro.mesAnoFol.mes + "/" + m.filtro.mesAnoFol.ano;
-                    document.getElementById("numFol").value          = m.filtro.numFol;
-                    document.getElementById("execucao").value        = m.filtro.execucao;
+                    document.getElementById("ambiente").value        = m.conteudo.ambiente;
+                    document.getElementById("servidorCalculo").value = m.conteudo.servidorCalculo;
+                    document.getElementById("tipoCalculo").value     = m.conteudo.tipoCalculo;
+                    document.getElementById("mesAnoFol").value       = m.conteudo.mesAnoFol.mes + "/" + m.conteudo.mesAnoFol.ano;
+                    document.getElementById("numFol").value          = m.conteudo.numFol;
+                    document.getElementById("execucao").value        = m.conteudo.execucao;
                     
-                    document.getElementById("numFunc").value         = m.filtro.numFunc;
-                    document.getElementById("numVinc").value         = m.filtro.numVinc;
-                    document.getElementById("mesAnoRub").value       = m.filtro.mesAnoRub.mes + "/" + m.filtro.mesAnoRub.ano;
-                    document.getElementById("seqFunc").value         = m.filtro.seqFunc;
-                    document.getElementById("seqVinc").value         = m.filtro.seqVinc;
-                    document.getElementById("rubrica").value         = m.filtro.rubrica;
-                    document.getElementById("complemento").value     = m.filtro.complemento;
-                    document.getElementById("periodo").value         = m.filtro.periodo;
+                    document.getElementById("numFunc").value         = m.conteudo.numFunc;
+                    document.getElementById("numVinc").value         = m.conteudo.numVinc;
+                    document.getElementById("mesAnoRub").value       = m.conteudo.mesAnoRub.mes + "/" + m.conteudo.mesAnoRub.ano;
+                    document.getElementById("seqFunc").value         = m.conteudo.seqFunc;
+                    document.getElementById("seqVinc").value         = m.conteudo.seqVinc;
+                    document.getElementById("rubrica").value         = m.conteudo.rubrica;
+                    document.getElementById("complemento").value     = m.conteudo.complemento;
+                    document.getElementById("periodo").value         = m.conteudo.periodo;
                     document.getElementById("tipo").value            = "entra";
                     break;
             }

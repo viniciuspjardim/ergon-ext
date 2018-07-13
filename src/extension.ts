@@ -3,8 +3,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { lerArqRubricas} from './rubricas';
+import { Arquivo } from './arquivo';
 
-
+let arquivo: Arquivo;
 let fs = require('fs');
 let panel: vscode.WebviewPanel;
 
@@ -26,19 +27,17 @@ export function activate(context: vscode.ExtensionContext) {
             { enableScripts: true }
         );
 
+        arquivo = new Arquivo(panel);
+
         let caminho = vscode.Uri.file(path.join(context.extensionPath, 'src', 'html', 'rubricas.html'));
 
         // Lendo html do arquivo e inserindo no webview
         panel.webview.html = carregarWebView(caminho.fsPath);
 
-        // Caso os campos padrões existam são enviados para o webview
-        setTimeout(function(){
+        // Caso os campos padrões existam, serão enviados para o webview
         if(camposPadrao !== undefined) {
-            panel.webview.postMessage({
-                acao: "filtro",
-                filtro: camposPadrao
-            });
-        } }, 6000);
+            arquivo.enviarParaWebviw("filtro", camposPadrao, 6000);
+        }
 
         // Cadastrando um listener para mensagens recebidas do webview.
         // Quando a mensagem chegar vai chamar a função parseArqRubricas(...)
