@@ -1,7 +1,10 @@
 import { atualizarWebView } from "./extension";
 
-let fs = require('fs');
-let iconv = require('iconv-lite');
+import fs = require('fs');
+import iconv = require('iconv-lite');
+const rubricaEntraRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9]+)\s*([a-zA-Z0-9]*)\s*([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
+const rubricaSaiRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*<-\s*\.+\s*(\d+)\s*([a-zA-Z0-9]+)\s*([a-zA-Z0-9]*)\s*([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
+
 
 // Todo converter estas funções para uma classe
 
@@ -12,7 +15,7 @@ export function lerArqRubricas(pastaExecucao: string, c: any) {
 
     console.log(caminho);
 
-    fs.readFile(caminho, 'binary', function (err: any, data: string) {
+    fs.readFile(caminho, function (err: any, data: Buffer) {
         if (err) {
             atualizarWebView(true, "");
             return console.error(err);
@@ -25,7 +28,7 @@ export function lerArqRubricas(pastaExecucao: string, c: any) {
 
 export function parseArqRubricas(conteudoArq: string): string {
 
-    let conteudoArqNovo: string = "";
+    let novoConteudo: string = "";
 
     // Substituindo CRLF ou CR pelo LF
     conteudoArq = conteudoArq.replace(/\r\n/g, "\n");
@@ -33,14 +36,39 @@ export function parseArqRubricas(conteudoArq: string): string {
 
     let linhas: string[] = conteudoArq.split("\n");
     
+    let numLinha: number = 1;
     let i: any;
+    let cache: any = {};
     
     for(i in linhas) {
+
         let linha: string = linhas[i];
-        conteudoArqNovo += linha + "?" + "\n";
+        let novaLinha: string;
+        let atribEntra: any = rubricaEntraRegex.exec(linha);
+        let atribSai: any = rubricaSaiRegex.exec(linha);
+
+        if(atribEntra !== null) {
+            novaLinha = "<span class='rubEntra'>" + linha + "</span>";
+            // Rubrica entra RE
+            cache[`RE_${atribEntra[1]}_${atribEntra[3]}`] = numLinha;
+        }
+        else if(atribSai !== null) {
+            novaLinha = "<span class='rubSai'>" + linha + "</span>";
+            // Rubrica sai RS
+            cache[`RS_${atribSai[1]}_${atribSai[3]}`] = numLinha;
+        }
+        else {
+            novaLinha = "        " + linha;
+        }
+
+        novaLinha = `<span id='linha${numLinha}' class='contLinha'>${numLinha}</span>${novaLinha}\n`;
+        novoConteudo += novaLinha;
+        numLinha++;
     }
 
-    return conteudoArqNovo;
+    console.log(cache);
+
+    return novoConteudo;
 }
 
 export function enviarArqRubricas(conteudoArq: string) { }

@@ -4,32 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rubricas Periodo</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
     <style>
-            body { padding-top: 60px; }
+            body { 
+                padding-top: 60px;
+                font-family: Consolas, 'Courier New', monospace;
+                font-size: 14px;
+            }
+            pre {
+                font-family: Consolas, 'Courier New', monospace;
+                font-size: 14px;
+            }
+
+            .rubEntra { background-color: rgba(0, 170, 43, 0.171); }
+            .rubSai { background-color: rgba(192, 29, 0, 0.171); }
+            .contLinha {
+                display: inline-block;
+                width: 32px;
+                margin-right: 1em;
+                color: rgba(255, 255, 255, 0.418);
+                text-align: right;
+
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">ErgonExt</a>
+    <nav>
+        <div >
+            <div>
+                <a href="#">ErgonExt</a>
             </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Página Atual</a></li>
+            <ul>
+                <li></li><a href="#">Página Atual</a></li>
                 <li><a href="#">Página B</a></li>
                 <li><a href="#">Página C</a></li>
             </ul>
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Buscar">
+            <form>
+                <div>
+                    <input type="text" placeholder="Buscar">
                 </div>
-                <button type="submit" class="btn btn-default">Ok</button>
+                <button type="submit">Ok</button>
             </form>
         </div>
     </nav>
-    <div class="container-fluid">
+    <div>
         <form>
             <div>
                 <span>Ambiente<input id="ambiente"/></span>
@@ -116,10 +139,5 @@
             })
         });
     </script>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <!--<script src="vscode-resource:/D:/Dropbox/projetos/ergonext/src/html/js/bootstrap.min.js"></script>-->
 </body>
 </html>

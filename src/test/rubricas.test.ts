@@ -10,7 +10,7 @@ import * as assert from 'assert';
 suite("Extension Tests", function () {
 
     test("Regex", function() {
-
+        //  1  379 <-  ...... 7119 R7119
         let linha1: string = " 1    1  -> ..... 1001 R1001                                      -139999999999.00(C)             0.01(P)             0.02(MC)             0.03(MP)";
         let linha2: string = " 1    0  -> ..       0 STARTUP                                                0.00(C)             0.00(P)             0.00(MC)             0.00(MP)";
         let linha3: string = "1002: categoria = CARGO COMISSAO; sEVEDados.strReferencia: AE-7; sEVEDados.strTipoEvento: NOMEACAO CC?";

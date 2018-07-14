@@ -6,8 +6,8 @@ import { lerArqRubricas} from './rubricas';
 import { Arquivo } from './arquivo';
 
 let arquivo: Arquivo;
-let fs = require('fs');
 let panel: vscode.WebviewPanel;
+const fs = require('fs');
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         // Caso os campos padrões existam, serão enviados para o webview
         if(camposPadrao !== undefined) {
-            arquivo.enviarParaWebviw("filtro", camposPadrao, 6000);
+            arquivo.enviarParaWebviw("filtro", camposPadrao, 500);
         }
 
         // Cadastrando um listener para mensagens recebidas do webview.
