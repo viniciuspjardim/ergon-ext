@@ -34,7 +34,7 @@
     </style>
 </head>
 <body>
-    <nav>
+    <!--<nav>
         <div >
             <div>
                 <a href="#">ErgonExt</a>
@@ -51,7 +51,7 @@
                 <button type="submit">Ok</button>
             </form>
         </div>
-    </nav>
+    </nav>-->
     <div>
         <form>
             <div>
@@ -78,6 +78,7 @@
     <script>
 
         window.vscode = acquireVsCodeApi();
+        window.indice = {};
 
         function textoParaData(texto) {
             let arr = texto.trim().split("/");
@@ -88,8 +89,21 @@
         window.addEventListener('message', event => {
             let m = event.data;
             switch(m.acao) {
-                case 'arquivo_carregado':
-                    document.getElementById("conteudoArquivo").innerHTML    = m.conteudo; 
+                case 'parse_rubrica_ok':
+                    document.getElementById("conteudoArquivo").innerHTML    = m.conteudo.texto;
+                    window.indice = m.conteudo.index;
+
+                    // Indo para o perido/rubrica selecionados
+                    const rubrica = document.getElementById("rubrica").value;
+                    const perido = document.getElementById("periodo").value;
+
+                    const linhaId = "linha_" + window.indice["RE_" + perido + "_" + rubrica];
+                    document.getElementById(linhaId).scrollIntoView();
+
+                    break;
+                case 'parse_rubrica_err':
+                    // Todo não está funcioando, debugar
+                    document.getElementById("conteudoArquivo").innerHTML = m.conteudo; 
                     break;
                 case 'filtro':
                     document.getElementById("ambiente").value        = m.conteudo.ambiente;
@@ -134,7 +148,7 @@
             };
 
             window.vscode.postMessage({
-                acao: 'buscar_rubrica',
+                acao: 'parse_rubrica',
                 filtro: filtro
             })
         });
