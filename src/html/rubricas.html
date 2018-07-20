@@ -96,8 +96,9 @@
                     // Indo para o perido/rubrica selecionados
                     const rubrica = document.getElementById("rubrica").value;
                     const perido = document.getElementById("periodo").value;
+                    const tipo = document.getElementById("tipo").value;
 
-                    const linhaId = "linha_" + window.indice["RE_" + perido + "_" + rubrica];
+                    const linhaId = "linha_" + window.indice[tipo + "_" + perido + "_" + rubrica];
                     document.getElementById(linhaId).scrollIntoView();
 
                     break;
@@ -121,7 +122,7 @@
                     document.getElementById("rubrica").value         = m.conteudo.rubrica;
                     document.getElementById("complemento").value     = m.conteudo.complemento;
                     document.getElementById("periodo").value         = m.conteudo.periodo;
-                    document.getElementById("tipo").value            = "entra";
+                    document.getElementById("tipo").value            = m.conteudo.tipo;
                     break;
             }
         });

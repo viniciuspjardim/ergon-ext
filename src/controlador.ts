@@ -59,10 +59,8 @@ export class Controlador {
                     
                     // Começa a ler o arquivo de log/debug de rubircas e cadastra o callback pra
                     // quando terminar a leitura
-                    ES.lerArquivo(caminho, (err: NodeJS.ErrnoException, data: string,) => {
-
-                        if(err) {
-                            console.log(err);
+                    ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
+                        if(erro) {
                             const mensagemErr: string = "<span class='mensagemErr'>Erro ao ler arquivo</span>";
                             ES.enviarParaWebviw(this.panel, "parse_rubrica_err", mensagemErr);
                         }
