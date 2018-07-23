@@ -2,8 +2,8 @@
 
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { ES } from "./es";
-import { Rubricas } from "./rubricas";
+import { ES } from './ES';
+import { Rubricas } from './Rubricas';
 
 /** Classe de entrada e saida de dados */
 export class Controlador {
@@ -18,7 +18,7 @@ export class Controlador {
         this.context = context;
         this.panel = vscode.window.createWebviewPanel(
             'rubricasPeriodo',
-            "Rubricas Periodo",
+            'Rubricas Periodo',
             vscode.ViewColumn.One,
             { enableScripts: true }
         );
@@ -39,7 +39,7 @@ export class Controlador {
         this.panel.webview.html =  ES.lerArquivoSync(caminhoHTML.fsPath, 'utf8');
         
         if(this.camposPadrao) {
-            ES.enviarParaWebviw(this.panel, "filtro", this.camposPadrao, 500);
+            ES.enviarParaWebviw(this.panel, 'filtro', this.camposPadrao, 500);
         }
     }
 
@@ -61,14 +61,18 @@ export class Controlador {
                     // quando terminar a leitura
                     ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
                         if(erro) {
-                            const mensagemErr: string = "<span class='mensagemErr'>Erro ao ler arquivo</span>";
-                            ES.enviarParaWebviw(this.panel, "parse_rubrica_err", mensagemErr);
+                            const mensagemErr: string = '<span class="mensagemErr">Erro ao ler arquivo</span>';
+                            ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
                         }
                         else {
                             const resultado: any = this.rubricas.parseArqRubricas(data);
-                            ES.enviarParaWebviw(this.panel, "parse_rubrica_ok", resultado);
+                            ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
                         }
-                    }, "1252");
+                    }, '1252');
+                    return;
+
+                // Se mensagem recebida do webview 'buscar_rubrica'
+                case 'abrir_log_erro':
                     return;
             }
         }, undefined, this.context.subscriptions);

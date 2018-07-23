@@ -1,6 +1,6 @@
 'use strict';
 
-import { ES } from "./es";
+import { ES } from './ES';
 
 export class Rubricas {
 
@@ -21,14 +21,14 @@ export class Rubricas {
 
     public parseArqRubricas(conteudoArq: string): any {
 
-        let novoConteudo: string = "";
+        let novoConteudo: string = '';
         let index: any = {};
 
         // Substituindo CRLF ou CR pelo LF
-        conteudoArq = conteudoArq.replace(/\r\n/g, "\n");
-        conteudoArq = conteudoArq.replace(/\r/g, "\n");
+        conteudoArq = conteudoArq.replace(/\r\n/g, '\n');
+        conteudoArq = conteudoArq.replace(/\r/g, '\n');
 
-        let linhas: string[] = conteudoArq.split("\n");
+        let linhas: string[] = conteudoArq.split('\n');
 
         let numLinha: number = 1;
         let i: any;
@@ -42,16 +42,16 @@ export class Rubricas {
 
             // Rubrica entra RE
             if(atribEntra !== null) {
-                novaLinha = "<span class='rubEntra'>" + linha + "</span>";
+                novaLinha = '<span class="rubEntra">' + linha + '</span>';
                 index[`RE_${atribEntra[1]}_${atribEntra[3]}`] = numLinha;
             }
             // Rubrica sai RS
             else if(atribSai !== null) {
-                novaLinha = "<span class='rubSai'>" + linha + "</span>";
+                novaLinha = '<span class="rubSai">' + linha + '</span>';
                 index[`RS_${atribSai[1]}_${atribSai[3]}`] = numLinha;
             }
             else {
-                novaLinha = "        " + linha;
+                novaLinha = '        ' + linha;
             }
 
             novaLinha = `<span id='linha_${numLinha}' class='contLinha'>${numLinha}</span>${novaLinha}\n`;

@@ -12,12 +12,12 @@ export class ES {
     }
 
     /** Lê arquivo de forma assincrona */
-    public static lerArquivo(caminho: string, callback: (data: string, err?: NodeJS.ErrnoException) => void, charset: string = "utf8"): void {
+    public static lerArquivo(caminho: string, callback: (data: string, err?: NodeJS.ErrnoException) => void, charset: string = 'utf8'): void {
         
         fs.readFile(caminho, (erro: NodeJS.ErrnoException, buffer: Buffer) => {
 
             if(erro !== null) {
-                callback("", erro);
+                callback('', erro);
             }
             else {
                 const data: string = iconv.decode(buffer, charset);
@@ -27,7 +27,7 @@ export class ES {
     }
 
     /** Lê arquivo de forma sincrona */
-    public static lerArquivoSync(caminho: string, charset: string = "utf8"): string {
+    public static lerArquivoSync(caminho: string, charset: string = 'utf8'): string {
         return iconv.decode(fs.readFileSync(caminho), charset);
     }
 
