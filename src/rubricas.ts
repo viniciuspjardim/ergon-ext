@@ -1,6 +1,24 @@
 'use strict';
 
-import { ES } from './ES';
+import { ES } from './es';
+
+/** Entrando na rubrica, saindo da rubrica */
+type TipoLinha = 'RE' | 'RS';
+
+export interface DadosLinha {
+    periodo: string;
+    indiceRubrica: string;
+    rubrica: string;
+    mnemonico: string;
+    complemento: string;
+    valCalc: number;
+    valPago: number;
+    valLiq: number;
+    movCalc: number;
+    movPago: number;
+    movLiq: number;
+    tipoLinha: TipoLinha;
+}
 
 export class Rubricas {
 
@@ -30,6 +48,7 @@ export class Rubricas {
 
         let linhas: string[] = conteudoArq.split('\n');
 
+        // Pilha da chamada das rubricas
         let pilha: string[] = [];
         let numLinha: number = 1;
         let i: any;
@@ -37,38 +56,51 @@ export class Rubricas {
         for(i in linhas) {
 
             let linha: string = linhas[i];
+            let linhaFmt: string = "";
             let novaLinha: string;
             let preLinha: string = "";
             let posLinha: string = "";
-            let atribEntra: any = this.rubricaEntraRegex.exec(linha);
+            let atribEntra: RegExpExecArray | null = this.rubricaEntraRegex.exec(linha);
             this.rubricaEntraRegex.lastIndex = 0;
-            let atribSai: any = this.rubricaSaiRegex.exec(linha);
+            let atribSai: RegExpExecArray | null = this.rubricaSaiRegex.exec(linha);
             this.rubricaSaiRegex.lastIndex = 0;
 
-            // Rubrica entra RE
-            if(atribEntra !== null) {
-                pilha.push(atribEntra[3]);
+            // Rubrica entra 'RE'
+            if(atribEntra) {
+                const dados: DadosLinha = this.novoDadosLinha(atribEntra, 'RE');
+
+                pilha.push(dados.rubrica);
                 for(let item of pilha) {
                     preLinha += ` >> ${item}`;
                 }
-                preLinha = `<span class="contLinha"></span><span class="linha preLinha">${preLinha}</span>\n`;
-                novaLinha = `<span class="linha rubEntra">${linha}</span>`;
-                index[`RE_${atribEntra[1]}_${atribEntra[3]}`] = numLinha;
+
+                preLinha = `<span id="preLinha_${numLinha}" class="contLinha">&nbsp</span><span class="linha preLinha">${preLinha}</span>\n`;
+                
+                linhaFmt = ` >> ${dados.mnemonico} rubrica ${dados.rubrica} - "${dados.complemento}" periodo ${dados.periodo} valCalc ${dados.valCalc} valPag ${dados.valPago} valLiq ${dados.valLiq} movCalc ${dados.movCalc} movPag ${dados.movPago} movLiq ${dados.movLiq}`;
+                
+                novaLinha = `<span class="linha rubEntra">${linhaFmt}</span>`;
+                index[`RE_${dados.periodo}_${dados.rubrica}`] = numLinha;
             }
-            // Rubrica sai RS
-            else if(atribSai !== null) {
-                if(pilha[pilha.length -1] === atribSai[3]) {
+            // Rubrica sai 'RS'
+            else if(atribSai) {
+                const dados: DadosLinha = this.novoDadosLinha(atribSai, 'RS');
+
+                // Removendo a rubrica da pilha de rubricas
+                if(pilha[pilha.length -1] === dados.rubrica) {
                     pilha.pop();
                 }
+
                 posLinha = ' <<';
                 for(let item of pilha) {
                     posLinha += ` ${item} <<`;
                 }
 
-
-                posLinha = `<span class="contLinha"></span><span class="linha posLinha">${posLinha}</span>\n`;
-                novaLinha = `<span class="linha rubSai">${linha}</span>`;
-                index[`RS_${atribSai[1]}_${atribSai[3]}`] = numLinha;
+                posLinha = `<span id="posLinha_${numLinha}" class="contLinha">&nbsp</span><span class="linha posLinha">${posLinha}</span>\n`;
+                
+                linhaFmt = ` << ${dados.mnemonico} rubrica ${dados.rubrica} - "${dados.complemento}" periodo ${dados.periodo} valCalc ${dados.valCalc} valPag ${dados.valPago} valLiq ${dados.valLiq} movCalc ${dados.movCalc} movPag ${dados.movPago} movLiq ${dados.movLiq}`;
+                
+                novaLinha = `<span class="linha rubSai">${linhaFmt}</span>`;
+                index[`RS_${dados.periodo}_${dados.rubrica}`] = numLinha;
             }
             else {
                 novaLinha = `<span class="linha">        ${linha}</span>`;
@@ -80,5 +112,35 @@ export class Rubricas {
         }
 
         return {texto: novoConteudo, index: index};
+    }
+
+    private novoDadosLinha(dados: RegExpExecArray, tipoLinha: TipoLinha): DadosLinha {
+
+        let valCalc: number =  this.valorEmNumero(dados[6].trim());
+        let valPago: number =  this.valorEmNumero(dados[7].trim());
+        let valLiq: number =  valCalc - valPago;
+        let movCalc: number =  this.valorEmNumero(dados[8].trim());
+        let movPago: number =  this.valorEmNumero(dados[9].trim());
+        let movLiq: number =  movCalc - movPago;
+
+        return {
+            periodo: dados[1].trim(),
+            indiceRubrica: dados[2].trim(),
+            rubrica: dados[3].trim(),
+            mnemonico: dados[4].trim(),
+            complemento: dados[5].trim(),
+            valCalc: valCalc,
+            valPago: valPago,
+            valLiq: valLiq,
+            movCalc: movCalc,
+            movPago: movPago,
+            movLiq: movLiq,
+            tipoLinha: tipoLinha
+        };
+    }
+
+    private valorEmNumero(valorStr: string): number {
+        let valor: number = Number(valorStr);
+        return valor <= -139999999999 ? 0 : valor;
     }
 }

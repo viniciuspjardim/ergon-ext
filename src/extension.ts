@@ -1,7 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { Controlador } from './controlador';
+import { Controlador } from './Controlador';
 
 export let panel: vscode.WebviewPanel;
 export let controlador: Controlador;

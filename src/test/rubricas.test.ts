@@ -39,7 +39,7 @@ suite("Extension Tests", function () {
         if(dados1 !== null) {
 
             assert.equal(dados1[1], "1"); // periodo
-            assert.equal(dados1[2], "1"); // id da rubrica
+            assert.equal(dados1[2], "1"); // indice da rubrica
             assert.equal(dados1[3], "1001"); // rubrica
             assert.equal(dados1[4], "R1001"); // mnemonico
             assert.equal(dados1[6], "-139999999999.00"); // valor calculado

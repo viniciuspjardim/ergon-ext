@@ -19,10 +19,10 @@
                 width: 100%;
             } */
 
-            .rubEntra { background-color: rgba(0, 170, 43, 0.137); }
-            .rubSai { background-color: rgba(192, 29, 0, 0.137); }
-            .preLinha { background-color: rgba(255, 255, 255, 0.075); }
-            .posLinha { background-color: rgba(255, 255, 255, 0.075); }
+            .rubEntra { background-color: rgba(0, 192, 48, 0.137); }
+            .rubSai { background-color: rgba(192, 48, 0, 0.137); }
+            .preLinha { background-color: rgba(255, 255, 255, 0.137); }
+            .posLinha { background-color: rgba(255, 255, 255, 0.137); }
             
             .contLinha {
                 display: inline-block;
@@ -108,8 +108,9 @@
                     const rubrica = document.getElementById('rubrica').value;
                     const perido = document.getElementById('periodo').value;
                     const tipo = document.getElementById('tipo').value;
+                    const tipoId = tipo == 'RE' ? 'preLinha_' : 'linha_';
 
-                    const linhaId = 'linha_' + window.indice[tipo + '_' + perido + '_' + rubrica];
+                    const linhaId = tipoId + window.indice[tipo + '_' + perido + '_' + rubrica];
                     document.getElementById(linhaId).scrollIntoView();
 
                     break;

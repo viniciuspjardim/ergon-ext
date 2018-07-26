@@ -2,8 +2,8 @@
 
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { ES } from './ES';
-import { Rubricas } from './Rubricas';
+import { ES } from './es';
+import { Rubricas } from './rubricas';
 
 /** Classe de entrada e saida de dados */
 export class Controlador {
