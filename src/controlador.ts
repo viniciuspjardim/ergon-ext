@@ -35,12 +35,24 @@ export class Controlador {
     /** Carrega o arquivo html do webview e envia mensagem com os campos padrão */
     public carregarWebView(): void {
 
-        const caminhoHTML: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'html', 'rubricas.html'));
-        this.panel.webview.html =  ES.lerArquivoSync(caminhoHTML.fsPath, 'utf8');
+        const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'html', 'rubricas.html'));
+        this.panel.webview.html =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
         
         if(this.camposPadrao) {
             ES.enviarParaWebviw(this.panel, 'filtro', this.camposPadrao, 500);
         }
+    }
+
+    public carregarNomeRubricas(): void {
+        const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'html', 'rubricas.json'));
+        const jsonStr: string =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
+        const json: any = JSON.parse(jsonStr);
+        let nomeRubricas: any = {};
+
+        for(let rubrica of json.rubricas) {
+            nomeRubricas[`${rubrica.rubrica}`] = rubrica;
+        }
+        this.rubricas.setNomeRubricas(nomeRubricas);
     }
 
     /**

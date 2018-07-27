@@ -25,9 +25,14 @@ export class Rubricas {
     private rubricaEntraRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9]+)\s+([a-zA-Z0-9]*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
     private rubricaSaiRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*<-\s*\.+\s*(\d+)\s*([a-zA-Z0-9]+)\s+([a-zA-Z0-9]*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
     private pastaExecucao: string;
+    private nomeRubricas: any;
 
     constructor(pastaExecucao: string) {
         this.pastaExecucao = pastaExecucao;
+    }
+
+    public setNomeRubricas(nomeRubricas: any) {
+        this.nomeRubricas = nomeRubricas;
     }
 
     public construirCaminho(c: any): string {
@@ -71,14 +76,19 @@ export class Rubricas {
 
                 pilha.push(dados.rubrica);
                 for(let item of pilha) {
-                    preLinha += ` >> ${item}`;
+                    preLinha += `<span class="campo"> >> </span>${item}`;
                 }
 
-                preLinha = `<span id="preLinha_${numLinha}" class="contLinha">&nbsp</span><span class="linha preLinha">${preLinha}</span>\n`;
+                let nomeRubrica: string = '?';
+                if(this.nomeRubricas[dados.rubrica]) {
+                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome;
+                }
+
+                preLinha = `<div class="hlinha"><span id="preLinha_${numLinha}" class="contLinha">&nbsp</span><span class="linha preLinha">${preLinha}</span></div>\n`;
                 
-                linhaFmt = ` >> ${dados.mnemonico} rubrica ${dados.rubrica} - "${dados.complemento}" periodo ${dados.periodo} valCalc ${dados.valCalc} valPag ${dados.valPago} valLiq ${dados.valLiq} movCalc ${dados.movCalc} movPag ${dados.movPago} movLiq ${dados.movLiq}`;
+                linhaFmt = `<span class="campo"> >> </span>${dados.mnemonico} <span class="campo">rubrica</span> ${dados.rubrica} ${nomeRubrica} - "${dados.complemento}" <span class="campo">periodo</span> ${dados.periodo} <span class="campo">valCalc</span> ${dados.valCalc} <span class="campo">valPag</span> ${dados.valPago} <span class="campo">valLiq</span> ${dados.valLiq} <span class="campo">movCalc</span> ${dados.movCalc} <span class="campo">movPag</span> ${dados.movPago} <span class="campo">movLiq</span> ${dados.movLiq}`;
                 
-                novaLinha = `<span class="linha rubEntra">${linhaFmt}</span>`;
+                novaLinha = `<span class="rubEntra">${linhaFmt}</span>`;
                 index[`RE_${dados.periodo}_${dados.rubrica}`] = numLinha;
             }
             // Rubrica sai 'RS'
@@ -90,23 +100,28 @@ export class Rubricas {
                     pilha.pop();
                 }
 
-                posLinha = ' <<';
+                posLinha = '<span class="campo"> <<</span>';
                 for(let item of pilha) {
-                    posLinha += ` ${item} <<`;
+                    posLinha += ` ${item}<span class="campo"> <<</span>`;
                 }
 
-                posLinha = `<span id="posLinha_${numLinha}" class="contLinha">&nbsp</span><span class="linha posLinha">${posLinha}</span>\n`;
+                let nomeRubrica: string = '?';
+                if(this.nomeRubricas[dados.rubrica]) {
+                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome;
+                }
+
+                posLinha = `<div class="hlinha"><span id="posLinha_${numLinha}" class="contLinha">&nbsp</span><span class="linha posLinha">${posLinha}</span></div>\n`;
                 
-                linhaFmt = ` << ${dados.mnemonico} rubrica ${dados.rubrica} - "${dados.complemento}" periodo ${dados.periodo} valCalc ${dados.valCalc} valPag ${dados.valPago} valLiq ${dados.valLiq} movCalc ${dados.movCalc} movPag ${dados.movPago} movLiq ${dados.movLiq}`;
+                linhaFmt = `<span class="campo"> << </span>${dados.mnemonico} <span class="campo">rubrica</span> ${dados.rubrica} ${nomeRubrica} - "${dados.complemento}" <span class="campo">periodo</span> ${dados.periodo} <span class="campo">valCalc</span> ${dados.valCalc} <span class="campo">valPag</span> ${dados.valPago} <span class="campo">valLiq</span> ${dados.valLiq} <span class="campo">movCalc</span> ${dados.movCalc} <span class="campo">movPag</span> ${dados.movPago} <span class="campo">movLiq</span> ${dados.movLiq}`;
                 
-                novaLinha = `<span class="linha rubSai">${linhaFmt}</span>`;
+                novaLinha = `<span class="rubSai">${linhaFmt}</span>`;
                 index[`RS_${dados.periodo}_${dados.rubrica}`] = numLinha;
             }
             else {
                 novaLinha = `<span class="linha">        ${linha}</span>`;
             }
 
-            novaLinha = `${preLinha}<span id="linha_${numLinha}" class="contLinha">${numLinha}</span>${novaLinha}\n${posLinha}`;
+            novaLinha = `${preLinha}<div class="hlinha"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span>${novaLinha}</div>\n${posLinha}`;
             novoConteudo += novaLinha;
             numLinha++;
         }

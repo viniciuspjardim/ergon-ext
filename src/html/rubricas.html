@@ -11,24 +11,45 @@
             }
             pre {
                 font-family: Consolas, 'Courier New', monospace;
+                color:  rgba(255, 255, 255, 0.603);
                 font-size: 14px;
             }
 
-            /* .linha {
-                display: table-cell;
+            .hlinha {
+                float: left;
                 width: 100%;
-            } */
-
-            .rubEntra { background-color: rgba(0, 192, 48, 0.137); }
-            .rubSai { background-color: rgba(192, 48, 0, 0.137); }
-            .preLinha { background-color: rgba(255, 255, 255, 0.137); }
-            .posLinha { background-color: rgba(255, 255, 255, 0.137); }
+            }
+            .rubEntra {
+                float: left;
+                width: calc(100% - 48px);
+                background-color: rgba(0, 192, 48, 0.137);
+                color:  rgb(255, 255, 255);
+            }
+            .rubSai {
+                float: left;
+                width: calc(100% - 48px);
+                background-color: rgba(192, 48, 0, 0.137);
+                color:  rgb(255, 255, 255);
+            }
+            .preLinha {
+                float: left;
+                width: calc(100% - 48px);
+                background-color: rgba(255, 255, 255, 0.137);
+                color:  rgb(255, 255, 255);
+            }
+            .posLinha {
+                float: left;
+                width: calc(100% - 48px);
+                background-color: rgba(255, 255, 255, 0.137);
+                color:  rgb(255, 255, 255);
+            }
+            .campo { color:  rgba(255, 255, 255, 0.452); }
             
             .contLinha {
-                display: inline-block;
+                float: left;
                 width: 32px;
                 margin-right: 1em;
-                color: rgba(255, 255, 255, 0.418);
+                color: rgba(255, 255, 255, 0.349);
                 text-align: right;
 
                 -webkit-touch-callout: none;
