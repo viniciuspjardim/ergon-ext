@@ -76,17 +76,33 @@ export class Rubricas {
 
                 pilha.push(dados.rubrica);
                 for(let item of pilha) {
-                    preLinha += `<span class="campo"> >> </span>${item}`;
+                    preLinha += `<span class="campo semBorda">>></span>${item}`;
                 }
 
                 let nomeRubrica: string = '?';
                 if(this.nomeRubricas[dados.rubrica]) {
-                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome;
+                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome.trim();
                 }
 
-                preLinha = `<div class="hlinha"><span id="preLinha_${numLinha}" class="contLinha">&nbsp</span><span class="linha preLinha">${preLinha}</span></div>\n`;
+                preLinha =
+                        `<div class="hlinha">` +
+                        `<span id="preLinha_${numLinha}" class="contLinha">&nbsp</span>` +
+                        `<span class="linha preLinha">${preLinha}</span>` +
+                        `</div>\n`;
                 
-                linhaFmt = `<span class="campo"> >> </span>${dados.mnemonico} <span class="campo">rubrica</span> ${dados.rubrica} ${nomeRubrica} - "${dados.complemento}" <span class="campo">periodo</span> ${dados.periodo} <span class="campo">valCalc</span> ${dados.valCalc} <span class="campo">valPag</span> ${dados.valPago} <span class="campo">valLiq</span> ${dados.valLiq} <span class="campo">movCalc</span> ${dados.movCalc} <span class="campo">movPag</span> ${dados.movPago} <span class="campo">movLiq</span> ${dados.movLiq}`;
+                linhaFmt =
+                        `<span class="campo semBorda">>></span>${dados.mnemonico}` +
+                        `<span class="campo">rubrica</span>` +
+                        `<span class="nomeRubrica">` +
+                        `${dados.rubrica} ${nomeRubrica} - "${dados.complemento}"` +
+                        `</span>` +
+                        `<span class="campo">periodo</span>${dados.periodo}` +
+                        `<span class="campo">valCalc</span>${dados.valCalc}` +
+                        `<span class="campo">valPag</span>${dados.valPago}` +
+                        `<span class="campo">valLiq</span>${dados.valLiq}` +
+                        `<span class="campo">movCalc</span>${dados.movCalc}` +
+                        `<span class="campo">movPag</span>${dados.movPago}` +
+                        `<span class="campo">movLiq</span>${dados.movLiq}`;
                 
                 novaLinha = `<span class="rubEntra">${linhaFmt}</span>`;
                 index[`RE_${dados.periodo}_${dados.rubrica}`] = numLinha;
@@ -100,19 +116,35 @@ export class Rubricas {
                     pilha.pop();
                 }
 
-                posLinha = '<span class="campo"> <<</span>';
+                posLinha = '<span class="campo semBorda"><<</span>';
                 for(let item of pilha) {
-                    posLinha += ` ${item}<span class="campo"> <<</span>`;
+                    posLinha += `${item}<span class="campo semBorda"><<</span>`;
                 }
 
                 let nomeRubrica: string = '?';
                 if(this.nomeRubricas[dados.rubrica]) {
-                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome;
+                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome.trim();
                 }
 
-                posLinha = `<div class="hlinha"><span id="posLinha_${numLinha}" class="contLinha">&nbsp</span><span class="linha posLinha">${posLinha}</span></div>\n`;
+                posLinha =
+                        `<div class="hlinha">` +
+                        `<span id="posLinha_${numLinha}" class="contLinha">&nbsp</span>` +
+                        `<span class="linha posLinha">${posLinha}</span>` +
+                        `</div>\n`;
                 
-                linhaFmt = `<span class="campo"> << </span>${dados.mnemonico} <span class="campo">rubrica</span> ${dados.rubrica} ${nomeRubrica} - "${dados.complemento}" <span class="campo">periodo</span> ${dados.periodo} <span class="campo">valCalc</span> ${dados.valCalc} <span class="campo">valPag</span> ${dados.valPago} <span class="campo">valLiq</span> ${dados.valLiq} <span class="campo">movCalc</span> ${dados.movCalc} <span class="campo">movPag</span> ${dados.movPago} <span class="campo">movLiq</span> ${dados.movLiq}`;
+                        linhaFmt =
+                        `<span class="campo semBorda"><<</span>${dados.mnemonico}` +
+                        `<span class="campo">rubrica</span>` +
+                        `<span class="nomeRubrica">` +
+                        `${dados.rubrica} ${nomeRubrica} - "${dados.complemento}"` +
+                        `</span>` +
+                        `<span class="campo">periodo</span>${dados.periodo}` +
+                        `<span class="campo">valCalc</span>${dados.valCalc}` +
+                        `<span class="campo">valPag</span>${dados.valPago}` +
+                        `<span class="campo">valLiq</span>${dados.valLiq}` +
+                        `<span class="campo">movCalc</span>${dados.movCalc}` +
+                        `<span class="campo">movPag</span>${dados.movPago}` +
+                        `<span class="campo">movLiq</span>${dados.movLiq}`;
                 
                 novaLinha = `<span class="rubSai">${linhaFmt}</span>`;
                 index[`RS_${dados.periodo}_${dados.rubrica}`] = numLinha;

@@ -9,12 +9,20 @@
                 font-family: Consolas, 'Courier New', monospace;
                 font-size: 14px;
             }
+            .cabeçalho {
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 0;
+                margin: 0;
+                padding: 1em;
+                background: rgb(30, 30, 30);
+            }
             pre {
                 font-family: Consolas, 'Courier New', monospace;
                 color:  rgba(255, 255, 255, 0.603);
                 font-size: 14px;
             }
-
             .hlinha {
                 float: left;
                 width: 100%;
@@ -34,17 +42,31 @@
             .preLinha {
                 float: left;
                 width: calc(100% - 48px);
-                background-color: rgba(255, 255, 255, 0.137);
+                background-color: rgba(0, 192, 48, 0.137);
                 color:  rgb(255, 255, 255);
             }
             .posLinha {
                 float: left;
                 width: calc(100% - 48px);
-                background-color: rgba(255, 255, 255, 0.137);
+                background-color: rgba(192, 48, 0, 0.137);
                 color:  rgb(255, 255, 255);
             }
-            .campo { color:  rgba(255, 255, 255, 0.452); }
-            
+            .campo {
+                margin: 1em;
+                padding-left: 1em;
+                color:  rgba(255, 255, 255, 0.452);
+                border-left-style: solid;
+                border-left-width: 2px;
+                border-left-color: white;
+            }
+            .semBorda {
+                border-left-style: none;
+                margin-left: 0;
+            }
+            .nomeRubrica {
+                display: inline-block;
+                width: 26em;
+            }
             .contLinha {
                 float: left;
                 width: 32px;
@@ -63,27 +85,30 @@
 </head>
 <body>
     <div>
-        <form>
-            <div>
-                <span>Ambiente<input id="ambiente"/></span>
-                <span>ServCalc<input id="servidorCalculo"/></span>
-                <span>TipoCalc<input id="tipoCalculo"/></span>
-                <span>MesAnoFol<input id="mesAnoFol"/></span>
-                <span>NumFol<input id="numFol"/></span>
-                <span>Exec<input id="execucao"/></span>
-                <span>Func<input id="numFunc"/></span>
-                <span>Vinc<input id="numVinc"/></span>
-                <span>MesAno<input id="mesAnoRub"/></span>
-                <span>SeqFunc<input id="seqFunc"/></span>
-                <span>SeqVinc<input id="seqVinc"/></span>
-                <span>Rub<input id="rubrica"/></span>
-                <span>Cpl<input id="complemento"/></span>
-                <span>Per<input id="periodo"/></span>
-                <span>Tipo<input id="tipo"/></span>
-                <button id="buscar" type="submit">Ok</button>
-                <button id="logErro" type="submit">Abrir Log/Erro</button>
-            </div>
-        </form>
+        <div class="cabeçalho">
+            <form>
+                <div>
+                    <span>Ambiente<input id="ambiente"/></span>
+                    <span>ServCalc<input id="servidorCalculo"/></span>
+                    <span>TipoCalc<input id="tipoCalculo"/></span>
+                    <span>MesAnoFol<input id="mesAnoFol"/></span>
+                    <span>NumFol<input id="numFol"/></span>
+                    <span>Exec<input id="execucao"/></span>
+                    <span>Func<input id="numFunc"/></span>
+                    <span>Vinc<input id="numVinc"/></span>
+                    <span>MesAno<input id="mesAnoRub"/></span>
+                    <span>SeqFunc<input id="seqFunc"/></span>
+                    <span>SeqVinc<input id="seqVinc"/></span>
+                    <span>Rub<input id="rubrica"/></span>
+                    <span>Cpl<input id="complemento"/></span>
+                    <span>Per<input id="periodo"/></span>
+                    <span>Tipo<input id="tipo"/></span>
+                    <button id="buscar" type="submit">Ok</button>
+                    <button id="logErro" type="submit">Abrir Log/Erro</button>
+                </div>
+            </form>
+            <div>Rubrica | Periodo | Valor Calc | Valor Pag | Valor Liq | Mov Calc | Mov Pag | Mov Liq </div>
+        </div>
         <pre id="conteudoArquivo">Nada para exibir</pre>
     </div>
     <script>
