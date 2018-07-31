@@ -9,23 +9,87 @@
                 font-family: Consolas, 'Courier New', monospace;
                 font-size: 14px;
             }
-            .cabeçalho {
+            #cabeçalho {
                 position: fixed;
                 top: 0;
                 right: 0;
                 left: 0;
                 margin: 0;
-                padding: 1em;
+                padding: 0;
                 background: rgb(30, 30, 30);
             }
+            #cabeçalho form {
+                padding: 1em;
+                padding-bottom: 0.5em;
+            }
+            #cabeçalho form div span {
+                white-space: nowrap;
+                padding: 4px 0 4px 0;
+                display: inline-block;
+                width: 10em;
+                text-align: right;
+            }
+            button:focus { outline: 0; }
+            #cabeçalho button {
+                float: right;
+                margin-right: 0.5em;
+                margin-left: 0.5em;
+                background-color: rgb(14, 99, 156);
+                border: none;
+                color: white;
+                padding: 4px 10px 4px 10px;
+            }
+            #cabeçalho button:hover {
+                background-color: rgb(17, 119, 187);
+            }
+            .inputTitulo {
+                display: inline-block;
+                width: 5em;
+                text-align: right;
+            }
+            input {
+                width: 4em;
+                margin-left: 1em;
+            }
+            .titulos {
+                padding: 0.25em;
+                background: rgb(51, 51, 51);
+            }
+            .titulosI {
+                float: left;
+                width: calc(100% - 48px);
+            }
+            /* header campo */
+            .hc {
+                display: inline-block;
+                width: 4.45em;
+                color: white;
+                text-align: center;
+
+                margin-left: 1em;
+                padding-left: 1em;
+                border-left-style: solid;
+                border-left-width: 2px;
+                border-left-color: rgba(255, 255, 255, 0.160);
+            }
+            /* borda direita (right) */
+            .rBorder {
+                padding-right: 1em;
+                border-right-style: solid;
+                border-right-width: 2px;
+                border-right-color: rgba(255, 255, 255, 0.160);
+            }
             pre {
+                margin-top: 110px;
                 font-family: Consolas, 'Courier New', monospace;
                 color:  rgba(255, 255, 255, 0.603);
                 font-size: 14px;
             }
+            /* header linha */
             .hlinha {
                 float: left;
                 width: 100%;
+                white-space: nowrap;
             }
             .rubEntra {
                 float: left;
@@ -42,30 +106,43 @@
             .preLinha {
                 float: left;
                 width: calc(100% - 48px);
-                background-color: rgba(0, 192, 48, 0.137);
+                /* background-color: rgba(0, 192, 48, 0.137); */
                 color:  rgb(255, 255, 255);
             }
             .posLinha {
                 float: left;
                 width: calc(100% - 48px);
-                background-color: rgba(192, 48, 0, 0.137);
+                /* background-color: rgba(192, 48, 0, 0.137); */
                 color:  rgb(255, 255, 255);
             }
-            .campo {
-                margin: 1em;
+            /** campo */
+            .c {
+                margin-left: 1em;
                 padding-left: 1em;
-                color:  rgba(255, 255, 255, 0.452);
                 border-left-style: solid;
                 border-left-width: 2px;
-                border-left-color: white;
+                border-left-color: rgba(255, 255, 255, 0.005);
             }
-            .semBorda {
+            /** campo sem borda */
+            .csb {
+                color: rgba(255, 255, 255, 0.452);
                 border-left-style: none;
-                margin-left: 0;
+                margin: 0;
+                padding: 0 1em 0 1em;
             }
             .nomeRubrica {
                 display: inline-block;
                 width: 26em;
+            }
+            .resultadoRub {
+                display: inline-block;
+                width: 5em;
+                text-align: right;
+            }
+            .periodo {
+                display: inline-block;
+                width: 8em;
+                text-align: right;
             }
             .contLinha {
                 float: left;
@@ -85,7 +162,7 @@
 </head>
 <body>
     <div>
-        <div class="cabeçalho">
+        <div id="cabeçalho">
             <form>
                 <div>
                     <span>Ambiente<input id="ambiente"/></span>
@@ -103,11 +180,23 @@
                     <span>Cpl<input id="complemento"/></span>
                     <span>Per<input id="periodo"/></span>
                     <span>Tipo<input id="tipo"/></span>
+                    <button id="logErro" type="submit">Abrir Log / Erro</button>
                     <button id="buscar" type="submit">Ok</button>
-                    <button id="logErro" type="submit">Abrir Log/Erro</button>
                 </div>
             </form>
-            <div>Rubrica | Periodo | Valor Calc | Valor Pag | Valor Liq | Mov Calc | Mov Pag | Mov Liq </div>
+            <div class="hlinha titulos">
+                <span class="contLinha">&nbsp</span>
+                <span class="titulosI">
+                    <span class="hc" style="width: 27.7em; border-style: none;">Rubrica</span>
+                    <span class="hc" style="width: 7.4em;">Periodo</span>
+                    <span class="hc">Val Calc</span>
+                    <span class="hc">Val Pag</span>
+                    <span class="hc">Val Liq</span>
+                    <span class="hc">Mov Calc</span>
+                    <span class="hc">Mov Pag</span>
+                    <span class="hc rBorder">Mov Liq</span>
+                <span>
+            </div>
         </div>
         <pre id="conteudoArquivo">Nada para exibir</pre>
     </div>
@@ -158,6 +247,7 @@
 
                     const linhaId = tipoId + window.indice[tipo + '_' + perido + '_' + rubrica];
                     document.getElementById(linhaId).scrollIntoView();
+                    window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
 
                     break;
                 case 'parse_rubrica_err':
