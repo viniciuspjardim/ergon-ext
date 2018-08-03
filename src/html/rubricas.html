@@ -26,12 +26,14 @@
                 white-space: nowrap;
                 padding: 4px 0 4px 0;
                 display: inline-block;
-                width: 10em;
+                width: 130px;
                 text-align: right;
+                font-size: 11px;
             }
             button:focus { outline: 0; }
             #cabeçalho button {
                 float: right;
+                margin-top: 0.3em;
                 margin-right: 0.5em;
                 margin-left: 0.5em;
                 background-color: rgb(14, 99, 156);
@@ -50,10 +52,19 @@
             input {
                 width: 4em;
                 margin-left: 1em;
+                padding: 4px 6px 4px 6px;
+                background-color: rgb(60, 60, 60);
+                color: rgba(255, 255, 255, 0.788);
+                border: none;
+            }
+            input:focus {
+                outline: 1;
+                outline-color: rgb(23, 74, 108);
             }
             .titulos {
                 padding: 0.25em;
-                background: rgb(51, 51, 51);
+                background-color: rgb(9, 71, 113);
+                /* background-color: rgb(51, 51, 51); */
             }
             .titulosI {
                 float: left;
@@ -168,12 +179,12 @@
                     <span>Ambiente<input id="ambiente"/></span>
                     <span>ServCalc<input id="servidorCalculo"/></span>
                     <span>TipoCalc<input id="tipoCalculo"/></span>
-                    <span>MesAnoFol<input id="mesAnoFol"/></span>
+                    <span>DataFol<input id="mesAnoFol"/></span>
                     <span>NumFol<input id="numFol"/></span>
                     <span>Exec<input id="execucao"/></span>
                     <span>Func<input id="numFunc"/></span>
                     <span>Vinc<input id="numVinc"/></span>
-                    <span>MesAno<input id="mesAnoRub"/></span>
+                    <span>DataRub<input id="mesAnoRub"/></span>
                     <span>SeqFunc<input id="seqFunc"/></span>
                     <span>SeqVinc<input id="seqVinc"/></span>
                     <span>Rub<input id="rubrica"/></span>
@@ -236,8 +247,12 @@
             let m = event.data;
             switch(m.acao) {
                 case 'parse_rubrica_ok':
-                    document.getElementById('conteudoArquivo').innerHTML    = m.conteudo.texto;
-                    window.indice = m.conteudo.index;
+
+                    // Nulo é quando mantem o mesmo arquivo ai não precisa recarregar a view
+                    if(m.conteudo.texto !== null) {
+                        document.getElementById('conteudoArquivo').innerHTML = m.conteudo.texto;
+                        window.indice = m.conteudo.index;
+                    }
 
                     // Indo para o perido/rubrica selecionados
                     const rubrica = document.getElementById('rubrica').value;

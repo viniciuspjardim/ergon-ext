@@ -61,7 +61,6 @@ export class Rubricas {
         for(i in linhas) {
 
             let linha: string = linhas[i];
-            let linhaFmt: string = "";
             let novaLinha: string;
             let preLinha: string = "";
             let posLinha: string = "";
@@ -69,6 +68,36 @@ export class Rubricas {
             this.rubricaEntraRegex.lastIndex = 0;
             let atribSai: RegExpExecArray | null = this.rubricaSaiRegex.exec(linha);
             this.rubricaSaiRegex.lastIndex = 0;
+
+            let fmt = (dados: DadosLinha): string => {
+                
+                let campoRubrica: string;
+                let nomeRubrica: string = '?';
+
+                if(this.nomeRubricas[dados.rubrica]) {
+                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome.trim();
+                }
+
+                if(dados.rubrica !== "0") {
+                    let cpl: string = dados.complemento === '' ? '' : ` - "${dados.complemento}"`;
+                    campoRubrica = `${dados.rubrica} ${nomeRubrica}${cpl}`;
+                }
+                else {
+                    campoRubrica = dados.mnemonico;
+                }
+                
+                let linhaFmt: string =
+                        `<span class="nomeRubrica">${campoRubrica}</span>` +
+                        `<span class="c periodo">${dados.periodo}</span>` +
+                        `<span class="c resultadoRub">${dados.valCalc}</span>` +
+                        `<span class="c resultadoRub">${dados.valPago}</span>` +
+                        `<span class="c resultadoRub">${dados.valLiq}</span>` +
+                        `<span class="c resultadoRub">${dados.movCalc}</span>` +
+                        `<span class="c resultadoRub">${dados.movPago}</span>` +
+                        `<span class="c resultadoRub">${dados.movLiq}</span>`;
+                
+                return linhaFmt;
+            };
 
             // Rubrica entra 'RE'
             if(atribEntra) {
@@ -79,32 +108,13 @@ export class Rubricas {
                     preLinha += `<span class="c csb">>></span>${item}`;
                 }
 
-                let nomeRubrica: string = '?';
-                if(this.nomeRubricas[dados.rubrica]) {
-                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome.trim();
-                }
-
                 preLinha =
                         `<div class="hlinha">` +
                         `<span id="preLinha_${numLinha}" class="contLinha">&nbsp</span>` +
                         `<span class="linha preLinha">${preLinha}</span>` +
                         `</div>\n`;
 
-                let campoRubrica = `${dados.rubrica} ${nomeRubrica} - "${dados.complemento}"`;
-                if(dados.rubrica === "0") {
-                    campoRubrica = `000${dados.mnemonico[0]} ${dados.mnemonico}`;
-                }
-                
-                linhaFmt =
-                        `<span class="c csb">>></span>` +
-                        `<span class="nomeRubrica">${campoRubrica}</span>` +
-                        `<span class="c periodo">${dados.periodo}</span>` +
-                        `<span class="c resultadoRub">${dados.valCalc}</span>` +
-                        `<span class="c resultadoRub">${dados.valPago}</span>` +
-                        `<span class="c resultadoRub">${dados.valLiq}</span>` +
-                        `<span class="c resultadoRub">${dados.movCalc}</span>` +
-                        `<span class="c resultadoRub">${dados.movPago}</span>` +
-                        `<span class="c resultadoRub">${dados.movLiq}</span>`;
+                let linhaFmt: string = '<span class="c csb">>></span>' + fmt(dados);
                 
                 novaLinha = `<span class="rubEntra">${linhaFmt}</span>`;
                 index[`RE_${dados.periodo}_${dados.rubrica}`] = numLinha;
@@ -123,32 +133,13 @@ export class Rubricas {
                     posLinha += `${item}<span class="c csb"><<</span>`;
                 }
 
-                let nomeRubrica: string = '?';
-                if(this.nomeRubricas[dados.rubrica]) {
-                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome.trim();
-                }
-
                 posLinha =
                         `<div class="hlinha">` +
                         `<span id="posLinha_${numLinha}" class="contLinha">&nbsp</span>` +
                         `<span class="linha posLinha">${posLinha}</span>` +
                         `</div>\n`;
-
-                let campoRubrica = `${dados.rubrica} ${nomeRubrica} - "${dados.complemento}"`;
-                if(dados.rubrica === "0") {
-                    campoRubrica = `000${dados.mnemonico[0]} ${dados.mnemonico}`;
-                }
                 
-                linhaFmt =
-                        `<span class="c csb"><<</span>` +
-                        `<span class="nomeRubrica">${campoRubrica}</span>` +
-                        `<span class="c periodo">${dados.periodo}</span>` +
-                        `<span class="c resultadoRub">${dados.valCalc}</span>` +
-                        `<span class="c resultadoRub">${dados.valPago}</span>` +
-                        `<span class="c resultadoRub">${dados.valLiq}</span>` +
-                        `<span class="c resultadoRub">${dados.movCalc}</span>` +
-                        `<span class="c resultadoRub">${dados.movPago}</span>` +
-                        `<span class="c resultadoRub">${dados.movLiq}</span>`;
+                let linhaFmt: string = `<span class="c csb"><<</span>` + fmt(dados);
                 
                 novaLinha = `<span class="rubSai">${linhaFmt}</span>`;
                 index[`RS_${dados.periodo}_${dados.rubrica}`] = numLinha;

@@ -13,6 +13,7 @@ export class Controlador {
     private camposPadrao: vscode.WorkspaceConfiguration;
     private pastaExecucao: string;
     private rubricas: Rubricas;
+    private caminhoArq: string;
 
     constructor(context: vscode.ExtensionContext) {
         this.context = context;
@@ -20,7 +21,10 @@ export class Controlador {
             'rubricasPeriodo',
             'Rubricas Periodo',
             vscode.ViewColumn.One,
-            { enableScripts: true }
+            {
+                enableScripts: true,
+                retainContextWhenHidden: true
+            }
         );
 
         // Lendo variaveis do arquivo de configuração do usuario
@@ -28,6 +32,7 @@ export class Controlador {
         this.pastaExecucao = vscode.workspace.getConfiguration('ergonExt').pastaExecucao;
 
         this.rubricas = new Rubricas(this.pastaExecucao);
+        this.caminhoArq = '';
 
         this.adicionarListenerWebview();
     }
@@ -64,26 +69,34 @@ export class Controlador {
         this.panel.webview.onDidReceiveMessage(mensagem => {
             switch (mensagem.acao) {
 
-                // Se mensagem recebida do webview 'buscar_rubrica'
+                // Se mensagem recebida do webview 'parse_rubrica'
                 case 'parse_rubrica':
 
                     const caminho: string = this.rubricas.construirCaminho(mensagem.filtro);
+
+                    // É o mesmo arquivo, então não precisa ser carregado novamente
+                    if(caminho === this.caminhoArq) {
+                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', {texto: null, index: null});
+                        return;
+                    }
                     
                     // Começa a ler o arquivo de log/debug de rubircas e cadastra o callback pra
                     // quando terminar a leitura
                     ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
                         if(erro) {
+                            this.caminhoArq = '';
                             const mensagemErr: string = '<span class="mensagemErr">Erro ao ler arquivo</span>';
                             ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
                         }
                         else {
+                            this.caminhoArq = caminho;
                             const resultado: any = this.rubricas.parseArqRubricas(data);
                             ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
                         }
                     }, '1252');
                     return;
 
-                // Se mensagem recebida do webview 'buscar_rubrica'
+                // Se mensagem recebida do webview 'abrir_log_erro'
                 case 'abrir_log_erro':
                     return;
             }
