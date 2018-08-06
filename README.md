@@ -31,7 +31,7 @@ Para evitar digitar os campos de filtro todas as vezes que abrir a extensão con
             "seqVinc": 1,
             "rubrica": 1001,
             "complemento": "",
-            "periodo": 1    ,
+            "periodo": 1,
             "tipo": "RE"
         }
     }
