@@ -130,12 +130,38 @@ parseArqRubricas(c);
         });
     </script>
 
+    "ergonExt": {
 
+        "caminhoExecucao": "C:/folha/execucao/Emp_01_TOCANTINS",
+        "charsetExecucao": "1252",
+        "caminhoRubricas": "C:/Users/vinicius.jardim/Dropbox/Projetos/ergonext/src/html/rubricas.json",
+        "charsetRubricas": "utf8",
 
+        "camposPadrao": {
+            "ambiente": "delta",
+            "servidorCalculo": "SRVFVJ",
+            "tipoCalculo": "VJ",
+            "mesAnoFol": {"mes": 7, "ano": 2018},
+            "numFol": 32,
+            "execucao": 1,
+            "numFunc": 103588,
+            "numVinc": 4,
+            "mesAnoRub": {"mes": 7, "ano": 2018},
+            "seqFunc": 2,
+            "seqVinc": 1,
+            "rubrica": 1001,
+            "complemento": "",
+            "periodo": 1,
+            "tipo": "RE"
+        }
+    }
 
-    "ergonExt": { 
+    "ergonExt": {
 
-        "pastaExecucao": "C:/folha/execucao/Emp_01_TOCANTINS",
+        "caminhoExecucao": "C:/folha/execucao/Emp_01_TOCANTINS",
+        "charsetExecucao": "1252",
+        "caminhoRubricas": "C:/Users/vinicius.jardim/Dropbox/Projetos/ergonext/src/html/rubricas.json",
+        "charsetRubricas": "utf8",
 
         "camposPadrao": {
             "ambiente": "delta",

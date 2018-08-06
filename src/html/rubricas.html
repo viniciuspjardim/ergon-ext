@@ -126,6 +126,9 @@
                 /* background-color: rgba(192, 48, 0, 0.137); */
                 color:  rgb(255, 255, 255);
             }
+            .linha {
+                margin-left: 3em;
+            }
             /** campo */
             .c {
                 margin-left: 1em;
@@ -191,8 +194,9 @@
                     <span>Cpl<input id="complemento"/></span>
                     <span>Per<input id="periodo"/></span>
                     <span>Tipo<input id="tipo"/></span>
-                    <button id="logErro" type="submit">Abrir Log / Erro</button>
-                    <button id="buscar" type="submit">Ok</button>
+                    <button id="abrirLogErro" type="submit">Log/Erro</button>
+                    <button id="abrirRubLiq" type="submit">Liq</button>
+                    <button id="abrirRubPer" type="submit">Per</button>
                 </div>
             </form>
             <div class="hlinha titulos">
@@ -290,22 +294,32 @@
             }
         });
 
-        document.getElementById('buscar').addEventListener('click', function() {
+        document.getElementById('abrirRubPer').addEventListener('click', function() {
 
             let campos = getCampos();
 
             window.vscode.postMessage({
-                acao: 'parse_rubrica',
+                acao: 'abrirRubPer',
                 filtro: campos
             })
         });
 
-        document.getElementById('logErro').addEventListener('click', function() {
+        document.getElementById('abrirRubLiq').addEventListener('click', function() {
 
             let campos = getCampos();
 
             window.vscode.postMessage({
-                acao: 'abrir_log_erro',
+                acao: 'abrirRubLiq',
+                filtro: campos
+            })
+        });
+
+        document.getElementById('abrirLogErro').addEventListener('click', function() {
+
+            let campos = getCampos();
+
+            window.vscode.postMessage({
+                acao: 'abrirLogErro',
                 filtro: campos
             })
         });

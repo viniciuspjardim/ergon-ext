@@ -10,8 +10,8 @@ export class Controlador {
 
     private context: vscode.ExtensionContext;
     private panel: vscode.WebviewPanel;
-    private camposPadrao: vscode.WorkspaceConfiguration;
-    private pastaExecucao: string;
+    /** Preferências do usuário */
+    private pref: vscode.WorkspaceConfiguration;
     private rubricas: Rubricas;
     private caminhoArq: string;
 
@@ -28,10 +28,9 @@ export class Controlador {
         );
 
         // Lendo variaveis do arquivo de configuração do usuario
-        this.camposPadrao = vscode.workspace.getConfiguration('ergonExt.camposPadrao');
-        this.pastaExecucao = vscode.workspace.getConfiguration('ergonExt').pastaExecucao;
+        this.pref = vscode.workspace.getConfiguration('ergonExt');
 
-        this.rubricas = new Rubricas(this.pastaExecucao);
+        this.rubricas = new Rubricas(this.pref.caminhoExecucao);
         this.caminhoArq = '';
 
         this.adicionarListenerWebview();
@@ -43,14 +42,13 @@ export class Controlador {
         const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'html', 'rubricas.html'));
         this.panel.webview.html =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
         
-        if(this.camposPadrao) {
-            ES.enviarParaWebviw(this.panel, 'filtro', this.camposPadrao, 500);
+        if(this.pref.camposPadrao) {
+            ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 500);
         }
     }
 
     public carregarNomeRubricas(): void {
-        const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'html', 'rubricas.json'));
-        const jsonStr: string =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
+        const jsonStr: string =  ES.lerArquivoSync(this.pref.caminhoRubricas, this.pref.charsetRubricas);
         const json: any = JSON.parse(jsonStr);
         let nomeRubricas: any = {};
 
@@ -67,12 +65,16 @@ export class Controlador {
     private adicionarListenerWebview(): void {
 
         this.panel.webview.onDidReceiveMessage(mensagem => {
+
+            let caminho: string;
+            let mensagemErr: string;
+
             switch (mensagem.acao) {
 
-                // Se mensagem recebida do webview 'parse_rubrica'
-                case 'parse_rubrica':
+                // Se mensagem recebida do webview 'abrirRubPer'
+                case 'abrirRubPer':
 
-                    const caminho: string = this.rubricas.construirCaminho(mensagem.filtro);
+                    caminho = this.rubricas.construirCaminho(mensagem.filtro, mensagem.acao);
 
                     // É o mesmo arquivo, então não precisa ser carregado novamente
                     if(caminho === this.caminhoArq) {
@@ -80,12 +82,12 @@ export class Controlador {
                         return;
                     }
                     
-                    // Começa a ler o arquivo de log/debug de rubircas e cadastra o callback pra
-                    // quando terminar a leitura
+                    // Começa a ler o arquivo de rubricas periodo e cadastra o callback pra quando
+                    // terminar a leitura
                     ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
                         if(erro) {
                             this.caminhoArq = '';
-                            const mensagemErr: string = '<span class="mensagemErr">Erro ao ler arquivo</span>';
+                            mensagemErr = '<span class="mensagemErr">Erro ao ler arquivo</span>';
                             ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
                         }
                         else {
@@ -93,11 +95,55 @@ export class Controlador {
                             const resultado: any = this.rubricas.parseArqRubricas(data);
                             ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
                         }
-                    }, '1252');
+                    }, this.pref.charsetExecucao);
+                    return;
+                
+                // Se mensagem recebida do webview 'abrirRubLiq'
+                case 'abrirRubLiq':
+
+                    caminho = this.rubricas.construirCaminho(mensagem.filtro, mensagem.acao);
+
+                    // É o mesmo arquivo, então não precisa ser carregado novamente
+                    if(caminho === this.caminhoArq) {
+                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', {texto: null, index: null});
+                        return;
+                    }
+                    
+                    // Começa a ler o arquivo de rubircas liquido e cadastra o callback pra quando
+                    // terminar a leitura
+                    ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
+                        if(erro) {
+                            this.caminhoArq = '';
+                            mensagemErr = '<span class="mensagemErr">Erro ao ler arquivo</span>';
+                            ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
+                        }
+                        else {
+                            this.caminhoArq = caminho;
+                            const resultado: any = this.rubricas.parseArqRubricas(data);
+                            ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
+                        }
+                    }, this.pref.charsetExecucao);
                     return;
 
-                // Se mensagem recebida do webview 'abrir_log_erro'
-                case 'abrir_log_erro':
+                // Se mensagem recebida do webview 'abrirLogErro'
+                case 'abrirLogErro':
+
+                    caminho = this.rubricas.construirCaminho(mensagem.filtro, mensagem.acao);
+
+                    // Começa a ler o arquivo de log/debug da execução e cadastra o callback pra
+                    // quando terminar a leitura
+                    ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
+                        if(erro) {
+                            this.caminhoArq = '';
+                            mensagemErr = '<span class="mensagemErr">Erro ao ler arquivo</span>';
+                            ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
+                        }
+                        else {
+                            this.caminhoArq = caminho;
+                            const resultado: any = this.rubricas.parseArqRubricas(data);
+                            ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
+                        }
+                    }, this.pref.charsetExecucao);
                     return;
             }
         }, undefined, this.context.subscriptions);

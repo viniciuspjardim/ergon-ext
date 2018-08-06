@@ -22,8 +22,8 @@ export interface DadosLinha {
 
 export class Rubricas {
 
-    private rubricaEntraRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9]+)\s+([a-zA-Z0-9]*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
-    private rubricaSaiRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*<-\s*\.+\s*(\d+)\s*([a-zA-Z0-9]+)\s+([a-zA-Z0-9]*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
+    private rubricaEntraRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+([a-zA-Z0-9]*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
+    private rubricaSaiRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*<-\s*\.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+([a-zA-Z0-9]*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
     private pastaExecucao: string;
     private nomeRubricas: any;
 
@@ -35,11 +35,27 @@ export class Rubricas {
         this.nomeRubricas = nomeRubricas;
     }
 
-    public construirCaminho(c: any): string {
-        //        C:/folha/execucao/Emp_01_TOCANTINS/Destino_delta        _SRVFVJ              /VJ              /F_2016              04                           034                   _E00001                   /Debug/Folha12-NF001245988              /SF02                     -NV03                     -SV01                     -Ano2016              /SF02                     -NV03                     -SV01                     -Mes2016              04                           -SM01.dbg
-        let caminho: string = `${this.pastaExecucao}/Destino_${c.ambiente}_${c.servidorCalculo}/${c.tipoCalculo}/F_${c.mesAnoFol.ano}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 3)}_E${ES.pad(c.execucao, 5)}/Debug/Folha12-NF${ES.pad(c.numFunc, 9)}/SF${ES.pad(c.seqFunc, 2)}-NV${ES.pad(c.numVinc, 2)}-SV${ES.pad(c.seqVinc, 2)}-Ano${c.mesAnoRub.ano}/SF${ES.pad(c.seqFunc, 2)}-NV${ES.pad(c.numVinc, 2)}-SV${ES.pad(c.seqVinc, 2)}-Mes${c.mesAnoRub.ano}${ES.pad(c.mesAnoRub.mes, 2)}-SM01.dbg`;
-        console.log(caminho);
-        return caminho;
+    public construirCaminho(c: any, acao: string): string {
+
+        if(acao === 'abrirRubPer') {
+            //        C:/folha/execucao/Emp_01_TOCANTINS/Destino_delta        _SRVFVJ              /VJ              /F_2016              04                           034                   _E00001                   /Debug/Folha12-NF001245988              /SF02                     -NV03                     -SV01                     -Ano2016              /SF02                     -NV03                     -SV01                     -Mes2016              04                           -SM01.dbg
+            let caminho: string = `${this.pastaExecucao}/Destino_${c.ambiente}_${c.servidorCalculo}/${c.tipoCalculo}/F_${c.mesAnoFol.ano}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 3)}_E${ES.pad(c.execucao, 5)}/Debug/Folha12-NF${ES.pad(c.numFunc, 9)}/SF${ES.pad(c.seqFunc, 2)}-NV${ES.pad(c.numVinc, 2)}-SV${ES.pad(c.seqVinc, 2)}-Ano${c.mesAnoRub.ano}/SF${ES.pad(c.seqFunc, 2)}-NV${ES.pad(c.numVinc, 2)}-SV${ES.pad(c.seqVinc, 2)}-Mes${c.mesAnoRub.ano}${ES.pad(c.mesAnoRub.mes, 2)}-SM01.dbg`;
+            console.log(caminho);
+            return caminho;
+        }
+        if(acao === 'abrirRubLiq') {
+            //        C:/folha/execucao/Emp_01_TOCANTINS/Destino_delta        _SRVFVJ              /VJ              /F_2016              04                           034                   _E00001                   /Debug/Folha12-NF001245988              /SF02                     -NV03                     -SV01                     -Liquido-SL01.dbg
+            let caminho: string = `${this.pastaExecucao}/Destino_${c.ambiente}_${c.servidorCalculo}/${c.tipoCalculo}/F_${c.mesAnoFol.ano}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 3)}_E${ES.pad(c.execucao, 5)}/Debug/Folha12-NF${ES.pad(c.numFunc, 9)}/SF${ES.pad(c.seqFunc, 2)}-NV${ES.pad(c.numVinc, 2)}-SV${ES.pad(c.seqVinc, 2)}-Liquido-SL01.dbg`;
+            console.log(caminho);
+            return caminho;
+        }
+        else if(acao === 'abrirLogErro') {
+            //        C:/folha/execucao/Emp_01_TOCANTINS/Destino_delta        _SRVFVJ              /VJ              /F_2016              04                           034                   _E00001                   /Fontes/Fo12180732g.tmp
+            let caminho: string = `${this.pastaExecucao}/Destino_${c.ambiente}_${c.servidorCalculo}/${c.tipoCalculo}/F_${c.mesAnoFol.ano}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 3)}_E${ES.pad(c.execucao, 5)}/Fontes/Fo12${ES.pad(c.mesAnoFol.ano, 2)}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 2)}g.tmp`;
+            console.log(caminho);
+            return caminho;
+        }
+        return '';
     }
 
     public parseArqRubricas(conteudoArq: string): any {
@@ -111,7 +127,7 @@ export class Rubricas {
                 preLinha =
                         `<div class="hlinha">` +
                         `<span id="preLinha_${numLinha}" class="contLinha">&nbsp</span>` +
-                        `<span class="linha preLinha">${preLinha}</span>` +
+                        `<span class="preLinha">${preLinha}</span>` +
                         `</div>\n`;
 
                 let linhaFmt: string = '<span class="c csb">>></span>' + fmt(dados);
@@ -136,7 +152,7 @@ export class Rubricas {
                 posLinha =
                         `<div class="hlinha">` +
                         `<span id="posLinha_${numLinha}" class="contLinha">&nbsp</span>` +
-                        `<span class="linha posLinha">${posLinha}</span>` +
+                        `<span class="posLinha">${posLinha}</span>` +
                         `</div>\n`;
                 
                 let linhaFmt: string = `<span class="c csb"><<</span>` + fmt(dados);
@@ -145,7 +161,7 @@ export class Rubricas {
                 index[`RS_${dados.periodo}_${dados.rubrica}`] = numLinha;
             }
             else {
-                novaLinha = `<span class="linha">        ${linha}</span>`;
+                novaLinha = `<span class="linha">${linha}</span>`;
             }
 
             novaLinha = `${preLinha}<div class="hlinha"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span>${novaLinha}</div>\n${posLinha}`;
