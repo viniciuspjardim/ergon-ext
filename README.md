@@ -40,9 +40,9 @@ Para evitar digitar os campos de filtro todas as vezes que abrir a extensão con
 3. Salve o arquivo
 
 ## Arquivos Suportados
-* `(...)/Fontes/Fo\*g.tmp` - mensagens de alerta e erro do compilador
-* `(...)/Debug/Folha12\*/\*Liquido\*.dbg` - logs das fórmulas de líquido
-* `(...)/Debug/Folha12\*/\*Ano\*/\*.dbg` - logs das fórmulas de período e total
+* `(...)/Fontes/Fo*g.tmp` - mensagens de alerta e erro do compilador
+* `(...)/Debug/Folha12*/*Liquido*.dbg` - logs das fórmulas de líquido
+* `(...)/Debug/Folha12*/*Ano*/*.dbg` - logs das fórmulas de período e total
 
 ## Galeria
 
