@@ -1,65 +1,49 @@
-# ergonext README
+# Ergon Ext
+É uma extensão do VS Code que facilita a navegação pelos arquivos de log e debug do sistema de RH Ergon que é desenvolvido pela Techne.
+Para abrir a extensão aperte `Ctrl` + `Shift` + `P` e digite `Ergon: Carregar arquivos`.
 
-This is the README for your extension "ergonext". After writing up a brief description, we recommend including the following sections.
+## Configurando
+Para evitar digitar os campos de filtro todas as vezes que abrir a extensão configure os campos padrão.
 
-## Features
+1. Abra as configurações de usuário do VS Code: `Ctrl` + `Shift` + `P` e digite `Preferences: Open User Settings`.
+2. Do lado direito na aba `User Settings`, adicione um campo `"ergonExt": {...}` neste arquivo de configurações JSON. Exemplo:
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+```json
+{
+    "ergonExt": {
 
-For example if there is an image subfolder under your extension project workspace:
+        "caminhoExecucao": "(...)/execucao/Emp_(...)",
+        "charsetExecucao": "1252",
+        "caminhoRubricas": "(...)",
+        "charsetRubricas": "utf8",
 
-\!\[feature X\]\(images/feature-x.png\)
+        "camposPadrao": {
+            "ambiente": "producao",
+            "servidorCalculo": "SRVF1",
+            "tipoCalculo": "Real",
+            "mesAnoFol": {"mes": 4, "ano": 2018},
+            "numFol": 15,
+            "execucao": 1,
+            "numFunc": 123456,
+            "numVinc": 1,
+            "mesAnoRub": {"mes": 4, "ano": 2018},
+            "seqFunc": 2,
+            "seqVinc": 1,
+            "rubrica": 1001,
+            "complemento": "",
+            "periodo": 1    ,
+            "tipo": "RE"
+        }
+    }
+}
+```
+3. Salve o arquivo
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Arquivos Suportados
+* `(...)/Fontes/Fo\*g.tmp` - mensagens de alerta e erro do compilador
+* `(...)/Debug/Folha12\*/\*Liquido\*.dbg` - logs das fórmulas de líquido
+* `(...)/Debug/Folha12\*/\*Ano\*/\*.dbg` - logs das fórmulas de período e total
 
-## Requirements
+## Galeria
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+<img src="https://user-images.githubusercontent.com/1520962/43740025-70ede060-99a0-11e8-9907-42a959d475c5.png" width="640" height="360">
