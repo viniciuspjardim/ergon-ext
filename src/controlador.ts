@@ -39,7 +39,7 @@ export class Controlador {
     /** Carrega o arquivo html do webview e envia mensagem com os campos padrão */
     public carregarWebView(): void {
 
-        const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'html', 'rubricas.html'));
+        const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'rubricas.html'));
         this.panel.webview.html =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
         
         if(this.pref.camposPadrao) {
