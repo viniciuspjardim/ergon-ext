@@ -1,7 +1,6 @@
 'use strict';
 
-/**
- * Versão: 0.1.0
+/*
  * Autor: Vinícius Petrocione Jardim
  */
 
