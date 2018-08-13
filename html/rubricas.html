@@ -61,10 +61,21 @@
                 outline: 1;
                 outline-color: rgb(23, 74, 108);
             }
+            select {
+                width: 5em;
+                margin-left: 1em;
+                padding: 4px 6px 4px 6px;
+                background-color: rgb(60, 60, 60);
+                color: rgba(255, 255, 255, 0.788);
+                border: none;
+            }
+            select:focus {
+                outline: 1;
+                outline-color: rgb(23, 74, 108);
+            }
             .titulos {
                 padding: 0.25em;
                 background-color: rgb(9, 71, 113);
-                /* background-color: rgb(51, 51, 51); */
             }
             .titulosI {
                 float: left;
@@ -96,6 +107,7 @@
                 color:  rgba(255, 255, 255, 0.603);
                 font-size: 14px;
             }
+            #conteudoArquivo:focus { outline: 0; }
             /* header linha */
             .hlinha {
                 float: left;
@@ -177,7 +189,7 @@
 <body>
     <div>
         <div id="cabeçalho">
-            <form>
+            <form id="campos">
                 <div>
                     <span>Ambiente<input id="ambiente"/></span>
                     <span>ServCalc<input id="servidorCalculo"/></span>
@@ -193,14 +205,22 @@
                     <span>Rub<input id="rubrica"/></span>
                     <span>Cpl<input id="complemento"/></span>
                     <span>Per<input id="periodo"/></span>
-                    <span>Tipo<input id="tipo"/></span>
-                    <button id="abrirLogErro" type="submit">Log/Erro</button>
-                    <button id="abrirRubLiq" type="submit">Liq</button>
-                    <button id="abrirRubPer" type="submit">Per</button>
+                    <span>E/S<select id="tipo">
+                            <option value="RE">E &gt;&gt;</option>
+                            <option value="RS">S &lt;&lt;</option>
+                        </select>
+                    </span>
+                    <span>Arquivo<select id="acao">
+                            <option value="abrirRubPer">Per</option>
+                            <option value="abrirRubLiq">Liq</option>
+                            <option value="abrirLogErro">Err</option>
+                        </select>
+                    </span>
+                    <button id="abrirIr" type="submit">Abrir / Ir</button>
                 </div>
             </form>
             <div class="hlinha titulos">
-                <span class="contLinha">&nbsp</span>
+                <span class="contLinha">&nbsp;</span>
                 <span class="titulosI">
                     <span class="hc" style="width: 27.7em; border-style: none;">Rubrica</span>
                     <span class="hc" style="width: 7.4em;">Periodo</span>
@@ -213,12 +233,13 @@
                 <span>
             </div>
         </div>
-        <pre id="conteudoArquivo">Nada para exibir</pre>
+        <pre id="conteudoArquivo" tabindex="50">Nada para exibir</pre>
     </div>
     <script>
 
         window.vscode = acquireVsCodeApi();
         window.indice = {};
+        window.indiceLinha = {};
 
         function textoParaData(texto) {
             let arr = texto.trim().split('/');
@@ -241,7 +262,8 @@
                 rubrica         : document.getElementById('rubrica').value,
                 complemento     : document.getElementById('complemento').value,
                 periodo         : document.getElementById('periodo').value,
-                tipo            : document.getElementById('tipo').value
+                tipo            : document.getElementById('tipo').value,
+                acao            : document.getElementById('acao').value
             };
             return campos;
         }
@@ -252,10 +274,13 @@
             switch(m.acao) {
                 case 'parse_rubrica_ok':
 
-                    // Nulo é quando mantem o mesmo arquivo ai não precisa recarregar a view
+                    // Quando não é nulo o arquivo mudou, então precisa alterar o conteudo
+                    // da página e voltar a barra de rolagem pro começo
                     if(m.conteudo.texto !== null) {
                         document.getElementById('conteudoArquivo').innerHTML = m.conteudo.texto;
                         window.indice = m.conteudo.index;
+                        window.indiceLinha = m.conteudo.indexLinha;
+                        window.scrollTo(0, 0);
                     }
 
                     // Indo para o perido/rubrica selecionados
@@ -289,39 +314,81 @@
                     document.getElementById('rubrica').value         = m.conteudo.rubrica;
                     document.getElementById('complemento').value     = m.conteudo.complemento;
                     document.getElementById('periodo').value         = m.conteudo.periodo;
+                    
                     document.getElementById('tipo').value            = m.conteudo.tipo;
+                    document.getElementById('acao').value            = m.conteudo.acao;
                     break;
             }
         });
 
-        document.getElementById('abrirRubPer').addEventListener('click', function() {
+        function getProximoHeader(idAtual) {
+            let i;
+            let linhaAtual = parseInt(idAtual.split('_')[1]);
+
+            // Converter para busca binária
+            for(i = 0; i < window.indiceLinha.length; i++) {
+                if(window.indiceLinha[i].linha > linhaAtual) {
+                    return window.indiceLinha[i];
+                }
+            }
+            return null;
+        }
+
+        function getHeaderAnterior(idAtual) {
+            let i;
+            let linhaAtual = parseInt(idAtual.split('_')[1]);
+
+            // Converter para busca binária
+            for(i = window.indiceLinha.length -1; i >= 0; i--) {
+                if(window.indiceLinha[i].linha < linhaAtual) {
+                    return window.indiceLinha[i];
+                }
+            }
+            return null;
+        }
+
+        document.getElementById('abrirIr').addEventListener('click', function() {
 
             let campos = getCampos();
+            let acao = document.getElementById('acao').value;
 
             window.vscode.postMessage({
-                acao: 'abrirRubPer',
+                acao: acao,
                 filtro: campos
             })
         });
 
-        document.getElementById('abrirRubLiq').addEventListener('click', function() {
-
-            let campos = getCampos();
-
-            window.vscode.postMessage({
-                acao: 'abrirRubLiq',
-                filtro: campos
-            })
+        document.getElementById('campos').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                document.getElementById('abrirIr').click();
+            }
         });
 
-        document.getElementById('abrirLogErro').addEventListener('click', function() {
-
-            let campos = getCampos();
-
-            window.vscode.postMessage({
-                acao: 'abrirLogErro',
-                filtro: campos
-            })
+        document.getElementById('conteudoArquivo').addEventListener('keypress', function(e) {
+            
+            let elementos = document.querySelectorAll( ":hover" );
+            let id = elementos[4].childNodes[0].id;
+            
+            if(e.key === '.') {
+                let proximoHeader = getProximoHeader(id);
+                // Se existe um próximo hader scroll até ele
+                if(proximoHeader) {
+                    const tipoId = proximoHeader.tipo == 'RE' ? 'preLinha_' : 'linha_';
+                    const linhaId = tipoId + proximoHeader.linha;
+                    document.getElementById(linhaId).scrollIntoView();
+                    window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
+                }
+            }
+            else if(e.key === ',') {
+                let headerAnterior = getHeaderAnterior(id);
+                // Se existe um próximo hader scroll até ele
+                if(headerAnterior) {
+                    const tipoId = headerAnterior.tipo == 'RE' ? 'preLinha_' : 'linha_';
+                    const linhaId = tipoId + headerAnterior.linha;
+                    document.getElementById(linhaId).scrollIntoView();
+                    window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
+                }
+            }
         });
     </script>
 </body>

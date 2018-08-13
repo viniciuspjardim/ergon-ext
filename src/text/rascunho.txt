@@ -152,7 +152,8 @@ parseArqRubricas(c);
             "rubrica": 1001,
             "complemento": "",
             "periodo": 1,
-            "tipo": "RE"
+            "tipo": "RE",
+            "acao": "abrirRubPer"
         }
     }
 
@@ -178,6 +179,7 @@ parseArqRubricas(c);
             "rubrica": 1002,
             "complemento": "",
             "periodo": 0,
-            "tipo": "entra"
+            "tipo": "RE",
+            "acao": "abrirRubPer"
         }
     }

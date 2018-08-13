@@ -62,6 +62,7 @@ export class Rubricas {
 
         let novoConteudo: string = '';
         let index: any = {};
+        let indexLinha: any[] = [];
 
         // Substituindo CRLF ou CR pelo LF
         conteudoArq = conteudoArq.replace(/\r\n/g, '\n');
@@ -126,7 +127,7 @@ export class Rubricas {
 
                 preLinha =
                         `<div class="hlinha">` +
-                        `<span id="preLinha_${numLinha}" class="contLinha">&nbsp</span>` +
+                        `<span id="preLinha_${numLinha}" class="contLinha">&nbsp;</span>` +
                         `<span class="preLinha">${preLinha}</span>` +
                         `</div>\n`;
 
@@ -134,6 +135,12 @@ export class Rubricas {
                 
                 novaLinha = `<span class="rubEntra">${linhaFmt}</span>`;
                 index[`RE_${dados.periodo}_${dados.rubrica}`] = numLinha;
+                indexLinha.push({
+                    linha: numLinha,
+                    tipo: 'RE',
+                    perido: dados.periodo,
+                    rubrica: dados.rubrica
+                });
             }
             // Rubrica sai 'RS'
             else if(atribSai) {
@@ -151,7 +158,7 @@ export class Rubricas {
 
                 posLinha =
                         `<div class="hlinha">` +
-                        `<span id="posLinha_${numLinha}" class="contLinha">&nbsp</span>` +
+                        `<span id="posLinha_${numLinha}" class="contLinha">&nbsp;</span>` +
                         `<span class="posLinha">${posLinha}</span>` +
                         `</div>\n`;
                 
@@ -159,6 +166,12 @@ export class Rubricas {
                 
                 novaLinha = `<span class="rubSai">${linhaFmt}</span>`;
                 index[`RS_${dados.periodo}_${dados.rubrica}`] = numLinha;
+                indexLinha.push({
+                    linha: numLinha,
+                    tipo: 'RS',
+                    perido: dados.periodo,
+                    rubrica: dados.rubrica
+                });
             }
             else {
                 novaLinha = `<span class="linha">${linha}</span>`;
@@ -169,7 +182,7 @@ export class Rubricas {
             numLinha++;
         }
 
-        return {texto: novoConteudo, index: index};
+        return {texto: novoConteudo, index: index, indexLinha: indexLinha};
     }
 
     private novoDadosLinha(dados: RegExpExecArray, tipoLinha: TipoLinha): DadosLinha {

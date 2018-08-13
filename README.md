@@ -42,7 +42,8 @@ Exemplo:
             "rubrica": 1001,
             "complemento": "",
             "periodo": 1,
-            "tipo": "RE"
+            "tipo": "RE",
+            "acao": "abrirRubPer"
         }
     }
 }
@@ -53,6 +54,10 @@ Exemplo:
 * `(...)/Fontes/Fo*g.tmp` - mensagens de alerta e erro do compilador
 * `(...)/Debug/Folha12*/*Liquido*.dbg` - logs das fórmulas de líquido
 * `(...)/Debug/Folha12*/*Ano*/*.dbg` - logs das fórmulas de período e total
+
+## Teclas Atalho
+* `.` - ir para a próxima linha de cabeçalho
+* `,` - ir para a linha de cabeçalho anterior
 
 ## Galeria
 <img src="https://user-images.githubusercontent.com/1520962/43740025-70ede060-99a0-11e8-9907-42a959d475c5.png" width="640" height="360">
