@@ -292,6 +292,7 @@
                     const linhaId = tipoId + window.indice[tipo + '_' + perido + '_' + rubrica];
                     document.getElementById(linhaId).scrollIntoView();
                     window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
+                    document.getElementById('conteudoArquivo').focus();
 
                     break;
                 case 'parse_rubrica_err':
@@ -321,6 +322,27 @@
             }
         });
 
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('rubrica').focus();
+        }, false);
+
+        document.getElementById('abrirIr').addEventListener('click', function() {
+
+            let campos = getCampos();
+            let acao = document.getElementById('acao').value;
+
+            window.vscode.postMessage({
+                acao: acao,
+                filtro: campos
+            })
+        });
+
+        document.getElementById('campos').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                document.getElementById('abrirIr').click();
+            }
+        });
+
         function getProximoHeader(idAtual) {
             let i;
             let linhaAtual = parseInt(idAtual.split('_')[1]);
@@ -347,22 +369,16 @@
             return null;
         }
 
-        document.getElementById('abrirIr').addEventListener('click', function() {
+        function focoNoCampo(idCampo, e) {
 
-            let campos = getCampos();
-            let acao = document.getElementById('acao').value;
+            document.getElementById(idCampo).focus();
+            document.getElementById(idCampo).select();
 
-            window.vscode.postMessage({
-                acao: acao,
-                filtro: campos
-            })
-        });
-
-        document.getElementById('campos').addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') {
-                document.getElementById('abrirIr').click();
-            }
-        });
+            // Bloqueando o evento padrão para a tecla atalho pressionada não ser inserida no campo
+            if (e.preventDefault) e.preventDefault();
+            e.returnValue = false;
+            return false;
+        }
 
         document.getElementById('conteudoArquivo').addEventListener('keypress', function(e) {
             
@@ -370,6 +386,11 @@
             let id = elementos[4].childNodes[0].id;
             
             if(e.key === '.') {
+                console.log('===');
+                console.log(document.elementFromPoint(50, document.getElementById('cabeçalho').offsetHeight + 1));
+                console.log(document.elementFromPoint(50, document.getElementById('cabeçalho').offsetHeight + 1).parentElement.parentElement);
+                console.log(document.elementFromPoint(50, document.getElementById('cabeçalho').offsetHeight + 1).parentElement);
+
                 let proximoHeader = getProximoHeader(id);
                 // Se existe um próximo hader scroll até ele
                 if(proximoHeader) {
@@ -389,6 +410,19 @@
                     window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
                 }
             }
+            else if(e.key === 'a') return focoNoCampo('ambiente', e);
+            else if(e.key === 'f') return focoNoCampo('numFunc', e);
+            else if(e.key === 'v') return focoNoCampo('numVinc', e);
+            else if(e.key === 'd') return focoNoCampo('mesAnoRub', e);
+            else if(e.key === 'r') return focoNoCampo('rubrica', e);
+            else if(e.key === 'p') return focoNoCampo('periodo', e);
+            else if(e.key === 'e' || e.key === 's') {
+                if(e.key === 'e') document.getElementById('tipo').value = 'RE';
+                else document.getElementById('tipo').value = 'RS';
+                focoNoCampo('tipo', e);
+            }
+            
+            return true;
         });
     </script>
 </body>
