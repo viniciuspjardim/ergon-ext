@@ -183,3 +183,30 @@ parseArqRubricas(c);
             "acao": "abrirRubPer"
         }
     }
+
+    "ergonExt": {
+
+        "caminhoExecucao": "C:/folha/execucao/Emp_01_TOCANTINS",
+        "charsetExecucao": "1252",
+        "caminhoRubricas": "C:/Users/vinicius.jardim/Dropbox/Projetos/ergonext/src/html/rubricas.json",
+        "charsetRubricas": "utf8",
+
+        "camposPadrao": {
+            "ambiente": "delta",
+            "servidorCalculo": "SRVFVJ",
+            "tipoCalculo": "VJ",
+            "mesAnoFol": {"mes": 7, "ano": 2018},
+            "numFol": 32,
+            "execucao": 1,
+            "numFunc": 85409,
+            "numVinc": 1,
+            "mesAnoRub": {"mes": 7, "ano": 2018},
+            "seqFunc": 2,
+            "seqVinc": 1,
+            "rubrica": 1001,
+            "complemento": "",
+            "periodo": 0,
+            "tipo": "RE",
+            "acao": "abrirRubPer"
+        }
+    }
