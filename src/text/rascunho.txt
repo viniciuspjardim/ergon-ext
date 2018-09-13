@@ -1,3 +1,14 @@
+- Empacotar o projeto para distribuição: vsce package
+- Testar o pacote (arquivo ergonext-X.X.X.vsix)
+- colocar na pasta ..\ergonext_arquivos\pack
+- Comitar: git commit -a -m ""
+- adicionar tag: git tag -a vX.X.X -m "versão X.X.X"
+- git push origin master
+- git push --tags
+- Incrementar versão em package.json
+- Comitar nova versão: git commit -a -m "Preparado para nova versão"
+- git push origin master
+
 
 
 ==== Indice de rubricas ====
