@@ -15,9 +15,10 @@ suite("Extension Tests", function () {
         let linha2: string = " 1    0  -> ..       0 STARTUP                                                0.00(C)             0.00(P)             0.00(MC)             0.00(MP)";
         let linha3: string = "1002: categoria = CARGO COMISSAO; sEVEDados.strReferencia: AE-7; sEVEDados.strTipoEvento: NOMEACAO CC?";
         let linha4: string = " 1    1 <-  .. 1001 R1001                                                  0.00(C)             0.00(P)             0.00(MC)             0.00(MP)";
+        let linha5: string = " 0  508  -> .. 8200 R8200   01 P001                               -139999999999.00(C)             0.00(P)             0.00(MC)             0.00(MP) ";
 
-        let rxEntra: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9]+)\s+([a-zA-Z0-9]*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
-        let rxSai: RegExp = /^\s*(\d+)\s*(\d+)\s*<-\s*\.+\s*(\d+)\s*([a-zA-Z0-9]+)\s+([a-zA-Z0-9]*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
+        let rxEntra: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
+        let rxSai: RegExp = /^\s*(\d+)\s*(\d+)\s*<-\s*\.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
 
         let dados1 = rxEntra.exec(linha1);
         rxEntra.lastIndex = 0;
@@ -31,10 +32,20 @@ suite("Extension Tests", function () {
         let dados4 = rxSai.exec(linha4);
         rxSai.lastIndex = 0;
 
+        let dados5 = rxEntra.exec(linha5);
+        rxSai.lastIndex = 0;
+
+        /*
+        console.log("Dados 1:");
         console.log(dados1);
+        console.log("\nDados 2:");
         console.log(dados2);
+        console.log("\nDados 3:");
         console.log(dados3);
+        console.log("\nDados 4:");
         console.log(dados4);
+        console.log("\nDados 5:");
+        console.log(dados5);*/
 
         if(dados1 !== null) {
 
@@ -67,5 +78,21 @@ suite("Extension Tests", function () {
         }
 
         assert.equal(dados3, null);
+
+        if(dados5 !== null) {
+
+            assert.equal(dados5[1], "0"); // periodo
+            assert.equal(dados5[2], "508"); // id da rubrica
+            assert.equal(dados5[3], "8200"); // rubrica
+            assert.equal(dados5[4], "R8200"); // mnemonico
+            assert.equal(dados5[5], "01 P001"); // complemento
+            assert.equal(dados5[6], "-139999999999.00"); // valor calculado
+            assert.equal(dados5[7], "0.00"); // valor pago
+            assert.equal(dados5[8], "0.00"); // movimento calculado
+            assert.equal(dados5[9], "0.00"); // movimento pago
+        }
+        else {
+            assert.fail("null", "array", "dados5 == null");
+        }
     });
 });
