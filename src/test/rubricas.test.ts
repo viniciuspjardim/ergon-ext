@@ -14,7 +14,7 @@ suite("Extension Tests", function () {
         let linha1: string = " 1    1  -> ..... 1001 R1001                                      -139999999999.00(C)             0.01(P)             0.02(MC)             0.03(MP)";
         let linha2: string = " 1    0  -> ..       0 STARTUP                                                0.00(C)             0.00(P)             0.00(MC)             0.00(MP)";
         let linha3: string = "1002: categoria = CARGO COMISSAO; sEVEDados.strReferencia: AE-7; sEVEDados.strTipoEvento: NOMEACAO CC?";
-        let linha4: string = " 1    1 <-  .. 1001 R1001                                                  0.00(C)             0.00(P)             0.00(MC)             0.00(MP)";
+        // let linha4: string = " 1    1 <-  .. 1001 R1001                                                  0.00(C)             0.00(P)             0.00(MC)             0.00(MP)";
         let linha5: string = " 0  508  -> .. 8200 R8200   01 P001                               -139999999999.00(C)             0.00(P)             0.00(MC)             0.00(MP) ";
 
         let rxEntra: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
@@ -29,8 +29,8 @@ suite("Extension Tests", function () {
         let dados3 = rxEntra.exec(linha3);
         rxEntra.lastIndex = 0;
 
-        let dados4 = rxSai.exec(linha4);
-        rxSai.lastIndex = 0;
+        // let dados4 = rxSai.exec(linha4);
+        // rxSai.lastIndex = 0;
 
         let dados5 = rxEntra.exec(linha5);
         rxSai.lastIndex = 0;
