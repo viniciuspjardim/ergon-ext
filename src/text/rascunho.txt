@@ -6,7 +6,7 @@
 - git push origin master
 - git push --tags
 - Criar release no GitHub
-- Incrementar versão em package.json
+- Incrementar versão em package.json e em package-lock.json
 - Comitar nova versão: git commit -a -m "Preparado para nova versão"
 - git push origin master
 
