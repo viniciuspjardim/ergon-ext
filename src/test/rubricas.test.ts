@@ -16,7 +16,14 @@ suite("Extension Tests", function () {
         let linha3: string = "1002: categoria = CARGO COMISSAO; sEVEDados.strReferencia: AE-7; sEVEDados.strTipoEvento: NOMEACAO CC?";
         // let linha4: string = " 1    1 <-  .. 1001 R1001                                                  0.00(C)             0.00(P)             0.00(MC)             0.00(MP)";
         let linha5: string = " 0  508  -> .. 8200 R8200   01 P001                               -139999999999.00(C)             0.00(P)             0.00(MC)             0.00(MP) ";
+        
+        // let linha6: string = " Tabela GTO_VW_LIBERA_ACERTO           iniciada ...                       29/10/2018 12:31:22    ";
+        // let linha7: string = "Tabela GTO_VW_LIMITE_DJ               iniciada ...                       29/10/2018 12:31:22";
+        // let linha8: string = " ... em GTO_VW_LIMITE_DJ               lidos        10 gravados         0 29/10/2018 12:31:22  ";
 
+        // let rxTabIni: RegExp = /^\s*Tabela\s+([a-zA-Z0-9_]+)\s*iniciada\s*\.+\s*(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
+        // let rxTabSai: RegExp = /^\s*\.+\s+em\s+([a-zA-Z0-9_]+)\s*lidos\s*([0-9]+)\s+gravados\s+([0-9]+)\s+(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
+        
         let rxEntra: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
         let rxSai: RegExp = /^\s*(\d+)\s*(\d+)\s*<-\s*\.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
 
@@ -35,6 +42,12 @@ suite("Extension Tests", function () {
         let dados5 = rxEntra.exec(linha5);
         rxSai.lastIndex = 0;
 
+        // let dados6 = rxTabIni.exec(linha6);
+        // rxTabIni.lastIndex = 0;
+
+        // let dado8 = rxTabSai.exec(linha8);
+        // rxTabSai.lastIndex = 0;
+
         /*
         console.log("Dados 1:");
         console.log(dados1);
@@ -45,7 +58,11 @@ suite("Extension Tests", function () {
         console.log("\nDados 4:");
         console.log(dados4);
         console.log("\nDados 5:");
-        console.log(dados5);*/
+        console.log(dados5);
+        console.log("\nDados 6:");
+        console.log(dados6);
+        console.log("\nDados 8:");
+        console.log(dado8);*/
 
         if(dados1 !== null) {
 
