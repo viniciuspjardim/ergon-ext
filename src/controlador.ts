@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { ES } from './es';
 import { Rubricas } from './rubricas';
+import { Dump } from './dump';
 
 /** Classe de entrada e saida de dados */
 export class Controlador {
@@ -13,6 +14,7 @@ export class Controlador {
     /** Preferências do usuário */
     private pref: vscode.WorkspaceConfiguration;
     private rubricas: Rubricas;
+    private dump: Dump;
     private caminhoArq: string;
 
     constructor(context: vscode.ExtensionContext) {
@@ -31,6 +33,7 @@ export class Controlador {
         this.pref = vscode.workspace.getConfiguration('ergonExt');
 
         this.rubricas = new Rubricas(this.pref.caminhoExecucao);
+        this.dump = new Dump(this.pref.caminhoExecucao);
         this.caminhoArq = '';
 
         this.adicionarListenerWebview();
@@ -69,14 +72,16 @@ export class Controlador {
             let caminho: string;
             let mensagemErr: string;
 
-            // Se mensagem recebida do webview 'abrirRubPer' ou 'abrirRubLiq'
+            // Se mensagem recebida do webview for 'abrirRubPer' ou 'abrirRubLiq'
             if(mensagem.acao === 'abrirRubPer' || mensagem.acao === 'abrirRubLiq') {
 
                 caminho = this.rubricas.construirCaminho(mensagem.filtro, mensagem.acao);
 
-                // É o mesmo arquivo, então não precisa ser carregado novamente
-                if(caminho === this.caminhoArq) {
+                // O arquivo não precisa ser recarregado quando é o mesmo caminho e não tem flag
+                // para forçar o recarregamento
+                if(!mensagem.forcar && caminho === this.caminhoArq) {
                     ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', {texto: null, index: null});
+                    console.log('Caminhos iguais');
                     return;
                 }
 
@@ -97,13 +102,13 @@ export class Controlador {
 
                 return;
             }
-            // Se mensagem recebida do webview 'abrirLogErro' ou 'abrirDump'
-            else if(mensagem.acao === 'abrirLogErro' || mensagem.acao === 'abrirDump') {
+            // Se mensagem recebida do webview for 'abrirLogErro'
+            else if(mensagem.acao === 'abrirLogErro') {
 
                 caminho = this.rubricas.construirCaminho(mensagem.filtro, mensagem.acao);
 
-                // Começa a ler o arquivo de log/debug ou dump de dados da execução e
-                // cadastra o callback pra quando terminar a leitura
+                // Começa a ler o arquivo de log/debug de dados da execução e cadastra
+                // o callback pra quando terminar a leitura
                 ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
                     if(erro) {
                         this.caminhoArq = '';
@@ -118,6 +123,28 @@ export class Controlador {
                 }, this.pref.charsetExecucao);
                 return;
             }
+            // Se mensagem recebida do webview for 'abrirDump'
+            else if(mensagem.acao === 'abrirDump') {
+
+                caminho = this.dump.construirCaminho(mensagem.filtro, mensagem.acao);
+
+                // Começa a ler o arquivo de dump de dados da execução e cadastra
+                // o callback pra quando terminar a leitura
+                ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
+                    if(erro) {
+                        this.caminhoArq = '';
+                        mensagemErr = '<span class="mensagemErr">Erro ao ler arquivo</span>';
+                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
+                    }
+                    else {
+                        this.caminhoArq = caminho;
+                        const resultado: any = this.dump.parseArquivo(data);
+                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
+                    }
+                }, this.pref.charsetExecucao);
+                return;
+            }
+            
         }, undefined, this.context.subscriptions);
     }
 }

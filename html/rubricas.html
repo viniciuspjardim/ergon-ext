@@ -184,6 +184,21 @@
                 -ms-user-select: none;
                 user-select: none;
             }
+            #msgAoCarregar {
+                position: fixed;
+                bottom: 0;
+                width: 10%;
+                left: 50%;
+                margin: 1em;
+                margin-left: -5%;
+                padding: 8px;
+                text-align: center;
+                border-style: solid;
+                border-width: 1px;
+                border-color: rgba(255, 255, 255, 0.160);
+                background: rgb(50, 50, 50);
+                visibility: hidden;
+            }
     </style>
 </head>
 <body>
@@ -205,12 +220,14 @@
                     <span>Rub<input id="rubrica"/></span>
                     <span>Cpl<input id="complemento"/></span>
                     <span>Per<input id="periodo"/></span>
-                    <span>E/S<select id="tipo">
+                    <span>E/S
+                        <select id="tipo">
                             <option value="RE">E &gt;&gt;</option>
                             <option value="RS">S &lt;&lt;</option>
                         </select>
                     </span>
-                    <span>Arquivo<select id="acao">
+                    <span>Arquivo
+                        <select id="acao">
                             <option value="abrirRubPer">Per</option>
                             <option value="abrirRubLiq">Liq</option>
                             <option value="abrirLogErro">Err</option>
@@ -231,16 +248,18 @@
                     <span class="hc">Mov Calc</span>
                     <span class="hc">Mov Pag</span>
                     <span class="hc rBorder">Mov Liq</span>
-                <span>
+                </span>
             </div>
         </div>
         <pre id="conteudoArquivo" tabindex="50">Nada para exibir</pre>
+        <div id="msgAoCarregar">Carregando...</div>
     </div>
     <script>
 
         window.vscode = acquireVsCodeApi();
         window.indice = {};
         window.indiceLinha = {};
+        window.forcarRecarregar = false;
 
         function textoParaData(texto) {
             let arr = texto.trim().split('/');
@@ -269,9 +288,11 @@
             return campos;
         }
 
-        // Handle the message inside the webview
         window.addEventListener('message', event => {
+
             let m = event.data;
+            document.getElementById('msgAoCarregar').style.visibility='hidden';
+
             switch(m.acao) {
                 case 'parse_rubrica_ok':
 
@@ -329,13 +350,20 @@
 
         document.getElementById('abrirIr').addEventListener('click', function() {
 
-            let campos = getCampos();
+            document.getElementById('msgAoCarregar').style.visibility='visible';
+
             let acao = document.getElementById('acao').value;
+            let campos = getCampos();
+            let forcar = window.forcarRecarregar;
 
             window.vscode.postMessage({
                 acao: acao,
-                filtro: campos
-            })
+                filtro: campos,
+                // Forçar recarregamento do arquivo
+                forcar: forcar
+            });
+
+            window.forcarRecarregar = false;
         });
 
         document.getElementById('campos').addEventListener('keypress', function(e) {
@@ -421,6 +449,10 @@
                 if(e.key === 'e') document.getElementById('tipo').value = 'RE';
                 else document.getElementById('tipo').value = 'RS';
                 focoNoCampo('tipo', e);
+            }
+            else if(e.key === 'c') {
+                window.forcarRecarregar = true;
+                document.getElementById('abrirIr').click();
             }
             
             return true;

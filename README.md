@@ -67,6 +67,7 @@ Exemplo:
 * `s` - selecionar linha de saída da rubrica (campo `E\S`)
 * `.` - ir para a próxima linha de cabeçalho
 * `,` - ir para a linha de cabeçalho anterior
+* `c` - forçar recarregar arquivo. Útil quando há alterações externas
 
 ## Galeria
 <img src="https://user-images.githubusercontent.com/1520962/45162305-0cb9a700-b1c4-11e8-8fdb-6eec3e547bba.png" width="640" height="360">
