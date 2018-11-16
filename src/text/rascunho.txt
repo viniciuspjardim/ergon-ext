@@ -11,29 +11,6 @@
 - git push origin master
 
 
-
-==== Indice de rubricas ====
-
-# Indice
-{func: 85409, vinc: 1, ano: 2016, mes: 6, seq_func: 2, seq_vinc: 2, rubrica: 1001, complemento: null, periodo: 2, tipo: "ini"}
-
-# Campos
-{
-    tipoPer = "Parcial"
-    ini: "02/06/2016",
-    fim: "04/06/2016",
-    diasPer: 4,
-    valorPer: 560.00,
-    valorTotal: 820.00,
-    valorPago: 120.00,
-    valorDif: 700.00;
-    valorLiquido: 700.00,
-    movimento: 0.0,
-    movimentoPago: 0.0,
-    movimentoLiquido: 0.0
-}
-
-
 np ixrub       rub  rub                  complemento                     calculado                pago        mov calculado             mov pago
 ================================================================================================================================================
  1    0  -> ..    0 STARTUP                                    -139999999999.00(C)             0.00(P)             0.00(MC)             0.00(MP)
@@ -52,128 +29,11 @@ np ixrub       rub  rub                  complemento                     calcula
  0    2 <-  .. 1002 R1002                                                  0.00(C)             0.00(P)             0.00(MC)             0.00(MP)
 
 
-let c: Contexto = new Contexto();
-
-c.ambiente = "delta";
-c.servidorCalculo = "SRVFVJ";
-c.tipoCalculo = "VJ";
-c.mesAnoFol = new Date(2016, 4, 1);
-c.numFol = 34;
-c.execucao = 1;
-c.numFunc = 1245988;
-c.numVinc = 3;
-c.mesAnoRub = new Date(2016, 5, 1);
-c.seqFunc = 2;
-c.seqVinc = 1;
-c.rubrica = 1001;
-c.complemento = "";
-c.periodo = 0;
-c.tipo = "entra";
-
-parseArqRubricas(c);
-
-
-
-<script>
-
-        window.vscode = acquireVsCodeApi();
-
-        function textoParaData(texto) {
-            let arr = texto.trim().split("/");
-            return new Date(arr[1], arr[0], 1);
-        };
-
-        // Handle the message inside the webview
-        window.addEventListener('message', event => {
-
-            document.getElementById("conteudo").innerHTML    = "teste fuck";
-
-            switch(evento.acao) {
-                case 'arquivo_carregado':
-                    let message = evento.data; // The JSON data our extension sent
-                    document.getElementById("conteudo").innerHTML    = evento.conteudo; 
-                    break;
-                case 'filtro':
-                    document.getElementById("ambiente").value        = evento.filtro.ambiente;
-                    document.getElementById("servidorCalculo").value = evento.filtro.servidorCalculo;
-                    document.getElementById("tipoCalculo").value     = evento.filtro.tipoCalculo;
-                    document.getElementById("mesAnoFol").value       = evento.filtro.mesAnoFol.getMonth() + "/" + evento.filtro.mesAnoFol.getFullYear();
-                    document.getElementById("numFol").value          = evento.filtro.numFol;
-                    document.getElementById("execucao").value        = evento.filtro.execucao;
-                    
-                    document.getElementById("numFunc").value         = evento.filtro.numFunc;
-                    document.getElementById("numVinc").value         = evento.filtro.numVinc;
-                    document.getElementById("mesAnoRub").value       = evento.filtro.mesAnoRub.getMonth() + "/" + evento.filtro.mesAnoRub.getFullYear();
-                    document.getElementById("seqFunc").value         = evento.filtro.seqFunc;
-                    document.getElementById("seqVinc").value         = evento.filtro.seqVinc;
-                    document.getElementById("rubrica").value         = evento.filtro.rubrica;
-                    document.getElementById("complemento").value     = evento.filtro.complemento;
-                    document.getElementById("periodo").value         = evento.filtro.periodo;
-                    document.getElementById("tipo").value            = "entra";
-                    break;
-            }
-        });
-
-        document.getElementById("buscar").addEventListener("click", function() {
-
-            let filtro = {
-                ambiente        = document.getElementById("ambiente").value,
-                servidorCalculo = document.getElementById("servidorCalculo").value,
-                tipoCalculo     = document.getElementById("tipoCalculo").value,
-                mesAnoFol       = textoParaData(document.getElementById("mesAnoFol").value),
-                numFol          = document.getElementById("numFol").value,
-                execucao        = document.getElementById("execucao").value,
-            
-                numFunc         = document.getElementById("numFunc").value,
-                numVinc         = document.getElementById("numVinc").value,
-                mesAnoRub       = textoParaData(document.getElementById("mesAnoRub").value),
-                seqFunc         = document.getElementById("seqFunc").value,
-                seqVinc         = document.getElementById("seqVinc").value,
-                rubrica         = document.getElementById("rubrica").value,
-                complemento     = document.getElementById("complemento").value,
-                periodo         = document.getElementById("periodo").value,
-                tipo            = document.getElementById("tipo").value
-            };
-            
-            window.vscode.postMessage({
-                acao: 'buscar_rubrica',
-                filtro: filtro
-            })
-        });
-    </script>
-
     "ergonExt": {
 
         "caminhoExecucao": "C:/folha/execucao/Emp_01_TOCANTINS",
         "charsetExecucao": "1252",
-        "caminhoRubricas": "C:/Users/vinicius.jardim/Dropbox/Projetos/ergonext/src/html/rubricas.json",
-        "charsetRubricas": "utf8",
-
-        "camposPadrao": {
-            "ambiente": "delta",
-            "servidorCalculo": "SRVFVJ",
-            "tipoCalculo": "VJ",
-            "mesAnoFol": {"mes": 7, "ano": 2018},
-            "numFol": 32,
-            "execucao": 1,
-            "numFunc": 103588,
-            "numVinc": 4,
-            "mesAnoRub": {"mes": 7, "ano": 2018},
-            "seqFunc": 2,
-            "seqVinc": 1,
-            "rubrica": 1001,
-            "complemento": "",
-            "periodo": 1,
-            "tipo": "RE",
-            "acao": "abrirRubPer"
-        }
-    }
-
-    "ergonExt": {
-
-        "caminhoExecucao": "C:/folha/execucao/Emp_01_TOCANTINS",
-        "charsetExecucao": "1252",
-        "caminhoRubricas": "C:/Users/vinicius.jardim/Dropbox/Projetos/ergonext/src/html/rubricas.json",
+        "caminhoRubricas": "D:/Dropbox/projetos/ergonext_arquivos/rubricas.json",
         "charsetRubricas": "utf8",
 
         "camposPadrao": {
@@ -188,9 +48,9 @@ parseArqRubricas(c);
             "mesAnoRub": {"mes": 4, "ano": 2016},
             "seqFunc": 2,
             "seqVinc": 1,
-            "rubrica": 1002,
+            "rubrica": 1001,
             "complemento": "",
-            "periodo": 0,
+            "periodo": 1,
             "tipo": "RE",
             "acao": "abrirRubPer"
         }
@@ -200,7 +60,7 @@ parseArqRubricas(c);
 
         "caminhoExecucao": "C:/folha/execucao/Emp_01_TOCANTINS",
         "charsetExecucao": "1252",
-        "caminhoRubricas": "C:/Users/vinicius.jardim/Dropbox/Projetos/ergonext/src/html/rubricas.json",
+        "caminhoRubricas": "C:/Users/vinicius.jardim/Dropbox/Projetos/ergonext_arquivos/rubricas.json",
         "charsetRubricas": "utf8",
 
         "camposPadrao": {

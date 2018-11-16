@@ -41,24 +41,36 @@ export class Controlador {
 
     /** Carrega o arquivo html do webview e envia mensagem com os campos padrão */
     public carregarWebView(): void {
-
-        const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'rubricas.html'));
-        this.panel.webview.html =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
         
-        if(this.pref.camposPadrao) {
-            ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 500);
+        try {
+            const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'rubricas.html'));
+            this.panel.webview.html =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
+            
+            if(this.pref.camposPadrao) {
+                ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 500);
+            }
+        }
+        catch(e) {
+            console.log(`Erro: ${e}`);
         }
     }
 
+    /** Carrega o arquivo com os nomes das rubricas */
     public carregarNomeRubricas(): void {
-        const jsonStr: string =  ES.lerArquivoSync(this.pref.caminhoRubricas, this.pref.charsetRubricas);
-        const json: any = JSON.parse(jsonStr);
-        let nomeRubricas: any = {};
+        try {
+            const jsonStr: string =  ES.lerArquivoSync(this.pref.caminhoRubricas, this.pref.charsetRubricas);
+            const json: any = JSON.parse(jsonStr);
+            let nomeRubricas: any = {};
 
-        for(let rubrica of json.rubricas) {
-            nomeRubricas[`${rubrica.rubrica}`] = rubrica;
+            for(let rubrica of json.rubricas) {
+                nomeRubricas[`${rubrica.rubrica}`] = rubrica;
+            }
+            this.rubricas.setNomeRubricas(nomeRubricas);
         }
-        this.rubricas.setNomeRubricas(nomeRubricas);
+        catch(e) {
+            console.log(`Erro: ${e}`);
+            this.rubricas.setNomeRubricas({});
+        }
     }
 
     /**

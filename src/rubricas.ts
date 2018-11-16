@@ -85,8 +85,8 @@ export class Rubricas {
 
             let linha: string = linhas[i];
             let novaLinha: string;
-            let preLinha: string = "";
-            let posLinha: string = "";
+            let preLinha: string = '';
+            let posLinha: string = '';
             let atribEntra: RegExpExecArray | null = this.rubricaEntraRegex.exec(linha);
             this.rubricaEntraRegex.lastIndex = 0;
             let atribSai: RegExpExecArray | null = this.rubricaSaiRegex.exec(linha);
@@ -101,7 +101,7 @@ export class Rubricas {
                     nomeRubrica = this.nomeRubricas[dados.rubrica].nome.trim();
                 }
 
-                if(dados.rubrica !== "0") {
+                if(dados.rubrica !== '0') {
                     let cpl: string = dados.complemento === '' ? '' : ` - "${dados.complemento}"`;
                     campoRubrica = `${dados.rubrica} ${nomeRubrica}${cpl}`;
                 }
