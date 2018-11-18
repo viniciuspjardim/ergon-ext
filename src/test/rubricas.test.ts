@@ -1,5 +1,6 @@
 // The module 'assert' provides assertion methods from node
 import * as assert from 'assert';
+import { Descobrir } from '../descobrir';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
@@ -47,6 +48,11 @@ suite("Extension Tests", function () {
 
         // let dado8 = rxTabSai.exec(linha8);
         // rxTabSai.lastIndex = 0;
+
+        let descobrir: Descobrir = new Descobrir('C:/folha/execucao/Emp_01_TOCANTINS');
+        descobrir.percorrerPastas();
+
+        console.log(descobrir.raiz);
 
         /*
         console.log("Dados 1:");
