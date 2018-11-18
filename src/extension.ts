@@ -18,6 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
         controlador = new Controlador(context);
         controlador.carregarWebView();
         controlador.carregarNomeRubricas();
+        controlador.descobrirDados();
     });
 
     context.subscriptions.push(disposable);

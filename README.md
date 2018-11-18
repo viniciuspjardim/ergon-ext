@@ -51,7 +51,14 @@ Exemplo:
 ```
 3. Salve o arquivo.
 
-## Arquivos Suportados
+## Recursos e Arquivos Suportados
+* Troca de arquivos simplismente alterando um campo filtro
+* Função de autocompletar para os campos do filtro (escaneia as pastas de execução para
+sugerir os valores)
+* Indexa pontos importantes sendo possivel navegar pelos arquivos com teclas atalho 
+* Formata os arquivos de texto facilitando a legibiliade
+
+### Arquivos
 * `(...)/Fontes/Fo*g.tmp` - mensagens de alerta e erro do compilador
 * `(...)/Debug/Folha12*/*Liquido*.dbg` - logs das fórmulas de líquido
 * `(...)/Debug/Folha12*/*Ano*/*.dbg` - logs das fórmulas de período e total

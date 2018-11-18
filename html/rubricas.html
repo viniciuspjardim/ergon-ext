@@ -199,24 +199,59 @@
                 background: rgb(50, 50, 50);
                 visibility: hidden;
             }
+
+            .autocomplete {
+                /*the container must be positioned relative:*/
+                position: relative;
+                display: inline-block;
+            }
+
+            .autocomplete-items {
+                position: absolute;
+                border: 1px solid rgb(23, 74, 108);
+                text-align: left;
+                z-index: 99;
+                /*position the autocomplete items to be the same width as the container:*/
+                top: 100%;
+                left: 0;
+                right: 0;
+            }
+
+            .autocomplete-items div {
+                padding: 10px;
+                cursor: pointer;
+                background-color: rgb(60, 60, 60);
+                /*border-bottom: 1px solid rgb(23, 74, 108);*/
+            }
+
+            .autocomplete-items div:hover {
+                /*when hovering an item:*/
+                background-color: rgb(42, 45, 46);
+            }
+
+            .autocomplete-active {
+                /*when navigating through the items using the arrow keys:*/
+                background-color: rgb(7, 54, 85) !important; 
+                color: #ffffff; 
+            }
     </style>
 </head>
 <body>
     <div>
         <div id="cabeçalho">
-            <form id="campos">
+            <form id="campos" autocomplete="off">
                 <div>
-                    <span>Ambiente<input id="ambiente"/></span>
-                    <span>ServCalc<input id="servidorCalculo"/></span>
-                    <span>TipoCalc<input id="tipoCalculo"/></span>
-                    <span>DataFol<input id="mesAnoFol"/></span>
-                    <span>NumFol<input id="numFol"/></span>
-                    <span>Exec<input id="execucao"/></span>
-                    <span>Func<input id="numFunc"/></span>
-                    <span>Vinc<input id="numVinc"/></span>
-                    <span>DataRub<input id="mesAnoRub"/></span>
-                    <span>SeqFunc<input id="seqFunc"/></span>
-                    <span>SeqVinc<input id="seqVinc"/></span>
+                    <div class="autocomplete"><span>Ambiente<input id="ambiente"/></span></div>
+                    <div class="autocomplete"><span>ServCalc<input id="servidorCalculo"/></span></div>
+                    <div class="autocomplete"><span>TipoCalc<input id="tipoCalculo"/></span></div>
+                    <div class="autocomplete"><span>DataFol<input id="mesAnoFol"/></span></div>
+                    <div class="autocomplete"><span>NumFol<input id="numFol"/></span></div>
+                    <div class="autocomplete"><span>Exec<input id="execucao"/></span></div>
+                    <div class="autocomplete"><span>Func<input id="numFunc"/></span></div>
+                    <div class="autocomplete"><span>Vinc<input id="numVinc"/></span></div>
+                    <div class="autocomplete"><span>SeqFunc<input id="seqFunc"/></span></div>
+                    <div class="autocomplete"><span>SeqVinc<input id="seqVinc"/></span></div>
+                    <div class="autocomplete"><span>DataRub<input id="mesAnoRub"/></span></div>
                     <span>Rub<input id="rubrica"/></span>
                     <span>Cpl<input id="complemento"/></span>
                     <span>Per<input id="periodo"/></span>
@@ -260,6 +295,10 @@
         window.indice = {};
         window.indiceLinha = {};
         window.forcarRecarregar = false;
+        window.autoCompletar = null;
+        window.autoCompletarLista = [];
+        window.camposAutoCompletar = ['ambiente', 'servidorCalculo', 'tipoCalculo', 'mesAnoFol', 'numFol',
+            'execucao', 'numFunc', 'numVinc', 'seqFunc', 'seqVinc', 'mesAnoRub'];
 
         function textoParaData(texto) {
             let arr = texto.trim().split('/');
@@ -276,9 +315,9 @@
                 execucao        : document.getElementById('execucao').value,
                 numFunc         : document.getElementById('numFunc').value,
                 numVinc         : document.getElementById('numVinc').value,
-                mesAnoRub       : textoParaData(document.getElementById('mesAnoRub').value),
                 seqFunc         : document.getElementById('seqFunc').value,
                 seqVinc         : document.getElementById('seqVinc').value,
+                mesAnoRub       : textoParaData(document.getElementById('mesAnoRub').value),
                 rubrica         : document.getElementById('rubrica').value,
                 complemento     : document.getElementById('complemento').value,
                 periodo         : document.getElementById('periodo').value,
@@ -318,7 +357,6 @@
 
                     break;
                 case 'parse_rubrica_err':
-                    // Todo não está funcioando, debugar
                     document.getElementById('conteudoArquivo').innerHTML = m.conteudo; 
                     break;
                 case 'filtro':
@@ -328,18 +366,19 @@
                     document.getElementById('mesAnoFol').value       = m.conteudo.mesAnoFol.mes + '/' + m.conteudo.mesAnoFol.ano;
                     document.getElementById('numFol').value          = m.conteudo.numFol;
                     document.getElementById('execucao').value        = m.conteudo.execucao;
-                    
                     document.getElementById('numFunc').value         = m.conteudo.numFunc;
                     document.getElementById('numVinc').value         = m.conteudo.numVinc;
-                    document.getElementById('mesAnoRub').value       = m.conteudo.mesAnoRub.mes + '/' + m.conteudo.mesAnoRub.ano;
                     document.getElementById('seqFunc').value         = m.conteudo.seqFunc;
                     document.getElementById('seqVinc').value         = m.conteudo.seqVinc;
+                    document.getElementById('mesAnoRub').value       = m.conteudo.mesAnoRub.mes + '/' + m.conteudo.mesAnoRub.ano;
                     document.getElementById('rubrica').value         = m.conteudo.rubrica;
                     document.getElementById('complemento').value     = m.conteudo.complemento;
                     document.getElementById('periodo').value         = m.conteudo.periodo;
-                    
                     document.getElementById('tipo').value            = m.conteudo.tipo;
                     document.getElementById('acao').value            = m.conteudo.acao;
+                    break;
+                case 'auto_completar':
+                    window.autoCompletar = m.conteudo;
                     break;
             }
         });
@@ -373,11 +412,10 @@
         });
 
         function getProximoHeader(idAtual) {
-            let i;
             let linhaAtual = parseInt(idAtual.split('_')[1]);
 
             // Converter para busca binária
-            for(i = 0; i < window.indiceLinha.length; i++) {
+            for(var i = 0; i < window.indiceLinha.length; i++) {
                 if(window.indiceLinha[i].linha > linhaAtual) {
                     return window.indiceLinha[i];
                 }
@@ -386,11 +424,10 @@
         }
 
         function getHeaderAnterior(idAtual) {
-            let i;
             let linhaAtual = parseInt(idAtual.split('_')[1]);
 
             // Converter para busca binária
-            for(i = window.indiceLinha.length -1; i >= 0; i--) {
+            for(var i = window.indiceLinha.length -1; i >= 0; i--) {
                 if(window.indiceLinha[i].linha < linhaAtual) {
                     return window.indiceLinha[i];
                 }
@@ -457,6 +494,168 @@
             
             return true;
         });
+
+        function listaAutoCompletarRec(inputId, noArvore, arr) {
+
+            // Se é um dos tipos buscados adiciona no array
+            if(noArvore.tipo == inputId) {
+                arr.push(noArvore.valor);
+            }
+            // Se não é, mas é um tipo pai e o valor bate com o que está no filtro, chama recursivo
+            // para aprofundar um nível
+            else if (noArvore.tipo === 'raiz' || noArvore.valor === document.getElementById(noArvore.tipo).value) {
+
+                for (var i = 0; i < noArvore.filhos.length; i++) {
+                    listaAutoCompletarRec(inputId, noArvore.filhos[i], arr);
+                }
+            }
+        }
+        
+        function listaAutoCompletar(inputId) {
+
+            if(window.autoCompletar == null) {
+                return [];
+            }
+            var arr = [];
+            listaAutoCompletarRec(inputId, window.autoCompletar, arr);
+            return arr;
+        }
+
+        function autocomplete(inp) {
+
+            /*the autocomplete function takes two arguments,
+            the text field element and an array of possible autocompleted values:*/
+            var currentFocus;
+
+            /*execute a function when someone writes in the text field:*/
+            inp.addEventListener("input", function(e) {
+
+                var arr = window.autoCompletarLista;
+                var a, b, i, val = this.value;
+                /*close any already open lists of autocompleted values*/
+                closeAllLists();
+                // if (!val) { return false; }
+                currentFocus = -1;
+                /*create a DIV element that will contain the items (values):*/
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                /*append the DIV element as a child of the autocomplete container:*/
+                this.parentNode.appendChild(a);
+                /*for each item in the array...*/
+                for(var i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    if (val == '' || arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        /*create a DIV element for each matching element:*/
+                        b = document.createElement("DIV");
+                        /*make the matching letters bold:*/
+                        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].substr(val.length);
+                        /*insert a input field that will hold the current array item's value:*/
+                        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                        /*execute a function when someone clicks on the item value (DIV element):*/
+                        b.addEventListener("click", function(e) {
+                            /*insert the value for the autocomplete text field:*/
+                            inp.value = this.getElementsByTagName("input")[0].value;
+                            /*close the list of autocompleted values,
+                            (or any other open lists of autocompleted values:*/
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+            });
+
+            // Gera a lista e força um evento para abrir a lista de auto complete ao receber foco.
+            inp.addEventListener("focus", function(e) {
+                window.autoCompletarLista = listaAutoCompletar(this.id);
+                inp.dispatchEvent(new Event('input'));
+            });
+
+            /*execute a function presses a key on the keyboard:*/
+            inp.addEventListener("keydown", function(e) {
+
+                if(window.autoCompletarLista == null || window.autoCompletarLista.length < 1) return;
+
+                var x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    /*If the arrow DOWN key is pressed,
+                    increase the currentFocus variable:*/
+                    currentFocus++;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 38) { //up
+                    /*If the arrow UP key is pressed,
+                    decrease the currentFocus variable:*/
+                    currentFocus--;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                  
+                    if (currentFocus > -1) {
+                        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                        e.preventDefault();
+                        /*and simulate a click on the "active" item:*/
+                        if (x) {
+                            x[currentFocus].click();
+                            currentFocus = -1;
+                        }
+                    }
+                }
+            });
+            function addActive(x) {
+                /*a function to classify an item as "active":*/
+                if (!x) return false;
+                /*start by removing the "active" class on all items:*/
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                /*add class "autocomplete-active":*/
+                if(x && x[currentFocus]) {
+                    x[currentFocus].classList.add("autocomplete-active");
+                }
+            }
+            function removeActive(x) {
+
+                if(!x) return false;
+
+                /*a function to remove the "active" class from all autocomplete items:*/
+                for (var i = 0; i < x.length; i++) {
+                    x[i].classList.remove("autocomplete-active");
+                }
+            }
+            function closeAllLists(elmnt) {
+
+                /*close all autocomplete lists in the document,
+                except the one passed as an argument:*/
+
+                var x = document.getElementsByClassName("autocomplete-items");
+
+                for(var i = 0; i < x.length; i++) {
+                    if (elmnt != x[i] && elmnt != inp) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
+                }
+            }
+            /*execute a function when someone clicks in the document:*/
+            document.addEventListener("click", function (e) {
+                if(e.target instanceof HTMLInputElement) {
+                    if(e.target.id && window.camposAutoCompletar.includes(e.target.id)) {
+                        return false;
+                    }
+                }
+                closeAllLists(e.target);
+            });
+        }
+
+        function adicionarAutoComplete() {
+            for(var i = 0; i < window.camposAutoCompletar.length; i++) {
+                autocomplete(document.getElementById(window.camposAutoCompletar[i]));
+            }
+        }
+
+        adicionarAutoComplete();
     </script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import * as path from 'path';
 import { ES } from './es';
 import { Rubricas } from './rubricas';
 import { Dump } from './dump';
+import { Descobrir } from './descobrir';
 
 /** Classe de entrada e saida de dados */
 export class Controlador {
@@ -13,8 +14,11 @@ export class Controlador {
     private panel: vscode.WebviewPanel;
     /** Preferências do usuário */
     private pref: vscode.WorkspaceConfiguration;
+
+    private descobrir: Descobrir;
     private rubricas: Rubricas;
     private dump: Dump;
+
     private caminhoArq: string;
 
     constructor(context: vscode.ExtensionContext) {
@@ -32,6 +36,7 @@ export class Controlador {
         // Lendo variaveis do arquivo de configuração do usuario
         this.pref = vscode.workspace.getConfiguration('ergonExt');
 
+        this.descobrir = new Descobrir(this.pref.caminhoExecucao);
         this.rubricas = new Rubricas(this.pref.caminhoExecucao);
         this.dump = new Dump(this.pref.caminhoExecucao);
         this.caminhoArq = '';
@@ -47,7 +52,7 @@ export class Controlador {
             this.panel.webview.html =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
             
             if(this.pref.camposPadrao) {
-                ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 500);
+                ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 300);
             }
         }
         catch(e) {
@@ -70,6 +75,19 @@ export class Controlador {
         catch(e) {
             console.log(`Erro: ${e}`);
             this.rubricas.setNomeRubricas({});
+        }
+    }
+
+    /** Percorre as pastas de execução buscando por dados para preecher os formulários */
+    public descobrirDados(): void {
+        try {
+            this.descobrir.percorrerPastas();
+            if(this.descobrir.raiz) {
+                ES.enviarParaWebviw(this.panel, 'auto_completar', this.descobrir.raiz, 400);
+            }
+        }
+        catch(e) {
+            console.log(`Erro: ${e}`);
         }
     }
 

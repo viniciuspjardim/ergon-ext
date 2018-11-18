@@ -128,33 +128,6 @@ export class Descobrir {
 
                 this.percorrerPastasRec(nivel, novoNo3, path.join(novoCaminho, 'Debug'));
             }
-            // Nível 3: F_201604034_E00001
-            else if(nivel === 3) {
-
-                // Só interessa os diretórios
-                if(!stat.isDirectory()) {
-                    continue;
-                }
-
-                let result: RegExpExecArray | null = this.rgxNivel3.exec(arq);
-                this.rgxNivel3.lastIndex = 0;
-
-                // Só interessa as pastas que seguem a regex
-                if(result === null) {
-                    continue;
-                }
-
-                // Adicionando o mês ano da folha
-                let novoNo1: ArvoreNo = noAtual.adicionar('mesAnoFol', `${result[2]}/${result[1]}`);
-
-                // Adicionando o número da folha
-                let novoNo2: ArvoreNo = novoNo1.adicionar('numFol', result[3]);
-
-                // Adicionando a execução
-                let novoNo3: ArvoreNo = novoNo2.adicionar('execucao', result[4]);
-
-                this.percorrerPastasRec(nivel, novoNo3, path.join(novoCaminho, 'Debug'));
-            }
             // Nível 4: Folha12-NF000099949
             else if(nivel === 4) {
 
