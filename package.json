@@ -2,7 +2,7 @@
     "name": "ergonext",
     "displayName": "Ergon Ext",
     "description": "Ajuda a navegar pelos arquivos de log e debug do sistema de RH Ergon (da Techne)",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "publisher": "ViniciusPJardim",
     "repository": {
         "type": "git",
