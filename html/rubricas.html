@@ -300,9 +300,18 @@
         window.camposAutoCompletar = ['ambiente', 'servidorCalculo', 'tipoCalculo', 'mesAnoFol', 'numFol',
             'execucao', 'numFunc', 'numVinc', 'seqFunc', 'seqVinc', 'mesAnoRub'];
 
+        function pad(num, padlen) {
+            var pad = new Array(1 + padlen).join('0');
+            return (pad + num).slice(-pad.length);
+        }
+        
         function textoParaData(texto) {
             let arr = texto.trim().split('/');
             return { mes: parseInt(arr[0]), ano: parseInt(arr[1]) };
+        }
+
+        function dataParaTexto(data) {
+            return pad(data.mes, 2) + '/' + pad(data.ano, 4)
         }
 
         function getCampos() {
@@ -363,14 +372,14 @@
                     document.getElementById('ambiente').value        = m.conteudo.ambiente;
                     document.getElementById('servidorCalculo').value = m.conteudo.servidorCalculo;
                     document.getElementById('tipoCalculo').value     = m.conteudo.tipoCalculo;
-                    document.getElementById('mesAnoFol').value       = m.conteudo.mesAnoFol.mes + '/' + m.conteudo.mesAnoFol.ano;
+                    document.getElementById('mesAnoFol').value       = dataParaTexto(m.conteudo.mesAnoFol);
                     document.getElementById('numFol').value          = m.conteudo.numFol;
                     document.getElementById('execucao').value        = m.conteudo.execucao;
                     document.getElementById('numFunc').value         = m.conteudo.numFunc;
                     document.getElementById('numVinc').value         = m.conteudo.numVinc;
                     document.getElementById('seqFunc').value         = m.conteudo.seqFunc;
                     document.getElementById('seqVinc').value         = m.conteudo.seqVinc;
-                    document.getElementById('mesAnoRub').value       = m.conteudo.mesAnoRub.mes + '/' + m.conteudo.mesAnoRub.ano;
+                    document.getElementById('mesAnoRub').value       = dataParaTexto(m.conteudo.mesAnoRub);
                     document.getElementById('rubrica').value         = m.conteudo.rubrica;
                     document.getElementById('complemento').value     = m.conteudo.complemento;
                     document.getElementById('periodo').value         = m.conteudo.periodo;
@@ -497,14 +506,13 @@
 
         function listaAutoCompletarRec(inputId, noArvore, arr) {
 
-            // Se é um dos tipos buscados adiciona no array
-            if(noArvore.tipo == inputId) {
+            // Se é um dos campos buscados, adiciona no array
+            if(noArvore.campo == inputId) {
                 arr.push(noArvore.valor);
             }
-            // Se não é, mas é um tipo pai e o valor bate com o que está no filtro, chama recursivo
+            // Se não é, mas é um campo pai e o valor bate com o que está no filtro, chama recursivo
             // para aprofundar um nível
-            else if (noArvore.tipo === 'raiz' || noArvore.valor === document.getElementById(noArvore.tipo).value) {
-
+            else if (noArvore.campo === 'raiz' || noArvore.valor === document.getElementById(noArvore.campo).value) {
                 for (var i = 0; i < noArvore.filhos.length; i++) {
                     listaAutoCompletarRec(inputId, noArvore.filhos[i], arr);
                 }
@@ -569,6 +577,12 @@
             // Gera a lista e força um evento para abrir a lista de auto complete ao receber foco.
             inp.addEventListener("focus", function(e) {
                 window.autoCompletarLista = listaAutoCompletar(this.id);
+                
+                // Invertendo a lista se for os campos de data para ficar o mais recente primeiro
+                if(['mesAnoFol', 'mesAnoRub'].includes(this.id)) {
+                    window.autoCompletarLista = window.autoCompletarLista.reverse();
+                }
+
                 inp.dispatchEvent(new Event('input'));
             });
 

@@ -3,22 +3,35 @@
 import fs = require('fs');
 import * as path from 'path';
 
+type TipoDado = 'raiz' | 'numero' | 'texto' | 'mesAno';
+
+export function formatarValor(tipo: TipoDado, valor: string): string {
+
+    if(tipo === 'numero') {
+        return String(+valor);
+    }
+
+    return valor;
+}
+
 export class ArvoreNo {
 
-    public nivel: number;
-    public tipo: string;
+    public campo: string;
+    public tipo: TipoDado;
     public valor: string;
     public filhos: ArvoreNo[];
 
-    constructor(nivel: number, tipo: string, valor: string) {
-        this.nivel = nivel;
+    constructor(campo: string, tipo: TipoDado, valor: string) {
+        this.campo = campo;
         this.tipo = tipo;
         this.valor = valor;
         this.filhos = new Array();
     }
 
     /** Busca nó, caso não encontrado adiciona novo nó. Retorna o nó encontrado ou adicionado */
-    public adicionar(tipo: string, valor: string): ArvoreNo {
+    public adicionar(campo: string, tipo: TipoDado, valor: string): ArvoreNo {
+
+        valor = formatarValor(tipo, valor);
 
         for(let i in this.filhos) {
             if(this.filhos[i].tipo === tipo && this.filhos[i].valor === valor) {
@@ -26,7 +39,7 @@ export class ArvoreNo {
             }
         }
 
-        let novoNo: ArvoreNo = new ArvoreNo(this.nivel + 1, tipo, valor);
+        let novoNo: ArvoreNo = new ArvoreNo(campo, tipo, valor);
         this.filhos.push(novoNo);
         return novoNo;
     }
@@ -34,7 +47,7 @@ export class ArvoreNo {
 
 export class Descobrir {
 
-    public raiz: ArvoreNo = new ArvoreNo(0, 'raiz', 'raiz');
+    public raiz: ArvoreNo = new ArvoreNo('raiz', 'raiz', 'raiz');
     private pastaExecucao: string;
 
     private rgxNivel1: RegExp = /^Destino_([a-zA-Z]+)_([a-zA-Z]+)$/ig;
@@ -81,10 +94,10 @@ export class Descobrir {
                 }
 
                 // Adicionando o ambiente
-                let novoNo1: ArvoreNo = noAtual.adicionar('ambiente', result[1]);
+                let novoNo1: ArvoreNo = noAtual.adicionar('ambiente', 'texto', result[1]);
 
                 // Adicionando o servidor de calculo
-                let novoNo2: ArvoreNo = novoNo1.adicionar('servidorCalculo', result[2]);
+                let novoNo2: ArvoreNo = novoNo1.adicionar('servidorCalculo', 'texto',  result[2]);
 
                 this.percorrerPastasRec(nivel, novoNo2, novoCaminho);
             }
@@ -97,7 +110,7 @@ export class Descobrir {
                 }
 
                 // Adicionando o tipo de cálculo
-                let novoNo: ArvoreNo = noAtual.adicionar('tipoCalculo', arq);
+                let novoNo: ArvoreNo = noAtual.adicionar('tipoCalculo', 'texto',  arq);
 
                 this.percorrerPastasRec(nivel, novoNo, novoCaminho);
             }
@@ -118,13 +131,13 @@ export class Descobrir {
                 }
 
                 // Adicionando o mês ano da folha
-                let novoNo1: ArvoreNo = noAtual.adicionar('mesAnoFol', `${result[2]}/${result[1]}`);
+                let novoNo1: ArvoreNo = noAtual.adicionar('mesAnoFol', 'mesAno', `${result[2]}/${result[1]}`);
 
                 // Adicionando o número da folha
-                let novoNo2: ArvoreNo = novoNo1.adicionar('numFol', result[3]);
+                let novoNo2: ArvoreNo = novoNo1.adicionar('numFol', 'numero',  result[3]);
 
                 // Adicionando a execução
-                let novoNo3: ArvoreNo = novoNo2.adicionar('execucao', result[4]);
+                let novoNo3: ArvoreNo = novoNo2.adicionar('execucao', 'numero',  result[4]);
 
                 this.percorrerPastasRec(nivel, novoNo3, path.join(novoCaminho, 'Debug'));
             }
@@ -145,7 +158,7 @@ export class Descobrir {
                 }
 
                 // Adicionando o número funcional
-                let novoNo: ArvoreNo = noAtual.adicionar('numFunc', result[1]);
+                let novoNo: ArvoreNo = noAtual.adicionar('numFunc', 'numero',  result[1]);
 
                 this.percorrerPastasRec(nivel, novoNo, novoCaminho);
             }
@@ -166,13 +179,13 @@ export class Descobrir {
                 }
 
                 // Adicionando o número de vínculo
-                let novoNo1: ArvoreNo = noAtual.adicionar('numVinc', result[2]);
+                let novoNo1: ArvoreNo = noAtual.adicionar('numVinc', 'numero', result[2]);
 
                 // Adicionando a sequência de funcionário
-                let novoNo2: ArvoreNo = novoNo1.adicionar('seqFunc', result[1]);
+                let novoNo2: ArvoreNo = novoNo1.adicionar('seqFunc', 'numero', result[1]);
 
                 // Adicionando a sequência de vínculo
-                let novoNo3: ArvoreNo = novoNo2.adicionar('seqVinc', result[3]);
+                let novoNo3: ArvoreNo = novoNo2.adicionar('seqVinc', 'numero', result[3]);
 
                 this.percorrerPastasRec(nivel, novoNo3, novoCaminho);
             }
@@ -193,7 +206,7 @@ export class Descobrir {
                 }
 
                 // Adicionando o mes ano de direito
-                noAtual.adicionar('mesAnoRub',`${result[5]}/${result[4]}`);
+                noAtual.adicionar('mesAnoRub', 'mesAno', `${result[5]}/${result[4]}`);
             }
         }
     }
