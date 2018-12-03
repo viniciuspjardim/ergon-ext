@@ -25,7 +25,7 @@ export class Controlador {
         this.context = context;
         this.panel = vscode.window.createWebviewPanel(
             'rubricasPeriodo',
-            'Rubricas Periodo',
+            'Ergon Ext',
             vscode.ViewColumn.One,
             {
                 enableScripts: true,

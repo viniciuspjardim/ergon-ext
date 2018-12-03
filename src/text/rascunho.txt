@@ -33,7 +33,7 @@ np ixrub       rub  rub                  complemento                     calcula
 
         "caminhoExecucao": "C:/folha/execucao/Emp_01_TOCANTINS",
         "charsetExecucao": "1252",
-        "caminhoRubricas": "D:/Dropbox/projetos/ergonext_arquivos/rubricas.json",
+        "caminhoRubricas": "D:/Dropbox/projetos/ergonext-arquivos/rubricas.json",
         "charsetRubricas": "utf8",
 
         "camposPadrao": {
@@ -60,7 +60,7 @@ np ixrub       rub  rub                  complemento                     calcula
 
         "caminhoExecucao": "C:/folha/execucao/Emp_01_TOCANTINS",
         "charsetExecucao": "1252",
-        "caminhoRubricas": "C:/Users/vinicius.jardim/Dropbox/Projetos/ergonext_arquivos/rubricas.json",
+        "caminhoRubricas": "C:/Users/vinicius.jardim/Dropbox/Projetos/ergonext-arquivos/rubricas.json",
         "charsetRubricas": "utf8",
 
         "camposPadrao": {

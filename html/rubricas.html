@@ -3,237 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Rubricas Periodo</title>
+    <title>Ergon Ext</title>
     <style>
-            body {
-                font-family: Consolas, 'Courier New', monospace;
-                font-size: 14px;
-            }
-            #cabeçalho {
-                position: fixed;
-                top: 0;
-                right: 0;
-                left: 0;
-                margin: 0;
-                padding: 0;
-                background: rgb(30, 30, 30);
-            }
-            #cabeçalho form {
-                padding: 1em;
-                padding-bottom: 0.5em;
-            }
-            #cabeçalho form div span {
-                white-space: nowrap;
-                padding: 4px 0 4px 0;
-                display: inline-block;
-                width: 130px;
-                text-align: right;
-                font-size: 11px;
-            }
-            button:focus { outline: 0; }
-            #cabeçalho button {
-                float: right;
-                margin-top: 0.3em;
-                margin-right: 0.5em;
-                margin-left: 0.5em;
-                background-color: rgb(14, 99, 156);
-                border: none;
-                color: white;
-                padding: 4px 10px 4px 10px;
-            }
-            #cabeçalho button:hover {
-                background-color: rgb(17, 119, 187);
-            }
-            .inputTitulo {
-                display: inline-block;
-                width: 5em;
-                text-align: right;
-            }
-            input {
-                width: 4em;
-                margin-left: 1em;
-                padding: 4px 6px 4px 6px;
-                background-color: rgb(60, 60, 60);
-                color: rgba(255, 255, 255, 0.788);
-                border: none;
-            }
-            input:focus {
-                outline: 1;
-                outline-color: rgb(23, 74, 108);
-            }
-            select {
-                width: 5em;
-                margin-left: 1em;
-                padding: 4px 6px 4px 6px;
-                background-color: rgb(60, 60, 60);
-                color: rgba(255, 255, 255, 0.788);
-                border: none;
-            }
-            select:focus {
-                outline: 1;
-                outline-color: rgb(23, 74, 108);
-            }
-            .titulos {
-                padding: 0.25em;
-                background-color: rgb(9, 71, 113);
-            }
-            .titulosI {
-                float: left;
-                width: calc(100% - 48px);
-            }
-            /* header campo */
-            .hc {
-                display: inline-block;
-                width: 4.45em;
-                color: white;
-                text-align: center;
+        body {
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 14px;
+        }
+        #cabeçalho {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            margin: 0;
+            padding: 0;
+            background: rgb(30, 30, 30);
+        }
+        #cabeçalho form {
+            padding: 1em;
+            padding-bottom: 0.5em;
+        }
+        #cabeçalho form div span {
+            white-space: nowrap;
+            padding: 4px 0 4px 0;
+            display: inline-block;
+            width: 130px;
+            text-align: right;
+            font-size: 11px;
+        }
+        button:focus { outline: 0; }
+        #cabeçalho button {
+            float: right;
+            margin-top: 0.3em;
+            margin-right: 0.5em;
+            margin-left: 0.5em;
+            background-color: rgb(14, 99, 156);
+            border: none;
+            color: white;
+            padding: 4px 10px 4px 10px;
+        }
+        #cabeçalho button:hover {
+            background-color: rgb(17, 119, 187);
+        }
+        .inputTitulo {
+            display: inline-block;
+            width: 5em;
+            text-align: right;
+        }
+        input {
+            width: 4em;
+            margin-left: 1em;
+            padding: 4px 6px 4px 6px;
+            background-color: rgb(60, 60, 60);
+            color: rgba(255, 255, 255, 0.788);
+            border: none;
+        }
+        input:focus {
+            outline: 1;
+            outline-color: rgb(23, 74, 108);
+        }
+        select {
+            width: 5em;
+            margin-left: 1em;
+            padding: 4px 6px 4px 6px;
+            background-color: rgb(60, 60, 60);
+            color: rgba(255, 255, 255, 0.788);
+            border: none;
+        }
+        select:focus {
+            outline: 1;
+            outline-color: rgb(23, 74, 108);
+        }
+        .titulos {
+            padding: 0.25em;
+            background-color: rgb(9, 71, 113);
+        }
+        .titulosI {
+            float: left;
+            width: calc(100% - 48px);
+        }
+        /* header campo */
+        .hc {
+            display: inline-block;
+            width: 4.45em;
+            color: white;
+            text-align: center;
 
-                margin-left: 1em;
-                padding-left: 1em;
-                border-left-style: solid;
-                border-left-width: 2px;
-                border-left-color: rgba(255, 255, 255, 0.160);
-            }
-            /* borda direita (right) */
-            .rBorder {
-                padding-right: 1em;
-                border-right-style: solid;
-                border-right-width: 2px;
-                border-right-color: rgba(255, 255, 255, 0.160);
-            }
-            pre {
-                margin-top: 110px;
-                font-family: Consolas, 'Courier New', monospace;
-                color:  rgba(255, 255, 255, 0.603);
-                font-size: 14px;
-            }
-            #conteudoArquivo:focus { outline: 0; }
-            /* header linha */
-            .hlinha {
-                float: left;
-                width: 100%;
-                white-space: nowrap;
-            }
-            .rubEntra {
-                float: left;
-                width: calc(100% - 48px);
-                background-color: rgba(0, 192, 48, 0.137);
-                color:  rgb(255, 255, 255);
-            }
-            .rubSai {
-                float: left;
-                width: calc(100% - 48px);
-                background-color: rgba(192, 48, 0, 0.137);
-                color:  rgb(255, 255, 255);
-            }
-            .preLinha {
-                float: left;
-                width: calc(100% - 48px);
-                /* background-color: rgba(0, 192, 48, 0.137); */
-                color:  rgb(255, 255, 255);
-            }
-            .posLinha {
-                float: left;
-                width: calc(100% - 48px);
-                /* background-color: rgba(192, 48, 0, 0.137); */
-                color:  rgb(255, 255, 255);
-            }
-            .linha {
-                margin-left: 3em;
-            }
-            /** campo */
-            .c {
-                margin-left: 1em;
-                padding-left: 1em;
-                border-left-style: solid;
-                border-left-width: 2px;
-                border-left-color: rgba(255, 255, 255, 0.005);
-            }
-            /** campo sem borda */
-            .csb {
-                color: rgba(255, 255, 255, 0.452);
-                border-left-style: none;
-                margin: 0;
-                padding: 0 1em 0 1em;
-            }
-            .nomeRubrica {
-                display: inline-block;
-                width: 26em;
-            }
-            .resultadoRub {
-                display: inline-block;
-                width: 5em;
-                text-align: right;
-            }
-            .periodo {
-                display: inline-block;
-                width: 8em;
-                text-align: right;
-            }
-            .contLinha {
-                float: left;
-                width: 32px;
-                margin-right: 1em;
-                color: rgba(255, 255, 255, 0.349);
-                text-align: right;
+            margin-left: 1em;
+            padding-left: 1em;
+            border-left-style: solid;
+            border-left-width: 2px;
+            border-left-color: rgba(255, 255, 255, 0.160);
+        }
+        /* borda direita (right) */
+        .rBorder {
+            padding-right: 1em;
+            border-right-style: solid;
+            border-right-width: 2px;
+            border-right-color: rgba(255, 255, 255, 0.160);
+        }
+        pre {
+            margin-top: 110px;
+            font-family: Consolas, 'Courier New', monospace;
+            color:  rgba(255, 255, 255, 0.603);
+            font-size: 14px;
+        }
+        #conteudoArquivo:focus { outline: 0; }
+        /* header linha */
+        .hlinha {
+            float: left;
+            width: 100%;
+            white-space: nowrap;
+        }
+        .rubEntra {
+            float: left;
+            width: calc(100% - 48px);
+            background-color: rgba(0, 192, 48, 0.137);
+            color:  rgb(255, 255, 255);
+        }
+        .rubSai {
+            float: left;
+            width: calc(100% - 48px);
+            background-color: rgba(192, 48, 0, 0.137);
+            color:  rgb(255, 255, 255);
+        }
+        .preLinha {
+            float: left;
+            width: calc(100% - 48px);
+            /* background-color: rgba(0, 192, 48, 0.137); */
+            color:  rgb(255, 255, 255);
+        }
+        .posLinha {
+            float: left;
+            width: calc(100% - 48px);
+            /* background-color: rgba(192, 48, 0, 0.137); */
+            color:  rgb(255, 255, 255);
+        }
+        .linha {
+            margin-left: 3em;
+        }
+        /** campo */
+        .c {
+            margin-left: 1em;
+            padding-left: 1em;
+            border-left-style: solid;
+            border-left-width: 2px;
+            border-left-color: rgba(255, 255, 255, 0.005);
+        }
+        /** campo sem borda */
+        .csb {
+            color: rgba(255, 255, 255, 0.452);
+            border-left-style: none;
+            margin: 0;
+            padding: 0 1em 0 1em;
+        }
+        .nomeRubrica {
+            display: inline-block;
+            width: 26em;
+        }
+        .resultadoRub {
+            display: inline-block;
+            width: 5em;
+            text-align: right;
+        }
+        .periodo {
+            display: inline-block;
+            width: 8em;
+            text-align: right;
+        }
+        .contLinha {
+            float: left;
+            width: 32px;
+            margin-right: 1em;
+            color: rgba(255, 255, 255, 0.349);
+            text-align: right;
 
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
-            #msgAoCarregar {
-                position: fixed;
-                bottom: 0;
-                width: 10%;
-                left: 50%;
-                margin: 1em;
-                margin-left: -5%;
-                padding: 8px;
-                text-align: center;
-                border-style: solid;
-                border-width: 1px;
-                border-color: rgba(255, 255, 255, 0.160);
-                background: rgb(50, 50, 50);
-                visibility: hidden;
-            }
-
-            .autocomplete {
-                /*the container must be positioned relative:*/
-                position: relative;
-                display: inline-block;
-            }
-
-            .autocomplete-items {
-                position: absolute;
-                border: 1px solid rgb(23, 74, 108);
-                text-align: left;
-                z-index: 99;
-                /*position the autocomplete items to be the same width as the container:*/
-                top: 100%;
-                left: 0;
-                right: 0;
-            }
-
-            .autocomplete-items div {
-                padding: 10px;
-                cursor: pointer;
-                background-color: rgb(60, 60, 60);
-                /*border-bottom: 1px solid rgb(23, 74, 108);*/
-            }
-
-            .autocomplete-items div:hover {
-                /*when hovering an item:*/
-                background-color: rgb(42, 45, 46);
-            }
-
-            .autocomplete-active {
-                /*when navigating through the items using the arrow keys:*/
-                background-color: rgb(7, 54, 85) !important; 
-                color: #ffffff; 
-            }
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        #msgAoCarregar {
+            position: fixed;
+            bottom: 0;
+            width: 10%;
+            left: 50%;
+            margin: 1em;
+            margin-left: -5%;
+            padding: 8px;
+            text-align: center;
+            border-style: solid;
+            border-width: 1px;
+            border-color: rgba(255, 255, 255, 0.160);
+            background: rgb(50, 50, 50);
+            visibility: hidden;
+        }
+        .autocomplete {
+            /*the container must be positioned relative:*/
+            position: relative;
+            display: inline-block;
+        }
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid rgb(23, 74, 108);
+            text-align: left;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            left: 0;
+            right: 0;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: rgb(60, 60, 60);
+            /*border-bottom: 1px solid rgb(23, 74, 108);*/
+        }
+        .autocomplete-items div:hover {
+            /*when hovering an item:*/
+            background-color: rgb(42, 45, 46);
+        }
+        .autocomplete-active {
+            /*when navigating through the items using the arrow keys:*/
+            background-color: rgb(7, 54, 85) !important; 
+            color: #ffffff; 
+        }
     </style>
 </head>
 <body>
