@@ -15,6 +15,8 @@ export class Controlador {
     /** Preferências do usuário */
     private pref: vscode.WorkspaceConfiguration;
 
+    private ultimoFiltro: any = null;
+
     private descobrir: Descobrir;
     private rubricas: Rubricas;
     private dump: Dump;
@@ -48,12 +50,32 @@ export class Controlador {
     public carregarWebView(): void {
         
         try {
+            // Lendo o arquivo HTML
             const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'rubricas.html'));
             this.panel.webview.html =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
             
-            if(this.pref.camposPadrao) {
-                ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 300);
-            }
+            // Lendo o arquivo de filtro caso exista, se não tenta pegar das preferências do vscode
+            const homedir: string = require('os').homedir();
+            
+            ES.lerArquivo(path.join(homedir, 'AppData/Roaming/ErgonExtFiltro.json'), (data: string, erro?: NodeJS.ErrnoException) => {
+                
+                if(erro) {
+                    console.log(`Aviso: ${erro}`);
+
+                    if(this.pref.camposPadrao) {
+                        ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 300);
+                    }
+                }
+                else {
+                    ES.enviarParaWebviw(this.panel, 'filtro', JSON.parse(data), 300);
+                }
+            });
+
+            // Criando o callback para quando o painel for fechado. Salva os campos do filtro em um arquivo
+            this.panel.onDidDispose(() => {
+                this.salvarFiltro();
+                console.log('ErgonExt dispose');
+            }, null, this.context.subscriptions);
         }
         catch(e) {
             console.log(`Erro: ${e}`);
@@ -101,6 +123,10 @@ export class Controlador {
 
             let caminho: string;
             let mensagemErr: string;
+
+            if(mensagem.filtro) {
+                this.ultimoFiltro = mensagem.filtro;
+            }
 
             // Se mensagem recebida do webview for 'abrirRubPer' ou 'abrirRubLiq'
             if(mensagem.acao === 'abrirRubPer' || mensagem.acao === 'abrirRubLiq') {
@@ -176,5 +202,27 @@ export class Controlador {
             }
             
         }, undefined, this.context.subscriptions);
+    }
+
+    /** Salva o ultimo filtro */
+    public salvarFiltro(): void {
+
+        if(!this.ultimoFiltro) {
+            return;
+        }
+        try {
+            const homedir: string = require('os').homedir();
+            ES.escreverArquivoSync(path.join(homedir, 'AppData/Roaming/ErgonExtFiltro.json'), JSON.stringify(this.ultimoFiltro));
+        }
+        catch(e) {
+            console.log(`Erro: ${e}`);
+        }
+    }
+
+    /** Chamado ao fechar o vscode. Chama o dispose do painel para salvar o ultimo filtro */
+    public dispose(): void {
+        if(this.panel) {
+            this.panel.dispose();
+        }
     }
 }

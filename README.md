@@ -11,9 +11,6 @@ Para gerar o arquivo com os nomes das rubricas execute a seguinte query no banco
 `select rubrica, nome_abrev nome, mnemonico, tiporubr, fat_vant, e_cons from rubricas order by rubrica, nome;`
 e exporte o arquivo como JSON.
 
-Para evitar digitar os campos de filtro ao abrir a extensão é possível configurar também os
-campos padrão.
-
 1. Abra o arquivo de configurações de usuário do VS Code: `Ctrl` + `Shift` + `P` e digite
 `Preferences: Open User Settings`;
 2. Do lado direito na aba `User Settings`, adicione o campo `"ergonExt": {...}` no arquivo.
@@ -22,46 +19,29 @@ Exemplo:
 ```json
 {
     "ergonExt": {
-
         "caminhoExecucao": "<?>/execucao/Emp_<?>",
         "charsetExecucao": "1252",
         "caminhoRubricas": "<?>",
-        "charsetRubricas": "utf8",
-
-        "camposPadrao": {
-            "ambiente": "producao",
-            "servidorCalculo": "SRVF1",
-            "tipoCalculo": "Real",
-            "mesAnoFol": {"mes": 4, "ano": 2018},
-            "numFol": 15,
-            "execucao": 1,
-            "numFunc": 123456,
-            "numVinc": 1,
-            "mesAnoRub": {"mes": 4, "ano": 2018},
-            "seqFunc": 2,
-            "seqVinc": 1,
-            "rubrica": 1001,
-            "complemento": "",
-            "periodo": 1,
-            "tipo": "RE",
-            "acao": "abrirRubPer"
-        }
+        "charsetRubricas": "utf8"
     }
 }
 ```
 3. Salve o arquivo.
 
-## Recursos e Arquivos Suportados
-* Troca de arquivos simplismente alterando um campo filtro
+## Recursos
+* Abrir o arquivo correto simplesmente alterando os campos do filtro
 * Função de autocompletar para os campos do filtro (escaneia as pastas de execução para
 sugerir os valores)
-* Indexa pontos importantes sendo possivel navegar pelos arquivos com teclas atalho 
-* Formata os arquivos de texto facilitando a legibiliade
+* Indexa pontos importantes dos arquivos, como entrada e saída de rubricas, sendo possível
+navegar com teclas atalho. Exemplo: ir para a rubrica 3001 no período 0
+* Formata os arquivos de texto facilitando a legibilidade
+* Salva os campos de filtro para quando a extensão for aberta novamente continuar de onde
+parou
 
-### Arquivos
-* `(...)/Fontes/Fo*g.tmp` - mensagens de alerta e erro do compilador
-* `(...)/Debug/Folha12*/*Liquido*.dbg` - logs das fórmulas de líquido
-* `(...)/Debug/Folha12*/*Ano*/*.dbg` - logs das fórmulas de período e total
+## Arquivos Suportados
+* Per - `(...)/Debug/Folha12*/*Ano*/*.dbg` - logs das fórmulas de período e total
+* Liq - `(...)/Debug/Folha12*/*Liquido*.dbg` - logs das fórmulas de líquido
+* Err - `(...)/Fontes/Fo*g.tmp` - mensagens de alerta e erro do compilador
 
 ## Teclas Atalho
 * `a` - selecionar valor do campo `Ambiente`

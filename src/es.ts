@@ -31,6 +31,11 @@ export class ES {
         return iconv.decode(fs.readFileSync(caminho), charset);
     }
 
+    /** Escreve arquivo de forma sincrona */
+    public static escreverArquivoSync(caminho: string, conteudo: string, charset: string = 'utf8'): void {
+        fs.writeFileSync(caminho, iconv.encode(conteudo, charset));
+    }
+
     /** Envia conteudo para o webview */
     public static enviarParaWebviw(panel: vscode.WebviewPanel, acao: string, conteudo: any, delay?: number): void {
         const mensagem: any  = {
