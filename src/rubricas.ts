@@ -49,16 +49,11 @@ export class Rubricas {
             this.caminho = `${this.pastaExecucao}/Destino_${c.ambiente}_${c.servidorCalculo}/${c.tipoCalculo}/F_${c.mesAnoFol.ano}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 3)}_E${ES.pad(c.execucao, 5)}/Debug/Folha12-NF${ES.pad(c.numFunc, 9)}/SF${ES.pad(c.seqFunc, 2)}-NV${ES.pad(c.numVinc, 2)}-SV${ES.pad(c.seqVinc, 2)}-Liquido-SL01.dbg`;
             console.log(this.caminho);
         }
-        else if(acao === 'abrirLogErro') {
-            //        C:/folha/execucao/Emp_01_TOCANTINS/Destino_delta        _SRVFVJ              /VJ              /F_2016              04                           034                   _E00001                   /Fontes/Fo12180732g.tmp
-            this.caminho = `${this.pastaExecucao}/Destino_${c.ambiente}_${c.servidorCalculo}/${c.tipoCalculo}/F_${c.mesAnoFol.ano}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 3)}_E${ES.pad(c.execucao, 5)}/Fontes/Fo12${ES.pad(c.mesAnoFol.ano, 2)}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 2)}g.tmp`;
-            console.log(this.caminho);
-        }
 
         return this.caminho;
     }
 
-    public parseArqRubricas(conteudoArq: string): any {
+    public parseArquivo(conteudoArq: string): any {
 
         let novoConteudo: string = '';
         let index: any = {};

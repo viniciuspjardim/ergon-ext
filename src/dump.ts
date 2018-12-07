@@ -25,7 +25,7 @@ export class Dump {
 
     public parseArquivo(conteudoArq: string): any {
 
-        let novoConteudo: string = '';
+        // let novoConteudo: string = '';
 
         // Substituindo CRLF ou CR pelo LF
         conteudoArq = conteudoArq.replace(/\r\n/g, '\n');
@@ -40,13 +40,13 @@ export class Dump {
         for(i in linhas) {
             
             let linha: string = linhas[i];
-            let novaLinha: string;
+            // let novaLinha: string;
             let tabIni: RegExpExecArray | null = this.rxTabIni.exec(linha);
             this.rxTabIni.lastIndex = 0;
             let tabSai: RegExpExecArray | null = this.rxTabSai.exec(linha);
             this.rxTabSai.lastIndex = 0;
 
-            if(tabIni) {
+            /*if(tabIni) {
                 novaLinha = tabIni[1];
             }
             else if(tabSai) {
@@ -54,9 +54,9 @@ export class Dump {
             }
             else {
                 novaLinha = '';
-            }
+            }*/
 
-            novoConteudo += `<span class="linha">${novaLinha}</span>`;
+            // novoConteudo += `<span class="linha">${novaLinha}</span>`;
         }
 
         return {texto: conteudoArq, caminho: this.caminho};

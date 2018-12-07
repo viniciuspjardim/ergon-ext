@@ -6,6 +6,7 @@ import { ES } from './es';
 import { Rubricas } from './rubricas';
 import { Dump } from './dump';
 import { Descobrir } from './descobrir';
+import { ArquivoBase } from './arquivoBase';
 
 /** Classe de entrada e saida de dados */
 export class Controlador {
@@ -20,6 +21,7 @@ export class Controlador {
     private descobrir: Descobrir;
     private rubricas: Rubricas;
     private dump: Dump;
+    private arquivoBase: ArquivoBase;
 
     private caminhoArq: string;
 
@@ -42,6 +44,7 @@ export class Controlador {
         this.descobrir = new Descobrir(this.pref.caminhoExecucao);
         this.rubricas = new Rubricas(this.pref.caminhoExecucao);
         this.dump = new Dump(this.pref.caminhoExecucao);
+        this.arquivoBase = new ArquivoBase(this.pref.caminhoExecucao);
         this.caminhoArq = '';
 
         this.adicionarListenerWebview();
@@ -152,7 +155,7 @@ export class Controlador {
                     }
                     else {
                         this.caminhoArq = caminho;
-                        const resultado: any = this.rubricas.parseArqRubricas(data);
+                        const resultado: any = this.rubricas.parseArquivo(data);
                         ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
                     }
                 }, this.pref.charsetExecucao);
@@ -162,7 +165,7 @@ export class Controlador {
             // Se mensagem recebida do webview for 'abrirLogErro'
             else if(mensagem.acao === 'abrirLogErro') {
 
-                caminho = this.rubricas.construirCaminho(mensagem.filtro, mensagem.acao);
+                caminho = this.arquivoBase.construirCaminho(mensagem.filtro, mensagem.acao);
 
                 // Começa a ler o arquivo de log/debug de dados da execução e cadastra
                 // o callback pra quando terminar a leitura
@@ -174,10 +177,11 @@ export class Controlador {
                     }
                     else {
                         this.caminhoArq = caminho;
-                        const resultado: any = this.rubricas.parseArqRubricas(data);
+                        const resultado: any = this.arquivoBase.parseArquivo(data);
                         ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
                     }
                 }, this.pref.charsetExecucao);
+                
                 return;
             }
             // Se mensagem recebida do webview for 'abrirDump'
@@ -192,7 +196,6 @@ export class Controlador {
                         this.caminhoArq = '';
                         mensagemErr = '<span class="mensagemErr">Erro ao ler arquivo</span>';
                         ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
-                        console.log(erro);
                     }
                     else {
                         this.caminhoArq = caminho;
@@ -200,6 +203,7 @@ export class Controlador {
                         ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
                     }
                 }, this.pref.charsetExecucao);
+
                 return;
             }
             
