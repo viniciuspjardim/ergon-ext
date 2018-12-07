@@ -7,19 +7,20 @@ export class Dump {
     private rxTabIni: RegExp = /^\s*Tabela\s+([a-zA-Z0-9_]+)\s*iniciada\s*\.+\s*(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
     private rxTabSai: RegExp = /^\s*\.+\s+em\s+([a-zA-Z0-9_]+)\s*lidos\s*([0-9]+)\s+gravados\s+([0-9]+)\s+(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
     private pastaExecucao: string;
+    private caminho: string;
     
     constructor(pastaExecucao: string) {
         this.pastaExecucao = pastaExecucao;
+        this.caminho = '';
     }
 
     public construirCaminho(c: any, acao: string): string {
         if(acao === 'abrirDump') {
             //        C:/folha/execucao/Emp_01_TOCANTINS/Destino_delta        _SRVFVJ              /VJ              /F_2016              04                           034                   _E00001                   /Log/Folha11.LOG
-            let caminho: string = `${this.pastaExecucao}/Destino_${c.ambiente}_${c.servidorCalculo}/${c.tipoCalculo}/F_${c.mesAnoFol.ano}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 3)}_E${ES.pad(c.execucao, 5)}/Log/Folha11.LOG`;
-            console.log(caminho);
-            return caminho;
+            this.caminho = `${this.pastaExecucao}/Destino_${c.ambiente}_${c.servidorCalculo}/${c.tipoCalculo}/F_${c.mesAnoFol.ano}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 3)}_E${ES.pad(c.execucao, 5)}/Log/Folha11.LOG`;
+            console.log(this.caminho);
         }
-        return '';
+        return this.caminho;
     }
 
     public parseArquivo(conteudoArq: string): any {
@@ -58,6 +59,6 @@ export class Dump {
             novoConteudo += `<span class="linha">${novaLinha}</span>`;
         }
 
-        return {texto: novoConteudo};
+        return {texto: conteudoArq, caminho: this.caminho};
     }
 }

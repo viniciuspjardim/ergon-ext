@@ -25,6 +25,10 @@ export class Controlador {
 
     constructor(context: vscode.ExtensionContext) {
         this.context = context;
+
+        // Lendo variaveis do arquivo de configuração do usuario
+        this.pref = vscode.workspace.getConfiguration('ergonExt');
+
         this.panel = vscode.window.createWebviewPanel(
             'rubricasPeriodo',
             'Ergon Ext',
@@ -34,10 +38,7 @@ export class Controlador {
                 retainContextWhenHidden: true
             }
         );
-
-        // Lendo variaveis do arquivo de configuração do usuario
-        this.pref = vscode.workspace.getConfiguration('ergonExt');
-
+        
         this.descobrir = new Descobrir(this.pref.caminhoExecucao);
         this.rubricas = new Rubricas(this.pref.caminhoExecucao);
         this.dump = new Dump(this.pref.caminhoExecucao);
@@ -191,6 +192,7 @@ export class Controlador {
                         this.caminhoArq = '';
                         mensagemErr = '<span class="mensagemErr">Erro ao ler arquivo</span>';
                         ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
+                        console.log(erro);
                     }
                     else {
                         this.caminhoArq = caminho;

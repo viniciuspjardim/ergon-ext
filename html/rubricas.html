@@ -108,6 +108,18 @@
             font-size: 14px;
         }
         #conteudoArquivo:focus { outline: 0; }
+        .caminho {
+            float: left;
+            width: 96%;
+            margin: 1em;
+            padding: 8px;
+            text-align: center;
+            white-space: normal;
+            border-style: solid;
+            border-width: 1px;
+            border-color: rgba(255, 255, 255, 0.160);
+            background: rgb(50, 50, 50);
+        }
         /* header linha */
         .hlinha {
             float: left;
@@ -342,7 +354,8 @@
                     // Quando não é nulo o arquivo mudou, então precisa alterar o conteudo
                     // da página e voltar a barra de rolagem pro começo
                     if(m.conteudo.texto !== null) {
-                        document.getElementById('conteudoArquivo').innerHTML = m.conteudo.texto;
+                        document.getElementById('conteudoArquivo').innerHTML =
+                                '<div class="caminho">' + m.conteudo.caminho.replace(/\//g, '\\') + '</div>' + m.conteudo.texto;
                         window.indice = m.conteudo.index;
                         window.indiceLinha = m.conteudo.indexLinha;
                         window.scrollTo(0, 0);
