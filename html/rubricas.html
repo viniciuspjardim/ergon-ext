@@ -11,6 +11,7 @@
         }
         #cabeçalho {
             position: fixed;
+            z-index: 5;
             top: 0;
             right: 0;
             left: 0;
@@ -121,36 +122,45 @@
             background: rgb(50, 50, 50);
         }
         /* header linha */
-        .hlinha {
+        .lin {
             float: left;
             width: 100%;
             white-space: nowrap;
         }
         .rubEntra {
-            float: left;
+            position: relative;
+            display: inline-block;
             width: calc(100% - 48px);
             background-color: rgba(0, 192, 48, 0.137);
             color:  rgb(255, 255, 255);
         }
         .rubSai {
-            float: left;
+            position: relative;
+            display: inline-block;
             width: calc(100% - 48px);
             background-color: rgba(192, 48, 0, 0.137);
             color:  rgb(255, 255, 255);
         }
-        .preLinha {
-            float: left;
-            width: calc(100% - 48px);
-            /* background-color: rgba(0, 192, 48, 0.137); */
-            color:  rgb(255, 255, 255);
+        .rubEntra .rubInfo, .rubSai .rubInfo {
+            visibility: hidden;
+            padding: 5px 8px 5px 0px;
+            margin-bottom: 1px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: rgba(255, 255, 255, 0.160);
+            background: rgb(50, 50, 50);
+
+            bottom: 100%;
+ 
+            /* Position the tooltip text - see examples below! */
+            position: absolute;
+            z-index: 6;
         }
-        .posLinha {
-            float: left;
-            width: calc(100% - 48px);
-            /* background-color: rgba(192, 48, 0, 0.137); */
-            color:  rgb(255, 255, 255);
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .rubEntra:hover .rubInfo, .rubSai:hover .rubInfo {
+            visibility: visible;
         }
-        .linha {
+        .texto {
             margin-left: 3em;
         }
         /** campo */
@@ -279,7 +289,7 @@
                     <button id="abrirIr" type="submit">Abrir / Ir</button>
                 </div>
             </form>
-            <div class="hlinha titulos">
+            <div class="lin titulos">
                 <span class="contLinha">&nbsp;</span>
                 <span class="titulosI">
                     <span class="hc" style="width: 27.7em; border-style: none;">Rubrica</span>
@@ -297,7 +307,6 @@
         <div id="msgAoCarregar">Carregando...</div>
     </div>
     <script>
-
         window.vscode = acquireVsCodeApi();
         window.indice = {};
         window.indiceLinha = {};
@@ -365,9 +374,8 @@
                     const rubrica = document.getElementById('rubrica').value;
                     const perido = document.getElementById('periodo').value;
                     const tipo = document.getElementById('tipo').value;
-                    const tipoId = tipo == 'RE' ? 'preLinha_' : 'linha_';
 
-                    const linhaId = tipoId + window.indice[tipo + '_' + perido + '_' + rubrica];
+                    const linhaId = 'linha_' + window.indice[tipo + '_' + perido + '_' + rubrica];
                     document.getElementById(linhaId).scrollIntoView();
                     window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
                     document.getElementById('conteudoArquivo').focus();
@@ -477,8 +485,7 @@
                 let proximoHeader = getProximoHeader(id);
                 // Se existe um próximo hader scroll até ele
                 if(proximoHeader) {
-                    const tipoId = proximoHeader.tipo == 'RE' ? 'preLinha_' : 'linha_';
-                    const linhaId = tipoId + proximoHeader.linha;
+                    const linhaId = 'linha_' + proximoHeader.linha;
                     document.getElementById(linhaId).scrollIntoView();
                     window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
                 }
@@ -487,8 +494,7 @@
                 let headerAnterior = getHeaderAnterior(id);
                 // Se existe um próximo hader scroll até ele
                 if(headerAnterior) {
-                    const tipoId = headerAnterior.tipo == 'RE' ? 'preLinha_' : 'linha_';
-                    const linhaId = tipoId + headerAnterior.linha;
+                    const linhaId = 'linha_' + headerAnterior.linha;
                     document.getElementById(linhaId).scrollIntoView();
                     window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
                 }

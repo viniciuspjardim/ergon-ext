@@ -45,6 +45,11 @@ export class ArvoreNo {
     }
 }
 
+/** 
+ * Percorre recursivamente a pasta de execuções para descobrir dados e montar uma árvore com
+ * número das execuções, datas, numfuncs etc. Esses dados serão usados para a função de
+ * autocompletar nos campos do filtro.
+ */
 export class Descobrir {
 
     public raiz: ArvoreNo = new ArvoreNo('raiz', 'raiz', 'raiz');

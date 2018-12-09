@@ -38,7 +38,7 @@ export class ArquivoBase {
         for(i in linhas) {
             let linha: string = linhas[i];
             let novaLinha: string;
-            novaLinha = `<div class="hlinha"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span><span class="linha">${linha}</span></div>\n`;
+            novaLinha = `<div class="lin"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span>${linha}</div>\n`;
             novoConteudo += novaLinha;
             numLinha++;
         }

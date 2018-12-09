@@ -4,8 +4,8 @@ import { ES } from './es';
 
 export class Dump {
 
-    private rxTabIni: RegExp = /^\s*Tabela\s+([a-zA-Z0-9_]+)\s*iniciada\s*\.+\s*(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
-    private rxTabSai: RegExp = /^\s*\.+\s+em\s+([a-zA-Z0-9_]+)\s*lidos\s*([0-9]+)\s+gravados\s+([0-9]+)\s+(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
+    // private rxTabIni: RegExp = /^\s*Tabela\s+([a-zA-Z0-9_]+)\s*iniciada\s*\.+\s*(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
+    // private rxTabSai: RegExp = /^\s*\.+\s+em\s+([a-zA-Z0-9_]+)\s*lidos\s*([0-9]+)\s+gravados\s+([0-9]+)\s+(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
     private pastaExecucao: string;
     private caminho: string;
     
@@ -25,7 +25,7 @@ export class Dump {
 
     public parseArquivo(conteudoArq: string): any {
 
-        // let novoConteudo: string = '';
+        let novoConteudo: string = '';
 
         // Substituindo CRLF ou CR pelo LF
         conteudoArq = conteudoArq.replace(/\r\n/g, '\n');
@@ -33,20 +33,20 @@ export class Dump {
 
         let linhas: string[] = conteudoArq.split('\n');
 
-        // let numLinha: number = 1;
+        let numLinha: number = 1;
         let i: any;
 
         // TODO: finish file parse
         for(i in linhas) {
             
-            let linha: string = linhas[i];
-            // let novaLinha: string;
+            /* let linha: string = linhas[i];
+            let novaLinha: string;
             let tabIni: RegExpExecArray | null = this.rxTabIni.exec(linha);
             this.rxTabIni.lastIndex = 0;
             let tabSai: RegExpExecArray | null = this.rxTabSai.exec(linha);
             this.rxTabSai.lastIndex = 0;
 
-            /*if(tabIni) {
+            if(tabIni) {
                 novaLinha = tabIni[1];
             }
             else if(tabSai) {
@@ -54,11 +54,15 @@ export class Dump {
             }
             else {
                 novaLinha = '';
-            }*/
+            } */
 
-            // novoConteudo += `<span class="linha">${novaLinha}</span>`;
+            let linha: string = linhas[i];
+            let novaLinha: string;
+            novaLinha = `<div class="lin"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span>${linha}</div>\n`;
+            novoConteudo += novaLinha;
+            numLinha++;
         }
 
-        return {texto: conteudoArq, caminho: this.caminho};
+        return {texto: novoConteudo, caminho: this.caminho};
     }
 }

@@ -74,8 +74,7 @@ export class Rubricas {
 
             let linha: string = linhas[i];
             let novaLinha: string;
-            let preLinha: string = '';
-            let posLinha: string = '';
+            let rubInfo: string = '';
             let atribEntra: RegExpExecArray | null = this.rubricaEntraRegex.exec(linha);
             this.rubricaEntraRegex.lastIndex = 0;
             let atribSai: RegExpExecArray | null = this.rubricaSaiRegex.exec(linha);
@@ -117,18 +116,14 @@ export class Rubricas {
 
                 pilha.push(dados.rubrica);
                 for(let item of pilha) {
-                    preLinha += `<span class="c csb">>></span>${item}`;
+                    rubInfo += `<span class="c csb">>></span>${item}`;
                 }
 
-                preLinha =
-                        `<div class="hlinha">` +
-                        `<span id="preLinha_${numLinha}" class="contLinha">&nbsp;</span>` +
-                        `<span class="preLinha">${preLinha}</span>` +
-                        `</div>\n`;
+                rubInfo = `<span class="rubInfo">${rubInfo}</span>\n`;
 
                 let linhaFmt: string = '<span class="c csb">>></span>' + fmt(dados);
                 
-                novaLinha = `<span class="rubEntra">${linhaFmt}</span>`;
+                novaLinha = `<div class="rubEntra">${rubInfo}${linhaFmt}</div>`;
                 index[`RE_${dados.periodo}_${dados.rubrica}`] = numLinha;
                 indexLinha.push({
                     linha: numLinha,
@@ -146,20 +141,18 @@ export class Rubricas {
                     pilha.pop();
                 }
 
-                posLinha = '<span class="c csb"><<</span>';
+                rubInfo = '<span class="c csb"><<</span>';
                 for(let item of pilha) {
-                    posLinha += `${item}<span class="c csb"><<</span>`;
+                    rubInfo += `${item}<span class="c csb"><<</span>`;
                 }
 
-                posLinha =
-                        `<div class="hlinha">` +
-                        `<span id="posLinha_${numLinha}" class="contLinha">&nbsp;</span>` +
-                        `<span class="posLinha">${posLinha}</span>` +
-                        `</div>\n`;
+                rubInfo = `<span class="rubInfo">${rubInfo}</span>\n`;
                 
                 let linhaFmt: string = `<span class="c csb"><<</span>` + fmt(dados);
                 
-                novaLinha = `<span class="rubSai">${linhaFmt}</span>`;
+                novaLinha = `<div class="rubSai">${rubInfo}${linhaFmt}</div>`;
+                
+                // TODO: complemento não indexado, busca por complemento não está funcionando
                 index[`RS_${dados.periodo}_${dados.rubrica}`] = numLinha;
                 indexLinha.push({
                     linha: numLinha,
@@ -169,10 +162,10 @@ export class Rubricas {
                 });
             }
             else {
-                novaLinha = `<span class="linha">${linha}</span>`;
+                novaLinha = `<span class="texto">${linha}</span>`;
             }
 
-            novaLinha = `${preLinha}<div class="hlinha"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span>${novaLinha}</div>\n${posLinha}`;
+            novaLinha = `<div class="lin"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span>${novaLinha}</div>\n`;
             novoConteudo += novaLinha;
             numLinha++;
         }
