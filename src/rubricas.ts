@@ -22,6 +22,7 @@ export interface DadosLinha {
 
 export class Rubricas {
 
+    private periodoRegex: RegExp = /^\s*-\s+(\d+)\s+:\s+((\d{4})(\d{2})(\d{2}))-((\d{4})(\d{2})(\d{2}))\s+(\d+)\s+dias\s*$/ig;
     private rubricaEntraRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
     private rubricaSaiRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*<-\s*\.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
     private pastaExecucao: string;
@@ -55,9 +56,13 @@ export class Rubricas {
 
     public parseArquivo(conteudoArq: string): any {
 
+        // TODO: refatorar esse método
+
         let novoConteudo: string = '';
         let index: any = {};
         let indexLinha: any[] = [];
+        let indexPeriodo: any[] = [];
+        let diasPerTotal: number = -1;
 
         // Substituindo CRLF ou CR pelo LF
         conteudoArq = conteudoArq.replace(/\r\n/g, '\n');
@@ -75,12 +80,15 @@ export class Rubricas {
             let linha: string = linhas[i];
             let novaLinha: string;
             let rubInfo: string = '';
+            let perInfo: string = '';
+            let periodoDados: RegExpExecArray | null = this.periodoRegex.exec(linha);
+            this.periodoRegex.lastIndex = 0;
             let atribEntra: RegExpExecArray | null = this.rubricaEntraRegex.exec(linha);
             this.rubricaEntraRegex.lastIndex = 0;
             let atribSai: RegExpExecArray | null = this.rubricaSaiRegex.exec(linha);
             this.rubricaSaiRegex.lastIndex = 0;
 
-            let fmt = (dados: DadosLinha): string => {
+            let fmt = (dados: DadosLinha, rubInfo:string, perInfo:string): string => {
                 
                 let campoRubrica: string;
                 let nomeRubrica: string = '?';
@@ -98,8 +106,8 @@ export class Rubricas {
                 }
                 
                 let linhaFmt: string =
-                        `<span class="nomeRubrica">${campoRubrica}</span>` +
-                        `<span class="c periodo">${dados.periodo}</span>` +
+                        `<span class="nomeRubrica">${campoRubrica}${rubInfo}</span>` +
+                        `<span class="c periodo">${dados.periodo}${perInfo}</span>` +
                         `<span class="c resultadoRub">${dados.valCalc}</span>` +
                         `<span class="c resultadoRub">${dados.valPago}</span>` +
                         `<span class="c resultadoRub">${dados.valLiq}</span>` +
@@ -110,8 +118,25 @@ export class Rubricas {
                 return linhaFmt;
             };
 
+            if(periodoDados) {
+                novaLinha = `<span class="texto">${linha}</span>`;
+
+                if(+periodoDados[1] === 0) {
+                    diasPerTotal = +periodoDados[10];
+                }
+
+                indexPeriodo.push({
+                    priodo: +periodoDados[1],
+                    dataIni: +periodoDados[2],
+                    diaIni: +periodoDados[5],
+                    dataFim: +periodoDados[6],
+                    diaFim: +periodoDados[9],
+                    dias: +periodoDados[10],
+                    fracao: +periodoDados[10] / diasPerTotal
+                });
+            }
             // Rubrica entra 'RE'
-            if(atribEntra) {
+            else if(atribEntra) {
                 const dados: DadosLinha = this.novoDadosLinha(atribEntra, 'RE');
 
                 pilha.push(dados.rubrica);
@@ -119,11 +144,16 @@ export class Rubricas {
                     rubInfo += `<span class="c csb">>></span>${item}`;
                 }
 
-                rubInfo = `<span class="rubInfo">${rubInfo}</span>\n`;
+                rubInfo = `<span class="tooltip">Pilha: ${rubInfo}<span class="c csb">>></span></span>\n`;
 
-                let linhaFmt: string = '<span class="c csb">>></span>' + fmt(dados);
+                if(+dados.periodo < indexPeriodo.length) {
+                    let dadosPer: any = indexPeriodo[+dados.periodo];
+                    perInfo = `<span class="tooltip">Período ${dadosPer.priodo}: de ${dadosPer.diaIni} à ${dadosPer.diaFim} | ${dadosPer.dias} dia(s)</span>\n`;
+                }
+
+                let linhaFmt: string = '<span class="c csb">>></span>' + fmt(dados, rubInfo, perInfo);
                 
-                novaLinha = `<div class="rubEntra">${rubInfo}${linhaFmt}</div>`;
+                novaLinha = `<div class="rubEntra">${linhaFmt}</div>`;
                 index[`RE_${dados.periodo}_${dados.rubrica}`] = numLinha;
                 indexLinha.push({
                     linha: numLinha,
@@ -146,11 +176,16 @@ export class Rubricas {
                     rubInfo += `${item}<span class="c csb"><<</span>`;
                 }
 
-                rubInfo = `<span class="rubInfo">${rubInfo}</span>\n`;
+                rubInfo = `<span class="tooltip">Pilha: ${rubInfo}</span>\n`;
+
+                if(+dados.periodo < indexPeriodo.length) {
+                    let dadosPer: any = indexPeriodo[+dados.periodo];
+                    perInfo = `<span class="tooltip">Período ${dadosPer.priodo}: de ${dadosPer.diaIni} à ${dadosPer.diaFim} | ${dadosPer.dias} dia(s)</span>\n`;
+                }
                 
-                let linhaFmt: string = `<span class="c csb"><<</span>` + fmt(dados);
+                let linhaFmt: string = `<span class="c csb"><<</span>` + fmt(dados, rubInfo, perInfo);
                 
-                novaLinha = `<div class="rubSai">${rubInfo}${linhaFmt}</div>`;
+                novaLinha = `<div class="rubSai">${linhaFmt}</div>`;
                 
                 // TODO: complemento não indexado, busca por complemento não está funcionando
                 index[`RS_${dados.periodo}_${dados.rubrica}`] = numLinha;
@@ -170,7 +205,7 @@ export class Rubricas {
             numLinha++;
         }
 
-        return {texto: novoConteudo, caminho: this.caminho, index: index, indexLinha: indexLinha};
+        return {texto: novoConteudo, caminho: this.caminho, index: index, indexLinha: indexLinha, indexPeriodo: indexPeriodo};
     }
 
     private novoDadosLinha(dados: RegExpExecArray, tipoLinha: TipoLinha): DadosLinha {

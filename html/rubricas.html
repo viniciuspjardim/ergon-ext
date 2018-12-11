@@ -121,43 +121,45 @@
             border-color: rgba(255, 255, 255, 0.160);
             background: rgb(50, 50, 50);
         }
-        /* header linha */
         .lin {
             float: left;
             width: 100%;
             white-space: nowrap;
         }
         .rubEntra {
-            position: relative;
             display: inline-block;
             width: calc(100% - 48px);
             background-color: rgba(0, 192, 48, 0.137);
             color:  rgb(255, 255, 255);
         }
         .rubSai {
-            position: relative;
             display: inline-block;
             width: calc(100% - 48px);
             background-color: rgba(192, 48, 0, 0.137);
             color:  rgb(255, 255, 255);
         }
-        .rubEntra .rubInfo, .rubSai .rubInfo {
+        .nomeRubrica .tooltip, .periodo .tooltip {
             visibility: hidden;
-            padding: 5px 8px 5px 0px;
+            padding: 5px;
             margin-bottom: 1px;
             border-style: solid;
             border-width: 1px;
             border-color: rgba(255, 255, 255, 0.160);
             background: rgb(50, 50, 50);
-
-            bottom: 100%;
  
             /* Position the tooltip text - see examples below! */
             position: absolute;
+            bottom: 100%;
             z-index: 6;
         }
+        .nomeRubrica .tooltip {
+            left: 0;
+        }
+        .periodo .tooltip {
+            right: 0;
+        }
         /* Show the tooltip text when you mouse over the tooltip container */
-        .rubEntra:hover .rubInfo, .rubSai:hover .rubInfo {
+        .nomeRubrica:hover .tooltip, .periodo:hover .tooltip {
             visibility: visible;
         }
         .texto {
@@ -179,6 +181,7 @@
             padding: 0 1em 0 1em;
         }
         .nomeRubrica {
+            position: relative;
             display: inline-block;
             width: 26em;
         }
@@ -188,6 +191,7 @@
             text-align: right;
         }
         .periodo {
+            position: relative;
             display: inline-block;
             width: 8em;
             text-align: right;

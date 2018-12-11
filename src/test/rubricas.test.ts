@@ -21,9 +21,12 @@ suite("Extension Tests", function () {
         // let linha6: string = " Tabela GTO_VW_LIBERA_ACERTO           iniciada ...                       29/10/2018 12:31:22    ";
         // let linha7: string = "Tabela GTO_VW_LIMITE_DJ               iniciada ...                       29/10/2018 12:31:22";
         // let linha8: string = " ... em GTO_VW_LIMITE_DJ               lidos        10 gravados         0 29/10/2018 12:31:22  ";
+        let linha9: string =  " - 00 : 20181101-20181130    30 dias";
+        let linha10: string = " - 01 : 20181101-20181104    4 dias";
 
         // let rxTabIni: RegExp = /^\s*Tabela\s+([a-zA-Z0-9_]+)\s*iniciada\s*\.+\s*(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
         // let rxTabSai: RegExp = /^\s*\.+\s+em\s+([a-zA-Z0-9_]+)\s*lidos\s*([0-9]+)\s+gravados\s+([0-9]+)\s+(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
+        let rxPeriodo: RegExp = /^\s*-\s+(\d+)\s+:\s+((\d{4})(\d{2})(\d{2}))-((\d{4})(\d{2})(\d{2}))\s+(\d+)\s+dias\s*$/ig;
         
         let rxEntra: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
         let rxSai: RegExp = /^\s*(\d+)\s*(\d+)\s*<-\s*\.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;
@@ -49,6 +52,12 @@ suite("Extension Tests", function () {
         // let dado8 = rxTabSai.exec(linha8);
         // rxTabSai.lastIndex = 0;
 
+        let dado9 = rxPeriodo.exec(linha9);
+        rxPeriodo.lastIndex = 0;
+
+        let dado10 = rxPeriodo.exec(linha10);
+        rxPeriodo.lastIndex = 0;
+
         let descobrir: Descobrir = new Descobrir('C:/folha/execucao/Emp_01_TOCANTINS');
         descobrir.percorrerPastas();
 
@@ -69,6 +78,8 @@ suite("Extension Tests", function () {
         console.log(dados6);
         console.log("\nDados 8:");
         console.log(dado8);*/
+        console.log(dado9);
+        console.log(dado10);
 
         if(dados1 !== null) {
 
