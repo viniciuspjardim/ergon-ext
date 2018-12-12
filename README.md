@@ -1,7 +1,13 @@
 # Ergon Ext
 É uma extensão do VS Code que facilita a navegação pelos arquivos de log e debug do sistema
-de RH Ergon que é desenvolvido pela Techne. Para abrir a extensão aperte `Ctrl` + `Shift` +
-`P` e digite `Ergon: Carregar arquivos`.
+de RH Ergon que é desenvolvido pela Techne.
+
+## Instalando
+1. Baixe a última versão da extensão (arquivo `.vsix`) em
+[releases](https://github.com/viniciuspjardim/ergon-ext/releases) no GitHub; 
+2. Abra a guia de extensões no Visual Studio Code (`Ctrl` + `Shift` + `X`), clique em `...`
+na parte superior da guia e `Install from VSIX...`;
+3. Selecione o arquivo baixado.
 
 ## Configurando
 É necessário fornecer o caminho da pasta de execução da folha do Ergon e o caminho do
@@ -18,15 +24,19 @@ Exemplo:
 
 ```json
 {
+    ...,
+
     "ergonExt": {
-        "caminhoExecucao": "<?>/execucao/Emp_<?>",
+        "caminhoExecucao": ".../execucao/Emp_...",
         "charsetExecucao": "1252",
-        "caminhoRubricas": "<?>",
+        "caminhoRubricas": "...",
         "charsetRubricas": "utf8"
     }
 }
 ```
 3. Salve o arquivo.
+
+4. Para abrir a extensão aperte `Ctrl` + `Shift` + `P` e digite `Ergon: Carregar arquivos`.
 
 ## Recursos
 * Abrir o arquivo correto simplesmente alterando os campos do filtro
@@ -39,9 +49,9 @@ navegar com teclas atalho. Exemplo: ir para a rubrica 3001 no período 0
 parou
 
 ## Arquivos Suportados
-* Per - `(...)/Debug/Folha12*/*Ano*/*.dbg` - logs das fórmulas de período e total
-* Liq - `(...)/Debug/Folha12*/*Liquido*.dbg` - logs das fórmulas de líquido
-* Err - `(...)/Fontes/Fo*g.tmp` - mensagens de alerta e erro do compilador
+* Per - `.../Debug/Folha12*/*Ano*/*.dbg` - logs das fórmulas de período e total
+* Liq - `.../Debug/Folha12*/*Liquido*.dbg` - logs das fórmulas de líquido
+* Err - `.../Fontes/Fo*g.tmp` - mensagens de alerta e erro do compilador
 
 ## Teclas Atalho
 * `a` - selecionar valor do campo `Ambiente`
