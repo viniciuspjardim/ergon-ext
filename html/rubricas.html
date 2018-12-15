@@ -310,14 +310,19 @@
         <div id="msgAoCarregar">Carregando...</div>
     </div>
     <script>
+
         window.vscode = acquireVsCodeApi();
-        window.indice = {};
-        window.indiceLinha = {};
-        window.forcarRecarregar = false;
+
+        window.rubricaLinhaIdx = {};
+        window.linhaRubricaIdx = {};
+        window.periodoIdx = {};
+        
         window.autoCompletar = null;
         window.autoCompletarLista = [];
         window.camposAutoCompletar = ['ambiente', 'servidorCalculo', 'tipoCalculo', 'mesAnoFol', 'numFol',
             'execucao', 'numFunc', 'numVinc', 'seqFunc', 'seqVinc', 'mesAnoRub'];
+        
+        window.forcarRecarregar = false;
 
         function pad(num, padlen) {
             var pad = new Array(1 + padlen).join('0');
@@ -361,24 +366,35 @@
             document.getElementById('msgAoCarregar').style.visibility='hidden';
 
             switch(m.acao) {
+
                 case 'parse_rubrica_ok':
 
                     // Quando não é nulo o arquivo mudou, então precisa alterar o conteudo
                     // da página e voltar a barra de rolagem pro começo
                     if(m.conteudo.texto !== null) {
+
+                        // Inserindo dados no elemento
                         document.getElementById('conteudoArquivo').innerHTML =
-                                '<div class="caminho">' + m.conteudo.caminho.replace(/\//g, '\\') + '</div>' + m.conteudo.texto;
-                        window.indice = m.conteudo.index;
-                        window.indiceLinha = m.conteudo.indexLinha;
+                                '<div class="caminho">' + m.conteudo.caminho.replace(/\//g, '\\') + '</div>'
+                                + m.conteudo.texto;
+
+                        window.rubricaLinhaIdx = m.conteudo.rubricaLinhaIdx;
+                        window.linhaRubricaIdx = m.conteudo.linhaRubricaIdx;
+                        window.periodoIdx = m.conteudo.periodoIdx;
                         window.scrollTo(0, 0);
                     }
 
-                    // Indo para o perido/rubrica selecionados
-                    const rubrica = document.getElementById('rubrica').value;
-                    const perido = document.getElementById('periodo').value;
-                    const tipo = document.getElementById('tipo').value;
+                    // Montando a chave do índice com os valores do filtro para encontrar a linha
+                    // da rubrica buscada
 
-                    const linhaId = 'linha_' + window.indice[tipo + '_' + perido + '_' + rubrica];
+                    const tipo = document.getElementById('tipo').value;
+                    const perido = document.getElementById('periodo').value;
+                    const rubrica = document.getElementById('rubrica').value;
+                    const complemento = document.getElementById('complemento').value;
+
+                    const linhaId = 'linha_' + window.rubricaLinhaIdx[tipo + '\n' + perido +
+                            '\n' + rubrica + '\n' + complemento];
+
                     document.getElementById(linhaId).scrollIntoView();
                     window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
                     document.getElementById('conteudoArquivo').focus();
@@ -443,9 +459,9 @@
             let linhaAtual = parseInt(idAtual.split('_')[1]);
 
             // Converter para busca binária
-            for(var i = 0; i < window.indiceLinha.length; i++) {
-                if(window.indiceLinha[i].linha > linhaAtual) {
-                    return window.indiceLinha[i];
+            for(var i = 0; i < window.linhaRubricaIdx.length; i++) {
+                if(window.linhaRubricaIdx[i].linha > linhaAtual) {
+                    return window.linhaRubricaIdx[i];
                 }
             }
             return null;
@@ -455,9 +471,9 @@
             let linhaAtual = parseInt(idAtual.split('_')[1]);
 
             // Converter para busca binária
-            for(var i = window.indiceLinha.length -1; i >= 0; i--) {
-                if(window.indiceLinha[i].linha < linhaAtual) {
-                    return window.indiceLinha[i];
+            for(var i = window.linhaRubricaIdx.length -1; i >= 0; i--) {
+                if(window.linhaRubricaIdx[i].linha < linhaAtual) {
+                    return window.linhaRubricaIdx[i];
                 }
             }
             return null;

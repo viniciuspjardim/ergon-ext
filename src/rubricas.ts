@@ -54,14 +54,48 @@ export class Rubricas {
         return this.caminho;
     }
 
+    /** Percorre as linhas do arquivo formatando e indexando os tipos de linhas conhecidos */
     public parseArquivo(conteudoArq: string): any {
+        
+        let rubricaLinhaIdx: any = {};
+        let linhaRubricaIdx: any[] = [];
+        let periodoIdx: any[] = [];
 
-        // TODO: refatorar esse método
+        // Adiciona valores nos índices
+        const addIdx = (d: DadosLinha): void => {
 
-        let novoConteudo: string = '';
-        let index: any = {};
-        let indexLinha: any[] = [];
-        let indexPeriodo: any[] = [];
+            // Hash Table / índice onde a chave é <RE|RS, periodo, rubrica e complemento> e o
+            // valor é a linha onde essa rubrica está no arquivo.
+            // Usado para encontar a linha de uma rubrica
+            rubricaLinhaIdx[`${d.tipoLinha}\n${d.periodo}\n${d.rubrica}\n${d.complemento}`] = numLinha;
+
+            // Adicionando uma chave sem complemento na primeira vez que encontra a rubica X com
+            // complemento. Útil para encontrar a primeira ocorrência da rubrica X sem passar
+            // o campo complemento no filtro
+            if(d.complemento !== '') {
+                const chave = `${d.tipoLinha}\n${d.periodo}\n${d.rubrica}\n`;
+
+                // Adiciona caso não exista
+                if(!rubricaLinhaIdx[chave]) {
+                    rubricaLinhaIdx[chave] = numLinha;
+                }
+            }
+                
+            // Array ordenado por linha onde contém os dados de qual rubrica está naquela linha.
+            // Usado para encontrar rubricas próximas a uma linha
+            linhaRubricaIdx.push({
+                linha: numLinha,
+                tipo: d.tipoLinha,
+                perido: d.periodo,
+                rubrica: d.rubrica,
+                complemento: d.complemento
+            });
+        };
+
+        // Conteúdo original pós processado/formatado
+        let html: string = '';
+        
+        // Número de dias do perído total, ou seja do mês ano direito
         let diasPerTotal: number = -1;
 
         // Substituindo CRLF ou CR pelo LF
@@ -70,7 +104,7 @@ export class Rubricas {
 
         let linhas: string[] = conteudoArq.split('\n');
 
-        // Pilha da chamada das rubricas
+        // Pilha da chamadas das rubricas
         let pilha: string[] = [];
         let numLinha: number = 1;
         let i: any;
@@ -81,43 +115,28 @@ export class Rubricas {
             let novaLinha: string;
             let rubInfo: string = '';
             let perInfo: string = '';
-            let periodoDados: RegExpExecArray | null = this.periodoRegex.exec(linha);
+            
+            let periodoDados: RegExpExecArray | null = null;
+            let atribEntra: RegExpExecArray | null = null;
+            let atribSai: RegExpExecArray | null = null;
+
+            // Vendo se é uma linha do tipo periodoRegex
+            periodoDados = this.periodoRegex.exec(linha);
             this.periodoRegex.lastIndex = 0;
-            let atribEntra: RegExpExecArray | null = this.rubricaEntraRegex.exec(linha);
-            this.rubricaEntraRegex.lastIndex = 0;
-            let atribSai: RegExpExecArray | null = this.rubricaSaiRegex.exec(linha);
-            this.rubricaSaiRegex.lastIndex = 0;
 
-            let fmt = (dados: DadosLinha, rubInfo:string, perInfo:string): string => {
-                
-                let campoRubrica: string;
-                let nomeRubrica: string = '?';
+            // Se não for, ve se é de rubricaEntraRegex
+            if(!periodoDados) {
+                atribEntra = this.rubricaEntraRegex.exec(linha);
+                this.rubricaEntraRegex.lastIndex = 0;
+            }
 
-                if(this.nomeRubricas[dados.rubrica]) {
-                    nomeRubrica = this.nomeRubricas[dados.rubrica].nome.trim();
-                }
+            // Se não for nenhum dos dois acima, ve se é de rubricaSaiRegex
+            if(!periodoDados && !atribEntra) {
+                atribSai = this.rubricaSaiRegex.exec(linha);
+                this.rubricaSaiRegex.lastIndex = 0;
+            }
 
-                if(dados.rubrica !== '0') {
-                    let cpl: string = dados.complemento === '' ? '' : ` - "${dados.complemento}"`;
-                    campoRubrica = `${dados.rubrica} ${nomeRubrica}${cpl}`;
-                }
-                else {
-                    campoRubrica = dados.mnemonico;
-                }
-                
-                let linhaFmt: string =
-                        `<span class="nomeRubrica">${campoRubrica}${rubInfo}</span>` +
-                        `<span class="c periodo">${dados.periodo}${perInfo}</span>` +
-                        `<span class="c resultadoRub">${dados.valCalc}</span>` +
-                        `<span class="c resultadoRub">${dados.valPago}</span>` +
-                        `<span class="c resultadoRub">${dados.valLiq}</span>` +
-                        `<span class="c resultadoRub">${dados.movCalc}</span>` +
-                        `<span class="c resultadoRub">${dados.movPago}</span>` +
-                        `<span class="c resultadoRub">${dados.movLiq}</span>`;
-                
-                return linhaFmt;
-            };
-
+            // Linha de periodoRegex
             if(periodoDados) {
                 novaLinha = `<span class="texto">${linha}</span>`;
 
@@ -125,7 +144,7 @@ export class Rubricas {
                     diasPerTotal = +periodoDados[10];
                 }
 
-                indexPeriodo.push({
+                periodoIdx.push({
                     priodo: +periodoDados[1],
                     dataIni: +periodoDados[2],
                     diaIni: +periodoDados[5],
@@ -135,10 +154,11 @@ export class Rubricas {
                     fracao: +periodoDados[10] / diasPerTotal
                 });
             }
-            // Rubrica entra 'RE'
+            // Rubrica entra 'RE' (rubricaEntraRegex)
             else if(atribEntra) {
                 const dados: DadosLinha = this.novoDadosLinha(atribEntra, 'RE');
 
+                // Adicionando a rubrica da pilha de chamadas
                 pilha.push(dados.rubrica);
                 for(let item of pilha) {
                     rubInfo += `<span class="c csb">>></span>${item}`;
@@ -146,27 +166,23 @@ export class Rubricas {
 
                 rubInfo = `<span class="tooltip">Pilha: ${rubInfo}<span class="c csb">>></span></span>\n`;
 
-                if(+dados.periodo < indexPeriodo.length) {
-                    let dadosPer: any = indexPeriodo[+dados.periodo];
+                if(+dados.periodo < periodoIdx.length) {
+                    let dadosPer: any = periodoIdx[+dados.periodo];
                     perInfo = `<span class="tooltip">Período ${dadosPer.priodo}: de ${dadosPer.diaIni} à ${dadosPer.diaFim} | ${dadosPer.dias} dia(s)</span>\n`;
                 }
 
-                let linhaFmt: string = '<span class="c csb">>></span>' + fmt(dados, rubInfo, perInfo);
+                let linhaFmt: string = '<span class="c csb">>></span>' + this.fmt(dados, rubInfo, perInfo);
                 
                 novaLinha = `<div class="rubEntra">${linhaFmt}</div>`;
-                index[`RE_${dados.periodo}_${dados.rubrica}`] = numLinha;
-                indexLinha.push({
-                    linha: numLinha,
-                    tipo: 'RE',
-                    perido: dados.periodo,
-                    rubrica: dados.rubrica
-                });
+
+                // Adicionando dados aos índices
+                addIdx(dados);
             }
-            // Rubrica sai 'RS'
+            // Rubrica sai 'RS' (rubricaSaiRegex)
             else if(atribSai) {
                 const dados: DadosLinha = this.novoDadosLinha(atribSai, 'RS');
 
-                // Removendo a rubrica da pilha de rubricas
+                // Removendo a rubrica da pilha de chamadas
                 if(pilha[pilha.length -1] === dados.rubrica) {
                     pilha.pop();
                 }
@@ -178,34 +194,29 @@ export class Rubricas {
 
                 rubInfo = `<span class="tooltip">Pilha: ${rubInfo}</span>\n`;
 
-                if(+dados.periodo < indexPeriodo.length) {
-                    let dadosPer: any = indexPeriodo[+dados.periodo];
+                if(+dados.periodo < periodoIdx.length) {
+                    let dadosPer: any = periodoIdx[+dados.periodo];
                     perInfo = `<span class="tooltip">Período ${dadosPer.priodo}: de ${dadosPer.diaIni} à ${dadosPer.diaFim} | ${dadosPer.dias} dia(s)</span>\n`;
                 }
                 
-                let linhaFmt: string = `<span class="c csb"><<</span>` + fmt(dados, rubInfo, perInfo);
+                let linhaFmt: string = `<span class="c csb"><<</span>` + this.fmt(dados, rubInfo, perInfo);
                 
                 novaLinha = `<div class="rubSai">${linhaFmt}</div>`;
                 
-                // TODO: complemento não indexado, busca por complemento não está funcionando
-                index[`RS_${dados.periodo}_${dados.rubrica}`] = numLinha;
-                indexLinha.push({
-                    linha: numLinha,
-                    tipo: 'RS',
-                    perido: dados.periodo,
-                    rubrica: dados.rubrica
-                });
+                // Adicionando dados aos índices
+                addIdx(dados);
             }
             else {
                 novaLinha = `<span class="texto">${linha}</span>`;
             }
 
             novaLinha = `<div class="lin"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span>${novaLinha}</div>\n`;
-            novoConteudo += novaLinha;
+            html += novaLinha;
             numLinha++;
         }
 
-        return {texto: novoConteudo, caminho: this.caminho, index: index, indexLinha: indexLinha, indexPeriodo: indexPeriodo};
+        return {texto: html, caminho: this.caminho, rubricaLinhaIdx: rubricaLinhaIdx,
+            linhaRubricaIdx: linhaRubricaIdx, periodoIdx: periodoIdx};
     }
 
     private novoDadosLinha(dados: RegExpExecArray, tipoLinha: TipoLinha): DadosLinha {
@@ -231,6 +242,37 @@ export class Rubricas {
             movLiq: movLiq,
             tipoLinha: tipoLinha
         };
+    }
+
+    /** Formata linha de header */
+    private fmt (d: DadosLinha, rubInfo:string, perInfo:string): string {
+                
+        let campoRubrica: string;
+        let nomeRubrica: string = '?';
+
+        if(this.nomeRubricas[d.rubrica]) {
+            nomeRubrica = this.nomeRubricas[d.rubrica].nome.trim();
+        }
+
+        if(d.rubrica !== '0') {
+            let cpl: string = d.complemento === '' ? '' : ` - "${d.complemento}"`;
+            campoRubrica = `${d.rubrica} ${nomeRubrica}${cpl}`;
+        }
+        else {
+            campoRubrica = d.mnemonico;
+        }
+        
+        let linhaFmt: string =
+                `<span class="nomeRubrica">${campoRubrica}${rubInfo}</span>` +
+                `<span class="c periodo">${d.periodo}${perInfo}</span>` +
+                `<span class="c resultadoRub">${d.valCalc}</span>` +
+                `<span class="c resultadoRub">${d.valPago}</span>` +
+                `<span class="c resultadoRub">${d.valLiq}</span>` +
+                `<span class="c resultadoRub">${d.movCalc}</span>` +
+                `<span class="c resultadoRub">${d.movPago}</span>` +
+                `<span class="c resultadoRub">${d.movLiq}</span>`;
+        
+        return linhaFmt;
     }
 
     private valorEmNumero(valorStr: string): number {
