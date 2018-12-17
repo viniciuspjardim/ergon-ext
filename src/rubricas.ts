@@ -138,7 +138,7 @@ export class Rubricas {
 
             // Linha de periodoRegex
             if(periodoDados) {
-                novaLinha = `<span class="texto">${linha}</span>`;
+                novaLinha = `<span class="tab texto">${linha}</span>`;
 
                 if(+periodoDados[1] === 0) {
                     diasPerTotal = +periodoDados[10];
@@ -207,7 +207,7 @@ export class Rubricas {
                 addIdx(dados);
             }
             else {
-                novaLinha = `<span class="texto">${linha}</span>`;
+                novaLinha = `<span class="tab texto">${linha}</span>`;
             }
 
             novaLinha = `<div class="lin"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span>${novaLinha}</div>\n`;
