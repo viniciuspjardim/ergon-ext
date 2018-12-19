@@ -67,6 +67,7 @@ export class Descobrir {
 
     /** Chama o percorrerPastasRec com os valores padrões */
     public percorrerPastas(): void {
+        this.raiz.filhos = new Array();
         this.percorrerPastasRec(0, this.raiz, this.pastaExecucao);
     }
 

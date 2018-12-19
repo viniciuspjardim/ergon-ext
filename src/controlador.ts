@@ -145,6 +145,11 @@ export class Controlador {
                     return;
                 }
 
+                // Refaz a execução do descobrir dados
+                if(mensagem.forcar) {
+                    this.descobrirDados();
+                }
+
                 // Começa a ler o arquivo de rubricas periodo, total ou liquido e cadastra o
                 // callback pra quando terminar a leitura
                 ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
