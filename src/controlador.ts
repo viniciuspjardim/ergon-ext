@@ -211,6 +211,18 @@ export class Controlador {
 
                 return;
             }
+            // Se mensagem recebida do webview for 'abrirCaminho'
+            else if(mensagem.acao === 'abrirCaminho') {
+
+                caminho = mensagem.caminho;
+                console.log(caminho);
+
+                let uri = vscode.Uri.file(caminho);
+                let range = new vscode.Range(0, 0, 0, 0);
+
+                // Abre o arquivo em uma nova guia
+                vscode.window.showTextDocument(uri, {selection: range});
+            }
             
         }, undefined, this.context.subscriptions);
     }

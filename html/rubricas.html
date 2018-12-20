@@ -121,6 +121,13 @@
             border-color: rgba(255, 255, 255, 0.160);
             background: rgb(50, 50, 50);
         }
+        a {
+            color: rgba(255, 255, 255, 0.603);
+            text-decoration: none;
+        }
+        a:hover {
+            color: white;
+        }
         .lin {
             float: left;
             width: 100%;
@@ -378,13 +385,27 @@
 
                         // Inserindo dados no elemento
                         document.getElementById('conteudoArquivo').innerHTML =
-                                '<div class="caminho">' + m.conteudo.caminho.replace(/\//g, '\\') + '</div>'
+                                '<a class="caminho" href="' + m.conteudo.caminho + '">'
+                                    + m.conteudo.caminho.replace(/\//g, '\\') + '</a>'
                                 + m.conteudo.texto;
 
                         window.rubricaLinhaIdx = m.conteudo.rubricaLinhaIdx;
                         window.linhaRubricaIdx = m.conteudo.linhaRubricaIdx;
                         window.periodoIdx = m.conteudo.periodoIdx;
                         window.scrollTo(0, 0);
+
+                        // Enviando mensagem para o controlador ao clicar nos links para
+                        // abrir o arquivo correspondente
+                        var aTags = document.getElementsByTagName('a');
+
+                        for(i = 0; i < aTags.length; i++) {
+                            aTags[i].addEventListener('click', function(event) {
+                                window.vscode.postMessage({
+                                    acao: 'abrirCaminho',
+                                    caminho: event.target.getAttribute("href")
+                                });
+                            });
+                        }
                     }
 
                     // Montando a chave do índice com os valores do filtro para encontrar a linha
