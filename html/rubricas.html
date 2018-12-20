@@ -402,7 +402,8 @@
                             aTags[i].addEventListener('click', function(event) {
                                 window.vscode.postMessage({
                                     acao: 'abrirCaminho',
-                                    caminho: event.target.getAttribute("href")
+                                    caminho: event.target.getAttribute("href"),
+                                    linha: event.target.getAttribute("nlin")
                                 });
                             });
                         }

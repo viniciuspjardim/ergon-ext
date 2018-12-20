@@ -6,7 +6,8 @@ import { ES } from './es';
 import { Rubricas } from './rubricas';
 import { Dump } from './dump';
 import { Descobrir } from './descobrir';
-import { ArquivoBase } from './arquivoBase';
+import { Erros } from './erros';
+// import { ArquivoBase } from './arquivoBase';
 
 /** Classe de entrada e saida de dados */
 export class Controlador {
@@ -21,7 +22,8 @@ export class Controlador {
     private descobrir: Descobrir;
     private rubricas: Rubricas;
     private dump: Dump;
-    private arquivoBase: ArquivoBase;
+    private erros: Erros;
+    // private arquivoBase: ArquivoBase;
 
     private caminhoArq: string;
 
@@ -44,7 +46,8 @@ export class Controlador {
         this.descobrir = new Descobrir(this.pref.caminhoExecucao);
         this.rubricas = new Rubricas(this.pref.caminhoExecucao);
         this.dump = new Dump(this.pref.caminhoExecucao);
-        this.arquivoBase = new ArquivoBase(this.pref.caminhoExecucao);
+        this.erros = new Erros(this.pref.caminhoExecucao);
+        // this.arquivoBase = new ArquivoBase(this.pref.caminhoExecucao);
         this.caminhoArq = '';
 
         this.adicionarListenerWebview();
@@ -170,7 +173,7 @@ export class Controlador {
             // Se mensagem recebida do webview for 'abrirLogErro'
             else if(mensagem.acao === 'abrirLogErro') {
 
-                caminho = this.arquivoBase.construirCaminho(mensagem.filtro, mensagem.acao);
+                caminho = this.erros.construirCaminho(mensagem.filtro, mensagem.acao);
 
                 // Começa a ler o arquivo de log/debug de dados da execução e cadastra
                 // o callback pra quando terminar a leitura
@@ -182,7 +185,7 @@ export class Controlador {
                     }
                     else {
                         this.caminhoArq = caminho;
-                        const resultado: any = this.arquivoBase.parseArquivo(data);
+                        const resultado: any = this.erros.parseArquivo(data);
                         ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
                     }
                 }, this.pref.charsetExecucao);
@@ -218,7 +221,15 @@ export class Controlador {
                 console.log(caminho);
 
                 let uri = vscode.Uri.file(caminho);
-                let range = new vscode.Range(0, 0, 0, 0);
+                
+                let range;
+
+                if(mensagem.linha) {
+                    range = new vscode.Range((+mensagem.linha)-1, 0, +mensagem.linha-1, 200);
+                }
+                else {
+                    range = new vscode.Range(0, 0, 0, 0);
+                }
 
                 // Abre o arquivo em uma nova guia
                 vscode.window.showTextDocument(uri, {selection: range});

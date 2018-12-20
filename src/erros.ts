@@ -2,8 +2,9 @@
 
 import { ES } from './es';
 
-export class ArquivoBase {
+export class Erros {
 
+    private caminhoRegex: RegExp = /^\s*([a-zA-Z]:(?:\\[a-zA-Z0-9_\.-]+)+)(?:\(([\d]+)\))?(.*)$/ig;
     private pastaExecucao: string;
     private caminho: string;
     
@@ -36,10 +37,27 @@ export class ArquivoBase {
         let i: any;
 
         for(i in linhas) {
+
             let linha: string = linhas[i];
             let novaLinha: string;
-            novaLinha = `<div class="lin"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span><span class="texto">${linha}</span></div>\n`;
-            novoConteudo += novaLinha;
+
+            let periodoDados: RegExpExecArray | null = this.caminhoRegex.exec(linha);
+            this.caminhoRegex.lastIndex = 0;
+
+            if(periodoDados) {
+                let erroLinhaStr: string = '';
+                let erroLinhaNum: number = 0;
+
+                if(periodoDados[2]) {
+                    erroLinhaStr = ` (linha ${periodoDados[2]})`;
+                    erroLinhaNum = +periodoDados[2];
+                }
+                novaLinha = `<a href="${periodoDados[1].replace(/\\/g, '/')}" nlin="${erroLinhaNum}">${periodoDados[1]}${erroLinhaStr}</a>${periodoDados[3]}`;
+            }
+            else {
+                novaLinha = linha;
+            }
+            novoConteudo += `<div class="lin"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span><span class="texto">${novaLinha}</span></div>\n`;
             numLinha++;
         }
 

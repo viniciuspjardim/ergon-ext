@@ -16,7 +16,7 @@ export class Dump {
 
     public construirCaminho(c: any, acao: string): string {
         if(acao === 'abrirDump') {
-            //        C:/folha/execucao/Emp_01_TOCANTINS/Destino_delta        _SRVFVJ              /VJ              /F_2016              04                           034                   _E00001                   /Log/Folha11.LOG
+            // C:/folha/execucao/Emp_01_TOCANTINS/Destino_delta        _SRVFVJ              /VJ              /F_2016              04                           034                   _E00001                   /Log/Folha11.LOG
             this.caminho = `${this.pastaExecucao}/Destino_${c.ambiente}_${c.servidorCalculo}/${c.tipoCalculo}/F_${c.mesAnoFol.ano}${ES.pad(c.mesAnoFol.mes, 2)}${ES.pad(c.numFol, 3)}_E${ES.pad(c.execucao, 5)}/Log/Folha11.LOG`;
             console.log(this.caminho);
         }
