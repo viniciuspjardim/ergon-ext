@@ -35,7 +35,6 @@ Exemplo:
 }
 ```
 3. Salve o arquivo.
-
 4. Para abrir a extensão aperte `Ctrl` + `Shift` + `P` e digite `Ergon: Carregar arquivos`.
 
 ## Recursos
@@ -47,6 +46,8 @@ navegar com teclas atalho. Exemplo: ir para a rubrica 3001 no período 0
 * Formata os arquivos de texto facilitando a legibilidade
 * Salva os campos de filtro para quando a extensão for aberta novamente continuar de onde
 parou
+* Clicar nos caminhos de arquivos (de erros de compilação por exemplo) e abrir o arquivo
+na linha correta
 
 ## Arquivos Suportados
 * Per - `.../Debug/Folha12*/*Ano*/*.dbg` - logs das fórmulas de período e total
@@ -69,4 +70,9 @@ externas
 
 ## Galeria
 <img src="https://user-images.githubusercontent.com/1520962/50171325-eb8f4900-02d0-11e9-9fd6-09631a494cba.png" width="640">
+
+Rubricas de líquido (mostra a pilha de chamadas ao passar o mouse sobre a rubrica)
+
 <img src="https://user-images.githubusercontent.com/1520962/50171326-eb8f4900-02d0-11e9-9745-574cbc4dc24c.png" width="640">
+
+Rubricas de período/total (mostra o número de dias ao passar o mouse sore o período)
