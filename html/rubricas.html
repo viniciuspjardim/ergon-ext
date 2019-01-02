@@ -420,8 +420,18 @@
                     const linhaId = 'linha_' + window.rubricaLinhaIdx[tipo + '\n' + perido +
                             '\n' + rubrica + '\n' + complemento];
 
-                    document.getElementById(linhaId).scrollIntoView();
-                    window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
+                    const elemento = document.getElementById(linhaId);
+
+                    if(elemento) {
+                        elemento.scrollIntoView();
+                        window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
+                        
+                    }
+                    else {
+                        console.log('Elemento não econtrado!');
+                    }
+
+                    // Colocando o foco no conteudo do arquivo para as teclas atalhos funcionarem
                     document.getElementById('conteudoArquivo').focus();
 
                     break;
@@ -516,18 +526,12 @@
         }
 
         document.getElementById('conteudoArquivo').addEventListener('keypress', function(e) {
-            
-            let elementos = document.querySelectorAll( ":hover" );
-            let id = elementos[4].childNodes[0].id;
+            // Pega o id da primeira linha visível
+            let id = document.elementFromPoint(50, document.getElementById('cabeçalho').offsetHeight + 1).id;
             
             if(e.key === '.') {
-                console.log('===');
-                console.log(document.elementFromPoint(50, document.getElementById('cabeçalho').offsetHeight + 1));
-                console.log(document.elementFromPoint(50, document.getElementById('cabeçalho').offsetHeight + 1).parentElement.parentElement);
-                console.log(document.elementFromPoint(50, document.getElementById('cabeçalho').offsetHeight + 1).parentElement);
-
                 let proximoHeader = getProximoHeader(id);
-                // Se existe um próximo hader scroll até ele
+                // Se existe um próximo header scroll até ele
                 if(proximoHeader) {
                     const linhaId = 'linha_' + proximoHeader.linha;
                     document.getElementById(linhaId).scrollIntoView();
@@ -536,7 +540,7 @@
             }
             else if(e.key === ',') {
                 let headerAnterior = getHeaderAnterior(id);
-                // Se existe um próximo hader scroll até ele
+                // Se existe um header anterior scroll até ele
                 if(headerAnterior) {
                     const linhaId = 'linha_' + headerAnterior.linha;
                     document.getElementById(linhaId).scrollIntoView();
