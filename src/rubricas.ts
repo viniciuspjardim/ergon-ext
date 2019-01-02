@@ -168,7 +168,7 @@ export class Rubricas {
 
                 if(+dados.periodo < periodoIdx.length) {
                     let dadosPer: any = periodoIdx[+dados.periodo];
-                    perInfo = `<span class="tooltip">Período ${dadosPer.priodo}: de ${dadosPer.diaIni} à ${dadosPer.diaFim} | ${dadosPer.dias} dia(s)</span>\n`;
+                    perInfo = `<span class="tooltip">Período ${dadosPer.priodo}: de ${dadosPer.diaIni} à ${dadosPer.diaFim} | ${dadosPer.dias} de ${diasPerTotal} dias</span>\n`;
                 }
 
                 let linhaFmt: string = '<span class="c csb">>></span>' + this.fmt(dados, rubInfo, perInfo);
@@ -196,7 +196,7 @@ export class Rubricas {
 
                 if(+dados.periodo < periodoIdx.length) {
                     let dadosPer: any = periodoIdx[+dados.periodo];
-                    perInfo = `<span class="tooltip">Período ${dadosPer.priodo}: de ${dadosPer.diaIni} à ${dadosPer.diaFim} | ${dadosPer.dias} dia(s)</span>\n`;
+                    perInfo = `<span class="tooltip">Período ${dadosPer.priodo}: de ${dadosPer.diaIni} à ${dadosPer.diaFim} | ${dadosPer.dias} de ${diasPerTotal} dias</span>\n`;
                 }
                 
                 let linhaFmt: string = `<span class="c csb"><<</span>` + this.fmt(dados, rubInfo, perInfo);
@@ -265,12 +265,12 @@ export class Rubricas {
         let linhaFmt: string =
                 `<span class="nomeRubrica">${campoRubrica}${rubInfo}</span>` +
                 `<span class="c periodo">${d.periodo}${perInfo}</span>` +
-                `<span class="c resultadoRub">${d.valCalc}</span>` +
-                `<span class="c resultadoRub">${d.valPago}</span>` +
-                `<span class="c resultadoRub">${d.valLiq}</span>` +
-                `<span class="c resultadoRub">${d.movCalc}</span>` +
-                `<span class="c resultadoRub">${d.movPago}</span>` +
-                `<span class="c resultadoRub">${d.movLiq}</span>`;
+                this.formatarValor(d.valCalc) +
+                this.formatarValor(d.valPago) +
+                this.formatarValor(d.valLiq) +
+                this.formatarValor(d.movCalc) +
+                this.formatarValor(d.movPago) +
+                this.formatarValor(d.movLiq);
         
         return linhaFmt;
     }
@@ -278,5 +278,14 @@ export class Rubricas {
     private valorEmNumero(valorStr: string): number {
         let valor: number = Number(valorStr);
         return valor <= -139999999999 ? 0 : valor;
+    }
+
+    private formatarValor(valor: number): string {
+        if(valor === 0) {
+            return '<span class="c vRub z">0</span>';
+        }
+        else {
+            return `<span class="c vRub">${valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>`;
+        }
     }
 }
