@@ -6,11 +6,9 @@ import * as path from 'path';
 type TipoDado = 'raiz' | 'numero' | 'texto' | 'mesAno';
 
 export function formatarValor(tipo: TipoDado, valor: string): string {
-
     if(tipo === 'numero') {
         return String(+valor);
     }
-
     return valor;
 }
 
@@ -206,7 +204,7 @@ export class Descobrir {
                 let result: RegExpExecArray | null = this.rgxNivel6.exec(arq);
                 this.rgxNivel6.lastIndex = 0;
 
-                // Só interessa as pastas que seguem a regex
+                // Só interessa as arquivos que seguem a regex
                 if(result === null) {
                     continue;
                 }
