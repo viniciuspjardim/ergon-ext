@@ -31,14 +31,16 @@
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+        "test": "jest"
     },
     "devDependencies": {
-        "@types/mocha": "^2.2.42",
-        "@types/node": "^7.0.70",
-        "tslint": "^5.11.0",
+        "@types/jest": "^23.3.12",
+        "@types/node": "^7.10.2",
+        "jest": "^23.6.0",
+        "ts-jest": "^23.10.5",
+        "tslint": "^5.12.1",
         "typescript": "^2.6.1",
-        "vscode": "^1.1.21"
+        "vscode": "^1.1.26"
     },
     "dependencies": {
         "iconv-lite": "^0.4.24"

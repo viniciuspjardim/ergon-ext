@@ -7,7 +7,6 @@ import { Rubricas } from './rubricas';
 import { Dump } from './dump';
 import { Descobrir } from './descobrir';
 import { Erros } from './erros';
-// import { ArquivoBase } from './arquivoBase';
 
 /** Classe de entrada e saida de dados */
 export class Controlador {
