@@ -4,8 +4,10 @@ import { ES } from './es';
 
 export class Dump {
 
-    // private rxTabIni: RegExp = /^\s*Tabela\s+([a-zA-Z0-9_]+)\s*iniciada\s*\.+\s*(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
-    // private rxTabSai: RegExp = /^\s*\.+\s+em\s+([a-zA-Z0-9_]+)\s*lidos\s*([0-9]+)\s+gravados\s+([0-9]+)\s+(([0-9]{2})\/([0-9]{2})\/([0-9]{4}))\s+(([0-9]{2}):([0-9]{2}):([0-9]{2}))\s*$/ig;
+    //                              Tabela    FUNCIONARIOS     iniciada ...      21        / 01        / 2019         17       : 46       : 40
+    private rxTabIni: RegExp = /^\s*Tabela\s+([a-zA-Z0-9_]+)\s*iniciada\s*\.+\s*([0-9]{2})\/([0-9]{2})\/([0-9]{4})\s+([0-9]{2}):([0-9]{2}):([0-9]{2})\s*$/ig;
+    //                              ...   em    FUNCIONARIOS     lidos    1         gravados    1          21        / 01        / 2019         17       : 46       : 40
+    private rxTabSai: RegExp = /^\s*\.+\s+em\s+([a-zA-Z0-9_]+)\s*lidos\s*([0-9]+)\s+gravados\s+([0-9]+)\s+([0-9]{2})\/([0-9]{2})\/([0-9]{4})\s+([0-9]{2}):([0-9]{2}):([0-9]{2})\s*$/ig;
     private pastaExecucao: string;
     private caminho: string;
     
@@ -25,44 +27,84 @@ export class Dump {
 
     public parseArquivo(conteudoArq: string): any {
 
-        let novoConteudo: string = '';
-
         // Substituindo CRLF ou CR pelo LF
         conteudoArq = conteudoArq.replace(/\r\n/g, '\n');
         conteudoArq = conteudoArq.replace(/\r/g, '\n');
 
         let linhas: string[] = conteudoArq.split('\n');
+        let tabelas: any[] = [];
 
-        let numLinha: number = 1;
+        let novoConteudo: string = '';
         let i: any;
 
-        // TODO: finish file parse
         for(i in linhas) {
             
-            /* let linha: string = linhas[i];
-            let novaLinha: string;
+            let linha: string = linhas[i];
+
             let tabIni: RegExpExecArray | null = this.rxTabIni.exec(linha);
             this.rxTabIni.lastIndex = 0;
             let tabSai: RegExpExecArray | null = this.rxTabSai.exec(linha);
             this.rxTabSai.lastIndex = 0;
 
             if(tabIni) {
-                novaLinha = tabIni[1];
+                tabelas.push({
+                    tabela: tabIni[1],
+                    registros: 0,
+                    tempo: 0,
+                    inicio: new Date(+tabIni[4], +tabIni[3] -1, +tabIni[2], +tabIni[5], +tabIni[6], +tabIni[7], 0),
+                    fim: new Date(0, 0, 0)
+                });
             }
             else if(tabSai) {
-                novaLinha = tabSai[1];
+                let tabela = tabelas[tabelas.length -1];
+                if(tabela.tabela !== tabSai[1]) {
+                    throw new Error('Tabelas diferentes');
+                }
+                tabela.registros = tabSai[2];
+                tabela.fim = new Date(+tabSai[6], +tabSai[5] -1, +tabSai[4], +tabSai[7], +tabSai[8], +tabSai[9], 0);
+                tabela.tempo = (tabela.fim - tabela.inicio) / 1000;
             }
-            else {
-                novaLinha = '';
-            } */
-
-            let linha: string = linhas[i];
-            let novaLinha: string;
-            novaLinha = `<div class="lin"><span id="linha_${numLinha}" class="contLinha">${numLinha}</span><span class="texto">${linha}</span></div>\n`;
-            novoConteudo += novaLinha;
-            numLinha++;
         }
 
+        // Ordenar pelo tempo de execução
+        tabelas.sort((t1, t2) => {
+            return t1.tempo - t2.tempo;
+        });
+
+        for(i in tabelas) {
+            let tabela = tabelas[i];
+            let novaLinha: string;
+            novaLinha = `
+                <tr>
+                    <td>${tabela.tabela}</td>
+                    <td>${tabela.registros}</td>
+                    <td>${tabela.tempo}</td>
+                    <td>${Dump.formatarDataHora(tabela.inicio)}</td>
+                    <td>${Dump.formatarDataHora(tabela.fim)}</td>
+                </tr>\n`
+            ;
+                
+            novoConteudo += novaLinha;
+        }
+
+        novoConteudo = `
+            <table>
+                <tr>
+                    <th>Tabela / View</th>
+                    <th>Registros</th>
+                    <th>Tempo(s)</th>
+                    <th>Início</th>
+                    <th>Fim</th>
+                </tr>
+                ${novoConteudo}
+            </table>`
+        ;
+
         return {texto: novoConteudo, caminho: this.caminho};
+    }
+
+    public static formatarDataHora(data: Date): string {
+        return `${data.getDate()}/${data.getMonth()+1}/${data.getFullYear()} ${
+            data.getHours()}:${data.getMinutes()}:${data.getSeconds()}`;
     }
 }
