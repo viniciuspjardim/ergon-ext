@@ -53,6 +53,7 @@ na linha correta
 * Per - `.../Debug/Folha12*/*Ano*/*.dbg` - logs das fórmulas de período e total
 * Liq - `.../Debug/Folha12*/*Liquido*.dbg` - logs das fórmulas de líquido
 * Err - `.../Fontes/Fo*g.tmp` - mensagens de alerta e erro do compilador
+* Dump - `.../Log/Folha11.LOG` - arquivos de dump das tabelas utilizadas pela folha
 
 ## Teclas Atalho
 * `a` - selecionar valor do campo `Ambiente`
@@ -69,10 +70,7 @@ na linha correta
 externas
 
 ## Galeria
-<img src="https://user-images.githubusercontent.com/1520962/50171325-eb8f4900-02d0-11e9-9fd6-09631a494cba.png" width="640">
 
-Rubricas de líquido (mostra a pilha de chamadas ao passar o mouse sobre a rubrica)
+<img src="https://user-images.githubusercontent.com/1520962/56060144-50692600-5d3c-11e9-962e-4b04131fdbdb.png" width="640">
 
-<img src="https://user-images.githubusercontent.com/1520962/50171326-eb8f4900-02d0-11e9-9745-574cbc4dc24c.png" width="640">
-
-Rubricas de período/total (mostra o número de dias ao passar o mouse sore o período)
+Ver a galeria completa [aqui](galeria.md).
