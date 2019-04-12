@@ -348,6 +348,7 @@
             'execucao', 'numFunc', 'numVinc', 'seqFunc', 'seqVinc', 'mesAnoRub'];
         
         window.forcarRecarregar = false;
+        window.filtrarAutocompletar = true;
 
         function pad(num, padlen) {
             var pad = new Array(1 + padlen).join('0');
@@ -440,7 +441,6 @@
                     if(elemento) {
                         elemento.scrollIntoView();
                         window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
-                        
                     }
                     else {
                         console.log('Elemento não econtrado!');
@@ -537,14 +537,16 @@
             // Bloqueando o evento padrão para a tecla atalho pressionada não ser inserida no campo
             if (e.preventDefault) e.preventDefault();
             e.returnValue = false;
+
             return false;
         }
 
         document.getElementById('conteudoArquivo').addEventListener('keypress', function(e) {
             // Pega o id da primeira linha visível
             let id = document.elementFromPoint(50, document.getElementById('cabeçalho').offsetHeight + 1).id;
+            let key = e.key.toLowerCase();
             
-            if(e.key === '.') {
+            if(key === '.') {
                 let proximoHeader = getProximoHeader(id);
                 // Se existe um próximo header scroll até ele
                 if(proximoHeader) {
@@ -553,7 +555,7 @@
                     window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
                 }
             }
-            else if(e.key === ',') {
+            else if(key === ',') {
                 let headerAnterior = getHeaderAnterior(id);
                 // Se existe um header anterior scroll até ele
                 if(headerAnterior) {
@@ -562,18 +564,18 @@
                     window.scrollBy(0, -document.getElementById('cabeçalho').offsetHeight);
                 }
             }
-            else if(e.key === 'a') return focoNoCampo('ambiente', e);
-            else if(e.key === 'f') return focoNoCampo('numFunc', e);
-            else if(e.key === 'v') return focoNoCampo('numVinc', e);
-            else if(e.key === 'd') return focoNoCampo('mesAnoRub', e);
-            else if(e.key === 'r') return focoNoCampo('rubrica', e);
-            else if(e.key === 'p') return focoNoCampo('periodo', e);
-            else if(e.key === 'e' || e.key === 's') {
-                if(e.key === 'e') document.getElementById('tipo').value = 'RE';
+            else if(key === 'a') return focoNoCampo('ambiente', e);
+            else if(key === 'f') return focoNoCampo('numFunc', e);
+            else if(key === 'v') return focoNoCampo('numVinc', e);
+            else if(key === 'd') return focoNoCampo('mesAnoRub', e);
+            else if(key === 'r') return focoNoCampo('rubrica', e);
+            else if(key === 'p') return focoNoCampo('periodo', e);
+            else if(key === 'e' || key === 's') {
+                if(key === 'e') document.getElementById('tipo').value = 'RE';
                 else document.getElementById('tipo').value = 'RS';
                 focoNoCampo('tipo', e);
             }
-            else if(e.key === 'c') {
+            else if(key === 'c') {
                 window.forcarRecarregar = true;
                 document.getElementById('abrirIr').click();
             }
@@ -616,7 +618,16 @@
             inp.addEventListener("input", function(e) {
 
                 var arr = window.autoCompletarLista;
-                var a, b, i, val = this.value;
+                
+                // Valor que será o filtro do auto completar
+                var val = '';
+
+                // Não filtra, pois o usuário acabou de clicar nele
+                // É pra filtrar apenas se o usuário digitar algo
+                if(this.selectionStart === 0 || !window.filtrarAutocompletar) val = '';
+                else val = this.value;
+
+                var a, b, i;
                 /*close any already open lists of autocompleted values*/
                 closeAllLists();
                 // if (!val) { return false; }
@@ -653,6 +664,13 @@
 
             // Gera a lista e força um evento para abrir a lista de auto complete ao receber foco.
             inp.addEventListener("focus", function(e) {
+
+                // Forçando não filtrar o autocompletar ao receber o foco
+                window.filtrarAutocompletar = false;
+                setTimeout(() => {
+                    window.filtrarAutocompletar = true;
+                }, 1);
+
                 window.autoCompletarLista = listaAutoCompletar(this.id);
                 
                 // Invertendo a lista se for os campos de data para ficar o mais recente primeiro
@@ -732,6 +750,7 @@
             /*execute a function when someone clicks in the document:*/
             document.addEventListener("click", function (e) {
                 if(e.target instanceof HTMLInputElement) {
+                    e.target.select();
                     if(e.target.id && window.camposAutoCompletar.includes(e.target.id)) {
                         return false;
                     }
