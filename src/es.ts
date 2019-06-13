@@ -14,7 +14,7 @@ export class ES {
     /** Lê arquivo de forma assincrona */
     public static lerArquivo(caminho: string, callback: (data: string, err?: NodeJS.ErrnoException) => void, charset: string = 'utf8'): void {
         
-        fs.readFile(caminho, (erro: NodeJS.ErrnoException, buffer: Buffer) => {
+        fs.readFile(caminho, (erro: NodeJS.ErrnoException | null, buffer: Buffer) => {
 
             if(erro !== null) {
                 callback('', erro);
