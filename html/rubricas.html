@@ -17,7 +17,7 @@
             left: 0;
             margin: 0;
             padding: 0;
-            background: rgb(30, 30, 30);
+            background: var(--vscode-sideBar-background);
         }
         #cabeçalho form {
             padding: 1em;
@@ -30,6 +30,7 @@
             width: 130px;
             text-align: right;
             font-size: 11px;
+            color: var(--vscode-sideBarTitle-foreground);
         }
         button:focus { outline: 0; }
         #cabeçalho button {
@@ -37,13 +38,13 @@
             margin-top: 0.3em;
             margin-right: 0.5em;
             margin-left: 0.5em;
-            background-color: rgb(14, 99, 156);
+            background-color: var(--vscode-button-background);
             border: none;
-            color: white;
+            color: var(--vscode-button-foreground);
             padding: 4px 10px 4px 10px;
         }
         #cabeçalho button:hover {
-            background-color: rgb(17, 119, 187);
+            background-color: var(--vscode-button-hoverBackground);
         }
         .inputTitulo {
             display: inline-block;
@@ -54,29 +55,29 @@
             width: 4em;
             margin-left: 1em;
             padding: 4px 6px 4px 6px;
-            background-color: rgb(60, 60, 60);
+            background-color: var(--vscode-input-background);
             color: rgba(255, 255, 255, 0.788);
             border: none;
         }
         input:focus {
             outline: 1;
-            outline-color: rgb(23, 74, 108);
+            outline-color: var(--vscode-focusBorder);
         }
         select {
             width: 5em;
             margin-left: 1em;
             padding: 4px 6px 4px 6px;
-            background-color: rgb(60, 60, 60);
+            background-color: var(--vscode-input-background);
             color: rgba(255, 255, 255, 0.788);
             border: none;
         }
         select:focus {
             outline: 1;
-            outline-color: rgb(23, 74, 108);
+            outline-color: var(--vscode-focusBorder);
         }
         .titulos {
             padding: 0.25em;
-            background-color: rgb(9, 71, 113);
+            background-color: var(--vscode-button-background);
         }
         .titulosI {
             float: left;
@@ -118,8 +119,8 @@
             white-space: normal;
             border-style: solid;
             border-width: 1px;
-            border-color: rgba(255, 255, 255, 0.160);
-            background: rgb(50, 50, 50);
+            border-color: var(--vscode-window-activeBorder);
+            background: var(--vscode-sideBar-background);
         }
         a {
             color: rgba(255, 255, 255, 0.603);
@@ -151,8 +152,8 @@
             margin-bottom: 1px;
             border-style: solid;
             border-width: 1px;
-            border-color: rgba(255, 255, 255, 0.160);
-            background: rgb(50, 50, 50);
+            border-color: var(--vscode-focusBorder);
+            background: var(--vscode-sideBar-background);
  
             position: absolute;
             bottom: 100%;
@@ -233,8 +234,8 @@
             text-align: center;
             border-style: solid;
             border-width: 1px;
-            border-color: rgba(255, 255, 255, 0.160);
-            background: rgb(50, 50, 50);
+            border-color: var(--vscode-window-activeBorder);
+            background: var(--vscode-sideBar-background);
             visibility: hidden;
         }
         .autocomplete {
@@ -244,7 +245,7 @@
         }
         .autocomplete-items {
             position: absolute;
-            border: 1px solid rgb(23, 74, 108);
+            border: 1px solid var(--vscode-focusBorder);
             text-align: left;
             z-index: 99;
             /*position the autocomplete items to be the same width as the container:*/
@@ -255,28 +256,28 @@
         .autocomplete-items div {
             padding: 10px;
             cursor: pointer;
-            background-color: rgb(60, 60, 60);
+            background-color: var(--vscode-sideBar-background);
             /*border-bottom: 1px solid rgb(23, 74, 108);*/
         }
         .autocomplete-items div:hover {
             /*when hovering an item:*/
-            background-color: rgb(42, 45, 46);
+            background-color: var(--vscode-input-background);
         }
         .autocomplete-active {
             /*when navigating through the items using the arrow keys:*/
-            background-color: rgb(7, 54, 85) !important; 
-            color: #ffffff; 
+            background-color: var(--vscode-input-background) !important; 
+            color: #fff; 
         }
         table {
             margin-left: 16px;
             border-collapse: collapse;
-            border: 1px solid rgb(23, 74, 108);
+            border: 1px solid var(--vscode-focusBorder);
         }
         th {
             color: white;
         }
         td, th {
-            border: 1px solid rgb(23, 74, 108);
+            border: 1px solid var(--vscode-focusBorder);
             padding: 6px;
         }
     </style>
