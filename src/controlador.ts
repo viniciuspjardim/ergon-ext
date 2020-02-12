@@ -85,6 +85,7 @@ export class Controlador {
         }
         catch(e) {
             console.log(`Erro: ${e}`);
+            vscode.window.showErrorMessage(`Erro ao gerar webview! <${e.message}>`);
         }
     }
 
@@ -103,6 +104,9 @@ export class Controlador {
         catch(e) {
             console.log(`Erro: ${e}`);
             this.rubricas.setNomeRubricas({});
+            vscode.window.showWarningMessage(
+                `Arquivo de rubricas não encontrado em: ${this.pref.caminhoRubricas}`
+            );
         }
     }
 
@@ -116,6 +120,7 @@ export class Controlador {
         }
         catch(e) {
             console.log(`Erro: ${e}`);
+            vscode.window.showWarningMessage(`Autocompletar não carregado! <${e.message}>`);
         }
     }
 
@@ -249,6 +254,9 @@ export class Controlador {
         }
         catch(e) {
             console.log(`Erro: ${e}`);
+            vscode.window.showWarningMessage(
+                `Não foi possível salvar os campos do filtro atual! <${e.message}>`
+            );
         }
     }
 
