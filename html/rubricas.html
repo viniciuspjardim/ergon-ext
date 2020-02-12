@@ -357,11 +357,13 @@
         }
         
         function textoParaData(texto) {
+            if(!texto) return '';
             let arr = texto.trim().split('/');
             return { mes: parseInt(arr[0]), ano: parseInt(arr[1]) };
         }
 
         function dataParaTexto(data) {
+            if(!data || !data.mes || !data.ano) return '';
             return pad(data.mes, 2) + '/' + pad(data.ano, 4)
         }
 
