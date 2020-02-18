@@ -72,7 +72,7 @@ export class Controlador {
         
         try {
             // Lendo o arquivo HTML
-            const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'rubricas.html'));
+            const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'main.html'));
             this.panel.webview.html =  header + ES.lerArquivoSync(caminho.fsPath, 'utf8');
             
             // Lendo o arquivo de filtro caso exista, se não tenta pegar das preferências do vscode
