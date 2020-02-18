@@ -3,27 +3,76 @@
     <div id="cabeçalho">
       <form id="campos" autocomplete="off">
         <div>
-          <div class="autocomplete"><span>Ambiente<input id="ambiente" /></span></div>
-          <div class="autocomplete"><span>ServCalc<input id="servidorCalculo" /></span></div>
-          <div class="autocomplete"><span>TipoCalc<input id="tipoCalculo" /></span></div>
-          <div class="autocomplete"><span>DataFol<input id="mesAnoFol" /></span></div>
-          <div class="autocomplete"><span>NumFol<input id="numFol" /></span></div>
-          <div class="autocomplete"><span>Exec<input id="execucao" /></span></div>
-          <div class="autocomplete"><span>Func<input id="numFunc" /></span></div>
-          <div class="autocomplete"><span>Vinc<input id="numVinc" /></span></div>
-          <div class="autocomplete"><span>SeqFunc<input id="seqFunc" /></span></div>
-          <div class="autocomplete"><span>SeqVinc<input id="seqVinc" /></span></div>
-          <div class="autocomplete"><span>DataRub<input id="mesAnoRub" /></span></div>
-          <span>Rub<input id="rubrica" /></span>
-          <span>Cpl<input id="complemento" /></span>
-          <span>Per<input id="periodo" /></span>
-          <span>E/S
+          <div class="autocomplete">
+            <span title="Ambiente do banco de dados (A)">
+              Ambiente<input id="ambiente" />
+            </span></div>
+          <div class="autocomplete">
+            <span title="Máquina de cálculo">
+              ServCalc<input id="servidorCalculo" />
+            </span>
+          </div>
+          <div class="autocomplete">
+            <span title="Tipo de cálculo">
+              TipoCalc<input id="tipoCalculo" />
+            </span>
+          </div>
+          <div class="autocomplete">
+            <span title="Mês ano da folha">
+              DataFol<input id="mesAnoFol" />
+            </span>
+          </div>
+          <div class="autocomplete">
+            <span title="Número da folha">
+              NumFol<input id="numFol" />
+            </span>
+          </div>
+          <div class="autocomplete">
+            <span title="Execução da folha">
+              Exec<input id="execucao" />
+            </span>
+          </div>
+          <div class="autocomplete">
+            <span title="Número funcional (F)">
+              Func<input id="numFunc" />
+            </span>
+          </div>
+          <div class="autocomplete">
+            <span title="Número do vínculo (V)">
+              Vinc<input id="numVinc" />
+            </span>
+          </div>
+          <div class="autocomplete">
+            <span title="Sequência do funcionário">
+              SeqFunc<input id="seqFunc" />
+            </span>
+          </div>
+          <div class="autocomplete">
+            <span title="Sequência do vínculo">
+              SeqVinc<input id="seqVinc" />
+            </span>
+          </div>
+          <div class="autocomplete">
+            <span title="Mês ano direito da rubrica (D)">
+              DataRub<input id="mesAnoRub" />
+            </span>
+          </div>
+          <span title="Rubrica (R)">
+            Rub<input id="rubrica" />
+          </span>
+          <span title="Complemento">
+            Cpl<input id="complemento" />
+          </span>
+          <span title="Período (P)">
+            Per<input id="periodo" />
+          </span>
+          <span title="Entra (E) ou sai (S) da rubrica">E/S
             <select id="tipo">
               <option value="RE">E &gt;&gt;</option>
               <option value="RS">S &lt;&lt;</option>
             </select>
           </span>
-          <span>Arquivo
+          <span title="Tipo de arquivo">Arquivo
             <select id="acao">
               <option value="abrirRubPer">Per</option>
               <option value="abrirRubLiq">Liq</option>
@@ -38,7 +87,7 @@
         <span class="contLinha">&nbsp;</span>
         <span class="titulosI">
           <span class="hc" style="width: 27.7em; border-style: none;">Rubrica</span>
-          <span class="hc" style="width: 7.4em;">Periodo</span>
+          <span class="hc" style="width: 7.4em;">Período</span>
           <span class="hc">Val Calc</span>
           <span class="hc">Val Pag</span>
           <span class="hc">Val Liq</span>
