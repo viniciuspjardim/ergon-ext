@@ -54,11 +54,26 @@ export class Controlador {
 
     /** Carrega o arquivo html do webview e envia mensagem com os campos padrão */
     public carregarWebView(): void {
+
+        let cssPath: string = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'style.css')).path;
+        let scriptPath: string = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'script.js')).path;
+
+        let header: string = `
+            <!DOCTYPE html>
+            <html lang="pt-br">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Ergon Ext</title>
+                <link rel="stylesheet" href="vscode-resource:${cssPath}">
+                <script type="text/javascript" src="vscode-resource:${scriptPath}" defer></script>
+            </head>
+        `;
         
         try {
             // Lendo o arquivo HTML
             const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'rubricas.html'));
-            this.panel.webview.html =  ES.lerArquivoSync(caminho.fsPath, 'utf8');
+            this.panel.webview.html =  header + ES.lerArquivoSync(caminho.fsPath, 'utf8');
             
             // Lendo o arquivo de filtro caso exista, se não tenta pegar das preferências do vscode
             const homedir: string = require('os').homedir();
@@ -112,6 +127,7 @@ export class Controlador {
 
     /** Percorre as pastas de execução buscando por dados para preecher os formulários */
     public descobrirDados(): void {
+        // TODO: converter esse método para assincrono, para evitar delay ao abrir a extensão
         try {
             this.descobrir.percorrerPastas();
             if(this.descobrir.raiz) {
