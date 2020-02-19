@@ -74,23 +74,6 @@ export class Controlador {
             // Lendo o arquivo HTML
             const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'main.html'));
             this.panel.webview.html =  header + ES.lerArquivoSync(caminho.fsPath, 'utf8');
-            
-            // Lendo o arquivo de filtro caso exista, se não tenta pegar das preferências do vscode
-            const homedir: string = require('os').homedir();
-            
-            ES.lerArquivo(path.join(homedir, 'AppData/Roaming/ErgonExtFiltro.json'), (data: string, erro?: NodeJS.ErrnoException) => {
-                
-                if(erro) {
-                    console.log(`Aviso: ${erro}`);
-
-                    if(this.pref.camposPadrao) {
-                        ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 300);
-                    }
-                }
-                else {
-                    ES.enviarParaWebviw(this.panel, 'filtro', JSON.parse(data), 300);
-                }
-            });
 
             // Criando o callback para quando o painel for fechado. Salva os campos do filtro em um arquivo
             this.panel.onDidDispose(() => {
@@ -125,19 +108,41 @@ export class Controlador {
         }
     }
 
+    /** Lendo o arquivo de filtro caso exista, se não tenta pegar das preferências do vscode */
+    public carregarFiltro() {
+        setTimeout(() => {
+            const homedir: string = require('os').homedir();
+                
+            ES.lerArquivo(path.join(homedir, 'AppData/Roaming/ErgonExtFiltro.json'), (data: string, erro?: NodeJS.ErrnoException) => {
+                if(erro) {
+                    console.log(`Aviso: ${erro}`);
+
+                    if(this.pref.camposPadrao) {
+                        ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 400);
+                    }
+                }
+                else {
+                    ES.enviarParaWebviw(this.panel, 'filtro', JSON.parse(data), 400);
+                }
+            });
+        }, 1);
+    }
+
     /** Percorre as pastas de execução buscando por dados para preecher os formulários */
     public descobrirDados(): void {
         // TODO: converter esse método para assincrono, para evitar delay ao abrir a extensão
-        try {
-            this.descobrir.percorrerPastas();
-            if(this.descobrir.raiz) {
-                ES.enviarParaWebviw(this.panel, 'auto_completar', this.descobrir.raiz, 400);
+        setTimeout(() => {
+            try {
+                this.descobrir.percorrerPastas();
+                if(this.descobrir.raiz) {
+                    ES.enviarParaWebviw(this.panel, 'auto_completar', this.descobrir.raiz, 0);
+                }
             }
-        }
-        catch(e) {
-            console.log(`Erro: ${e}`);
-            vscode.window.showWarningMessage(`Autocompletar não carregado! <${e.message}>`);
-        }
+            catch(e) {
+                console.log(`Erro: ${e}`);
+                vscode.window.showWarningMessage(`Autocompletar não carregado! <${e.message}>`);
+            }
+        }, 800);
     }
 
     /**

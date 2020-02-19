@@ -12,6 +12,26 @@ window.camposAutoCompletar = ['ambiente', 'servidorCalculo', 'tipoCalculo', 'mes
 window.forcarRecarregar = false;
 window.filtrarAutocompletar = true;
 
+window.carregandoAutocompletar = true;
+window.carregandoArquivos = false;
+
+function mensagem() {
+  let el = document.getElementById('msgAoCarregar');
+  if(window.carregandoArquivos) {
+    el.innerHTML = 'Carregando...';
+    el.style.visibility = 'visible';
+  }
+  else if(window.carregandoAutocompletar) {
+    el.innerHTML = 'Carregando autocompletar...';
+    el.style.visibility = 'visible';
+  }
+  else {
+    el.style.visibility = 'hidden';
+  }
+}
+
+mensagem();
+
 function pad(num, padlen) {
   var pad = new Array(1 + padlen).join('0');
   return (pad + num).slice(-pad.length);
@@ -53,11 +73,13 @@ function getCampos() {
 window.addEventListener('message', event => {
 
   let m = event.data;
-  document.getElementById('msgAoCarregar').style.visibility = 'hidden';
 
   switch (m.acao) {
 
     case 'parse_rubrica_ok':
+
+      window.carregandoArquivos = false;  
+      mensagem();
 
       // Quando não é nulo o arquivo mudou, então precisa alterar o conteudo
       // da página e voltar a barra de rolagem pro começo
@@ -115,6 +137,8 @@ window.addEventListener('message', event => {
 
       break;
     case 'parse_rubrica_err':
+      window.carregandoArquivos = false;  
+      mensagem();
       document.getElementById('conteudoArquivo').innerHTML = m.conteudo;
       break;
     case 'filtro':
@@ -136,6 +160,8 @@ window.addEventListener('message', event => {
       document.getElementById('acao').value = m.conteudo.acao;
       break;
     case 'auto_completar':
+      window.carregandoAutocompletar = false;  
+      mensagem();
       window.autoCompletar = m.conteudo;
       break;
   }
@@ -146,8 +172,9 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false);
 
 document.getElementById('abrirIr').addEventListener('click', function () {
-
-  document.getElementById('msgAoCarregar').style.visibility = 'visible';
+  window.carregandoArquivos = true;  
+  if(window.forcarRecarregar) window.carregandoAutocompletar = true;  
+  mensagem();
 
   let acao = document.getElementById('acao').value;
   let campos = getCampos();
