@@ -3,10 +3,10 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { ES } from './es';
-import { Rubricas } from './rubricas';
-import { Dump } from './dump';
+import { Rubricas } from './parser/rubricas';
+import { Dump } from './parser/dump';
 import { Descobrir } from './descobrir';
-import { Erros } from './erros';
+import { Erros } from './parser/erros';
 
 /** Classe de entrada e saida de dados */
 export class Controlador {
@@ -110,26 +110,25 @@ export class Controlador {
 
     /** Lendo o arquivo de filtro caso exista, se não tenta pegar das preferências do vscode */
     public carregarFiltro() {
-        setTimeout(() => {
+        setTimeout(async () => {
             const homedir: string = require('os').homedir();
-                
-            ES.lerArquivo(path.join(homedir, 'AppData/Roaming/ErgonExtFiltro.json'), (data: string, erro?: NodeJS.ErrnoException) => {
-                if(erro) {
-                    console.log(`Aviso: ${erro}`);
 
-                    if(this.pref.camposPadrao) {
-                        ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 400);
-                    }
+            try {
+                const data: string = await ES.lerArquivo(path.join(homedir, 'AppData/Roaming/ErgonExtFiltro.json'));
+                ES.enviarParaWebviw(this.panel, 'filtro', JSON.parse(data), 400);
+            }
+            catch(erro) {
+                console.log(`Aviso: ${erro}`);
+                if(this.pref.camposPadrao) {
+                    ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 400);
                 }
-                else {
-                    ES.enviarParaWebviw(this.panel, 'filtro', JSON.parse(data), 400);
-                }
-            });
+            }
         }, 1);
     }
 
     /** Percorre as pastas de execução buscando por dados para preecher os formulários */
     public descobrirDados(): void {
+        console.log('Descobrir...');
         // TODO: converter esse método para assincrono, para evitar delay ao abrir a extensão
         setTimeout(() => {
             try {
@@ -154,7 +153,6 @@ export class Controlador {
         this.panel.webview.onDidReceiveMessage(mensagem => {
 
             let caminho: string;
-            let mensagemErr: string;
 
             if(mensagem.filtro) {
                 this.ultimoFiltro = mensagem.filtro;
@@ -178,70 +176,23 @@ export class Controlador {
                     this.descobrirDados();
                 }
 
-                // Começa a ler o arquivo de rubricas periodo, total ou liquido e cadastra o
-                // callback pra quando terminar a leitura
-                ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
-                    if(erro) {
-                        this.caminhoArq = '';
-                        mensagemErr = '<span class="mensagemErr">Erro ao ler arquivo</span>';
-                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
-                    }
-                    else {
-                        this.caminhoArq = caminho;
-                        const resultado: any = this.rubricas.parseArquivo(data);
-                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
-                    }
-                }, this.pref.charsetExecucao);
-
+                this.parse(caminho, this.rubricas);
                 return;
             }
             // Se mensagem recebida do webview for 'abrirLogErro'
             else if(mensagem.acao === 'abrirLogErro') {
-
                 caminho = this.erros.construirCaminho(mensagem.filtro, mensagem.acao);
-
-                // Começa a ler o arquivo de log/debug de dados da execução e cadastra
-                // o callback pra quando terminar a leitura
-                ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
-                    if(erro) {
-                        this.caminhoArq = '';
-                        mensagemErr = '<span class="mensagemErr">Erro ao ler arquivo</span>';
-                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
-                    }
-                    else {
-                        this.caminhoArq = caminho;
-                        const resultado: any = this.erros.parseArquivo(data);
-                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
-                    }
-                }, this.pref.charsetExecucao);
-                
+                this.parse(caminho, this.erros);
                 return;
             }
             // Se mensagem recebida do webview for 'abrirDump'
             else if(mensagem.acao === 'abrirDump') {
-
                 caminho = this.dump.construirCaminho(mensagem.filtro, mensagem.acao);
-
-                // Começa a ler o arquivo de dump de dados da execução e cadastra
-                // o callback pra quando terminar a leitura
-                ES.lerArquivo(caminho, (data: string, erro?: NodeJS.ErrnoException) => {
-                    if(erro) {
-                        this.caminhoArq = '';
-                        mensagemErr = '<span class="mensagemErr">Erro ao ler arquivo</span>';
-                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
-                    }
-                    else {
-                        this.caminhoArq = caminho;
-                        const resultado: any = this.dump.parseArquivo(data);
-                        ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
-                    }
-                }, this.pref.charsetExecucao);
-
+                this.parse(caminho, this.dump);
                 return;
             }
             // Se mensagem recebida do webview for 'abrirCaminho'
             else if(mensagem.acao === 'abrirCaminho') {
-
                 caminho = mensagem.caminho;
                 console.log(caminho);
 
@@ -261,6 +212,20 @@ export class Controlador {
             }
             
         }, undefined, this.context.subscriptions);
+    }
+
+    private async parse(caminho: string, paser: Parser): Promise<void> {
+        try {
+            const data: string = await ES.lerArquivo(caminho, this.pref.charsetExecucao);
+            this.caminhoArq = caminho;
+            const resultado: any = paser.parseArquivo(data);
+            ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
+        }
+        catch(erro) {
+            this.caminhoArq = '';
+            const mensagemErr: string = '<span class="mensagemErr">Erro ao ler arquivo</span>';
+            ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
+        }
     }
 
     /** Salva o ultimo filtro */

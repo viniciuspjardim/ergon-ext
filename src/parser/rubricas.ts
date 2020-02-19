@@ -1,6 +1,6 @@
 'use strict';
 
-import { ES } from './es';
+import { ES } from '../es';
 
 /** Entrando na rubrica, saindo da rubrica */
 type TipoLinha = 'RE' | 'RS';
@@ -20,7 +20,7 @@ export interface DadosLinha {
     tipoLinha: TipoLinha;
 }
 
-export class Rubricas {
+export class Rubricas implements Parser {
 
     private periodoRegex: RegExp = /^\s*-\s+(\d+)\s+:\s+((\d{4})(\d{2})(\d{2}))-((\d{4})(\d{2})(\d{2}))\s+(\d+)\s+dias\s*$/ig;
     private rubricaEntraRegex: RegExp = /^\s*(\d+)\s*(\d+)\s*-> \.+\s*(\d+)\s*([a-zA-Z0-9_]+)\s+((?:[^\s][a-zA-Z0-9\s]*[^\s])*)\s+([-+\.0-9]+)\s*\(C\)\s*([-+\.0-9]+)\s*\(P\)\s*([-+\.0-9]+)\s*\(MC\)\s*([-+\.0-9]+)\s*\(MP\)\s*$/ig;

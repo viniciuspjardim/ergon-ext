@@ -1,8 +1,8 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import fs = require('fs');
-import iconv = require('iconv-lite');
+import * as fs from 'fs-extra';
+import * as iconv from 'iconv-lite';
 
 /** Classe de entrada e saida de dados */
 export class ES {
@@ -12,18 +12,8 @@ export class ES {
     }
 
     /** Lê arquivo de forma assincrona */
-    public static lerArquivo(caminho: string, callback: (data: string, err?: NodeJS.ErrnoException) => void, charset: string = 'utf8'): void {
-        
-        fs.readFile(caminho, (erro: NodeJS.ErrnoException | null, buffer: Buffer) => {
-
-            if(erro !== null) {
-                callback('', erro);
-            }
-            else {
-                const data: string = iconv.decode(buffer, charset);
-                callback(data);
-            }
-        });
+    public static async lerArquivo(caminho: string, charset: string = 'utf8'): Promise<string> {
+        return iconv.decode(await fs.readFile(caminho), charset);
     }
 
     /** Lê arquivo de forma sincrona */
