@@ -1,5 +1,6 @@
 'use strict';
 
+import { homedir } from 'os';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { ES } from './es';
@@ -10,6 +11,10 @@ import { Erros } from './parser/erros';
 
 /** Classe de entrada e saida de dados */
 export class Controlador {
+
+    public static readonly homeDir: string = homedir();
+    public static readonly pathFiltro: string =
+        path.join(Controlador.homeDir, 'AppData/Roaming/ErgonExtFiltro.json');
 
     private context: vscode.ExtensionContext;
     private panel: vscode.WebviewPanel;
@@ -22,7 +27,6 @@ export class Controlador {
     private rubricas: Rubricas;
     private dump: Dump;
     private erros: Erros;
-    // private arquivoBase: ArquivoBase;
 
     private caminhoArq: string;
 
@@ -46,14 +50,13 @@ export class Controlador {
         this.rubricas = new Rubricas(this.pref.caminhoExecucao);
         this.dump = new Dump(this.pref.caminhoExecucao);
         this.erros = new Erros(this.pref.caminhoExecucao);
-        // this.arquivoBase = new ArquivoBase(this.pref.caminhoExecucao);
         this.caminhoArq = '';
 
         this.adicionarListenerWebview();
     }
 
     /** Carrega o arquivo html do webview e envia mensagem com os campos padrão */
-    public carregarWebView(): void {
+    public async carregarWebView(): Promise<void> {
 
         let cssPath: string = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'style.css')).path;
         let scriptPath: string = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'script.js')).path;
@@ -73,13 +76,14 @@ export class Controlador {
         try {
             // Lendo o arquivo HTML
             const caminho: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'main.html'));
-            this.panel.webview.html =  header + ES.lerArquivoSync(caminho.fsPath, 'utf8');
+            this.panel.webview.html =  header + await ES.lerArquivo(caminho.fsPath, 'utf8');
 
             // Criando o callback para quando o painel for fechado. Salva os campos do filtro em um arquivo
-            this.panel.onDidDispose(() => {
-                this.salvarFiltro();
+            this.panel.onDidDispose(async () => {
+                await this.salvarFiltro();
                 console.log('ErgonExt dispose');
-            }, null, this.context.subscriptions);
+            },
+            null, this.context.subscriptions);
         }
         catch(e) {
             console.log(`Erro: ${e}`);
@@ -88,9 +92,9 @@ export class Controlador {
     }
 
     /** Carrega o arquivo com os nomes das rubricas */
-    public carregarNomeRubricas(): void {
+    public async carregarNomeRubricas(): Promise<void> {
         try {
-            const jsonStr: string =  ES.lerArquivoSync(this.pref.caminhoRubricas, this.pref.charsetRubricas);
+            const jsonStr: string =  await ES.lerArquivo(this.pref.caminhoRubricas, this.pref.charsetRubricas);
             const json: any = JSON.parse(jsonStr);
             let nomeRubricas: any = {};
 
@@ -109,39 +113,33 @@ export class Controlador {
     }
 
     /** Lendo o arquivo de filtro caso exista, se não tenta pegar das preferências do vscode */
-    public carregarFiltro() {
-        setTimeout(async () => {
-            const homedir: string = require('os').homedir();
-
-            try {
-                const data: string = await ES.lerArquivo(path.join(homedir, 'AppData/Roaming/ErgonExtFiltro.json'));
-                ES.enviarParaWebviw(this.panel, 'filtro', JSON.parse(data), 400);
+    public async carregarFiltro(): Promise<void> {
+        try {
+            const data: string = await ES.lerArquivo(Controlador.pathFiltro);
+            await ES.enviarParaWebviw(this.panel, 'filtro', JSON.parse(data));
+        }
+        catch(e) {
+            console.log(`Aviso: ${e}`);
+            if(this.pref.camposPadrao) {
+                await ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao);
             }
-            catch(erro) {
-                console.log(`Aviso: ${erro}`);
-                if(this.pref.camposPadrao) {
-                    ES.enviarParaWebviw(this.panel, 'filtro', this.pref.camposPadrao, 400);
-                }
-            }
-        }, 1);
+        }
     }
 
     /** Percorre as pastas de execução buscando por dados para preecher os formulários */
-    public descobrirDados(): void {
+    public async descobrirDados(): Promise<void> {
         console.log('Descobrir...');
-        // TODO: converter esse método para assincrono, para evitar delay ao abrir a extensão
-        setTimeout(() => {
-            try {
-                this.descobrir.percorrerPastas();
-                if(this.descobrir.raiz) {
-                    ES.enviarParaWebviw(this.panel, 'auto_completar', this.descobrir.raiz, 0);
-                }
+        try {
+            await this.descobrir.percorrerPastas();
+            if(this.descobrir.raiz) {
+                await ES.enviarParaWebviw(this.panel, 'autocompletar_ok', this.descobrir.raiz);
             }
-            catch(e) {
-                console.log(`Erro: ${e}`);
-                vscode.window.showWarningMessage(`Autocompletar não carregado! <${e.message}>`);
-            }
-        }, 800);
+        }
+        catch(e) {
+            console.log(`Erro: ${e}`);
+            vscode.window.showWarningMessage(`Autocompletar não carregado! <${e.message}>`);
+            await ES.enviarParaWebviw(this.panel, 'autocompletar_err', null);
+        }
     }
 
     /**
@@ -150,7 +148,7 @@ export class Controlador {
      */
     private adicionarListenerWebview(): void {
 
-        this.panel.webview.onDidReceiveMessage(mensagem => {
+        this.panel.webview.onDidReceiveMessage(async mensagem => {
 
             let caminho: string;
 
@@ -166,17 +164,18 @@ export class Controlador {
                 // O arquivo não precisa ser recarregado quando é o mesmo caminho e não tem flag
                 // para forçar o recarregamento
                 if(!mensagem.forcar && caminho === this.caminhoArq) {
-                    ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', {texto: null, index: null});
+                    await ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', {texto: null, index: null});
                     console.log('Caminhos iguais');
                     return;
                 }
 
+                this.parse(caminho, this.rubricas);
+
                 // Refaz a execução do descobrir dados
                 if(mensagem.forcar) {
-                    this.descobrirDados();
+                    await this.descobrirDados();
                 }
 
-                this.parse(caminho, this.rubricas);
                 return;
             }
             // Se mensagem recebida do webview for 'abrirLogErro'
@@ -219,24 +218,23 @@ export class Controlador {
             const data: string = await ES.lerArquivo(caminho, this.pref.charsetExecucao);
             this.caminhoArq = caminho;
             const resultado: any = paser.parseArquivo(data);
-            ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
+            await ES.enviarParaWebviw(this.panel, 'parse_rubrica_ok', resultado);
         }
-        catch(erro) {
+        catch(e) {
+            console.log(`Erro: ${e}`);
             this.caminhoArq = '';
             const mensagemErr: string = '<span class="mensagemErr">Erro ao ler arquivo</span>';
-            ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
+            await ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
         }
     }
 
     /** Salva o ultimo filtro */
-    public salvarFiltro(): void {
-
+    public async salvarFiltro(): Promise<void> {
         if(!this.ultimoFiltro) {
             return;
         }
         try {
-            const homedir: string = require('os').homedir();
-            ES.escreverArquivoSync(path.join(homedir, 'AppData/Roaming/ErgonExtFiltro.json'), JSON.stringify(this.ultimoFiltro));
+            await ES.escreverArquivo(Controlador.pathFiltro, JSON.stringify(this.ultimoFiltro));
         }
         catch(e) {
             console.log(`Erro: ${e}`);
