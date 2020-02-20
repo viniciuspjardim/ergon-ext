@@ -14,12 +14,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     console.log('ErgonExt inicio...');
 
-    let disposable = vscode.commands.registerCommand('extension.carregarArquivos', () => {
+    let disposable = vscode.commands.registerCommand('extension.carregarArquivos', async () => {
         controlador = new Controlador(context);
-        controlador.carregarWebView();
-        controlador.carregarNomeRubricas();
-        controlador.carregarFiltro();
-        controlador.descobrirDados();
+        await controlador.carregarWebView();
+        await controlador.carregarNomeRubricas();
+        await controlador.carregarFiltro();
+        await controlador.descobrirDados();
     });
 
     context.subscriptions.push(disposable);

@@ -1,8 +1,8 @@
 'use strict';
 
-import { ES } from './es';
+import { ES } from '../es';
 
-export class ArquivoBase {
+export class ArquivoBase implements Parser {
 
     private pastaExecucao: string;
     private caminho: string;

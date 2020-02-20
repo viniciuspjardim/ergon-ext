@@ -15,6 +15,27 @@ window.filtrarAutocompletar = true;
 window.carregandoAutocompletar = true;
 window.carregandoArquivos = false;
 
+/**
+ * Tentativa da melhorar o el.innerHTML = 'algo', pois demora pra remover os elementos
+ * bem mais do que pra incluir. Pra remover demora +- 10s pra incluir +- 2s.
+ * Mesmo se trantando exatamente dos mesmos elementos...
+ * Existem vários posts falando sobre isso, mas nenhum conseguiu reduzir o tempo
+ * para remover os elementos.
+ * 
+ * Não está sendo usado, pois não melhorou o desempenho e quebrou as teclas
+ * atalho
+ */
+function replaceInnerHTML(html) {
+  let el = document.getElementById('conteudoArquivo');
+  el.remove();
+  let newEl = document.createElement("PRE");
+  newEl.id = 'conteudoArquivo';
+  newEl.tabIndex = 50;
+  newEl.innerHTML = html;
+  document.getElementById('main').appendChild(newEl);
+  console.log('shit');
+};
+
 function mensagem() {
   let el = document.getElementById('msgAoCarregar');
   if(window.carregandoArquivos) {
@@ -86,10 +107,12 @@ window.addEventListener('message', event => {
       if (m.conteudo.texto !== null) {
 
         // Inserindo dados no elemento
-        document.getElementById('conteudoArquivo').innerHTML =
+        const html =
           '<a class="caminho" href="' + m.conteudo.caminho + '">'
           + m.conteudo.caminho.replace(/\//g, '\\') + '</a>'
           + m.conteudo.texto;
+        
+        document.getElementById('conteudoArquivo').innerHTML = html;
 
         window.rubricaLinhaIdx = m.conteudo.rubricaLinhaIdx;
         window.linhaRubricaIdx = m.conteudo.linhaRubricaIdx;
@@ -159,10 +182,14 @@ window.addEventListener('message', event => {
       document.getElementById('tipo').value = m.conteudo.tipo;
       document.getElementById('acao').value = m.conteudo.acao;
       break;
-    case 'auto_completar':
+    case 'autocompletar_ok':
       window.carregandoAutocompletar = false;  
       mensagem();
       window.autoCompletar = m.conteudo;
+      break;
+    case 'autocompletar_err':
+      window.carregandoAutocompletar = false;  
+      mensagem();
       break;
   }
 });

@@ -35,6 +35,7 @@
         "test": "jest"
     },
     "devDependencies": {
+        "@types/fs-extra": "^8.1.0",
         "@types/jest": "^24.9.1",
         "@types/node": "^12.12.27",
         "jest": "^24.9.0",
@@ -44,6 +45,7 @@
         "vscode": "^1.1.36"
     },
     "dependencies": {
+        "fs-extra": "^8.1.0",
         "iconv-lite": "^0.4.24"
     }
 }

@@ -1,4 +1,4 @@
-import { Rubricas } from '../rubricas';
+import { Rubricas } from './rubricas';
 
 // Rodar testes no modo watch
 // npm run test -- --watch

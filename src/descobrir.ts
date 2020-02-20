@@ -1,6 +1,6 @@
 'use strict';
 
-import fs = require('fs');
+import * as fs from 'fs-extra';
 import * as path from 'path';
 
 type TipoDado = 'raiz' | 'numero' | 'texto' | 'mesAno';
@@ -64,22 +64,22 @@ export class Descobrir {
     }
 
     /** Chama o percorrerPastasRec com os valores padrões */
-    public percorrerPastas(): void {
+    public async percorrerPastas(): Promise<void> {
         this.raiz.filhos = new Array();
-        this.percorrerPastasRec(0, this.raiz, this.pastaExecucao);
+        await this.percorrerPastasRec(0, this.raiz, this.pastaExecucao);
     }
 
     /** Percorrendo recursivamente as pastas de execução da folha e coletando dados da execução */
-    private percorrerPastasRec(nivel: number, noAtual: ArvoreNo, caminho: string): void {
+    private async percorrerPastasRec(nivel: number, noAtual: ArvoreNo, caminho: string): Promise<void> {
 
-        let arquivos: string[] = fs.readdirSync(caminho);
+        let arquivos: string[] = await fs.readdir(caminho);
         nivel++;
 
         for(let i in arquivos) {
 
             let arq: string = arquivos[i];
             let novoCaminho: string = path.join(caminho, arq);
-            let stat: fs.Stats = fs.lstatSync(novoCaminho);
+            let stat: fs.Stats = await fs.lstat(novoCaminho);
 
             // Nível 1: Destino_delta_SRVFVJ
             if(nivel === 1) {
@@ -103,7 +103,7 @@ export class Descobrir {
                 // Adicionando o servidor de calculo
                 let novoNo2: ArvoreNo = novoNo1.adicionar('servidorCalculo', 'texto',  result[2]);
 
-                this.percorrerPastasRec(nivel, novoNo2, novoCaminho);
+                await this.percorrerPastasRec(nivel, novoNo2, novoCaminho);
             }
             // Nível 2: VJ
             else if(nivel === 2) {
@@ -116,7 +116,7 @@ export class Descobrir {
                 // Adicionando o tipo de cálculo
                 let novoNo: ArvoreNo = noAtual.adicionar('tipoCalculo', 'texto',  arq);
 
-                this.percorrerPastasRec(nivel, novoNo, novoCaminho);
+                await this.percorrerPastasRec(nivel, novoNo, novoCaminho);
             }
             // Nível 3: F_201604034_E00001
             else if(nivel === 3) {
@@ -143,7 +143,13 @@ export class Descobrir {
                 // Adicionando a execução
                 let novoNo3: ArvoreNo = novoNo2.adicionar('execucao', 'numero',  result[4]);
 
-                this.percorrerPastasRec(nivel, novoNo3, path.join(novoCaminho, 'Debug'));
+                // A pasta Debug pode não existir caso alguém tenha deletado
+                try {
+                    await this.percorrerPastasRec(nivel, novoNo3, path.join(novoCaminho, 'Debug'));
+                }
+                catch(e) {
+                    console.log(`Erro: ${e}`);
+                }
             }
             // Nível 4: Folha12-NF000099949
             else if(nivel === 4) {
@@ -164,7 +170,7 @@ export class Descobrir {
                 // Adicionando o número funcional
                 let novoNo: ArvoreNo = noAtual.adicionar('numFunc', 'numero',  result[1]);
 
-                this.percorrerPastasRec(nivel, novoNo, novoCaminho);
+                await this.percorrerPastasRec(nivel, novoNo, novoCaminho);
             }
             // Nível 5: SF01-NV01-SV01-Ano2005
             else if(nivel === 5) {
@@ -191,7 +197,7 @@ export class Descobrir {
                 // Adicionando a sequência de vínculo
                 let novoNo3: ArvoreNo = novoNo2.adicionar('seqVinc', 'numero', result[3]);
 
-                this.percorrerPastasRec(nivel, novoNo3, novoCaminho);
+                await this.percorrerPastasRec(nivel, novoNo3, novoCaminho);
             }
             // Nível 6: SF02-NV01-SV01-Mes201604-SM01.dbg
             else if(nivel === 6) {

@@ -1,8 +1,8 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import fs = require('fs');
-import iconv = require('iconv-lite');
+import * as fs from 'fs-extra';
+import * as iconv from 'iconv-lite';
 
 /** Classe de entrada e saida de dados */
 export class ES {
@@ -12,18 +12,8 @@ export class ES {
     }
 
     /** Lê arquivo de forma assincrona */
-    public static lerArquivo(caminho: string, callback: (data: string, err?: NodeJS.ErrnoException) => void, charset: string = 'utf8'): void {
-        
-        fs.readFile(caminho, (erro: NodeJS.ErrnoException | null, buffer: Buffer) => {
-
-            if(erro !== null) {
-                callback('', erro);
-            }
-            else {
-                const data: string = iconv.decode(buffer, charset);
-                callback(data);
-            }
-        });
+    public static async lerArquivo(caminho: string, charset: string = 'utf8'): Promise<string> {
+        return iconv.decode(await fs.readFile(caminho), charset);
     }
 
     /** Lê arquivo de forma sincrona */
@@ -31,24 +21,20 @@ export class ES {
         return iconv.decode(fs.readFileSync(caminho), charset);
     }
 
+    /** Escreve arquivo de forma asincrona */
+    public static async escreverArquivo(caminho: string, conteudo: string, charset: string = 'utf8'): Promise<void> {
+        await fs.writeFile(caminho, iconv.encode(conteudo, charset));
+    }
+    
     /** Escreve arquivo de forma sincrona */
     public static escreverArquivoSync(caminho: string, conteudo: string, charset: string = 'utf8'): void {
         fs.writeFileSync(caminho, iconv.encode(conteudo, charset));
     }
 
     /** Envia conteudo para o webview */
-    public static enviarParaWebviw(panel: vscode.WebviewPanel, acao: string, conteudo: any, delay?: number): void {
-        const mensagem: any  = {
-            acao: acao,
-            conteudo: conteudo
-        };
-
-        if(!delay) {
-            panel.webview.postMessage(mensagem);
-        }
-        else {
-            setTimeout(() => {panel.webview.postMessage(mensagem);}, delay);
-        }
+    public static async enviarParaWebviw(panel: vscode.WebviewPanel, acao: string, conteudo: any): Promise<boolean> {
+        const mensagem: any  = { acao, conteudo };
+        return await panel.webview.postMessage(mensagem);
     }
 
     public static pad(num: number, padlen: number): string {

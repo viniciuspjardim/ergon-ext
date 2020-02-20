@@ -1,8 +1,8 @@
 'use strict';
 
-import { ES } from './es';
+import { ES } from '../es';
 
-export class Dump {
+export class Dump implements Parser {
 
     //                              Tabela    FUNCIONARIOS     iniciada ...      21        / 01        / 2019         17       : 46       : 40
     private rxTabIni: RegExp = /^\s*Tabela\s+([a-zA-Z0-9_]+)\s*iniciada\s*\.+\s*([0-9]{2})\/([0-9]{2})\/([0-9]{4})\s+([0-9]{2}):([0-9]{2}):([0-9]{2})\s*$/ig;

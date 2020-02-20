@@ -1,8 +1,8 @@
 'use strict';
 
-import { ES } from './es';
+import { ES } from '../es';
 
-export class Erros {
+export class Erros implements Parser {
 
     private caminhoRegex: RegExp = /^\s*([a-zA-Z]:(?:\\[a-zA-Z0-9_\.-]+)+)(?:\(([\d]+)\))?(.*)$/ig;
     private pastaExecucao: string;
