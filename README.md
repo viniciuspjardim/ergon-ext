@@ -36,6 +36,10 @@ Exemplo: `C:\folha\execucao\Emp_01_TOCANTINS`;
 `Ergon: Caminho do arquivo de rubricas` e selecione o arquivo de rubricas exportado
 na etapa 1.
 
+> A codificação de caractere padrão para a pasta de execução é `Western (Windows 1252)`
+e para o arquivo de rubricas é `UTF-8`. Para altera-los use
+`Ergon: Codificação dos arquivos da folha` ou `Ergon: Codificação do arquivo de rubricas`.
+
 ## Abrir a extensão
 Abra a paleta de comandos (`Ctrl` + `Shift` + `P`) e digite: `Ergon: Carregar arquivos`.
 
