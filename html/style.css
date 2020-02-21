@@ -1,6 +1,12 @@
+:root{
+  --eext-header-separador: rgba(255, 255, 255, 0.160);
+}
 body {
   font-family: Consolas, 'Courier New', monospace;
   font-size: 14px;
+}
+::selection {
+  background: var(--vscode-selection-background, rgba(40, 151, 255, 0.5));
 }
 #cabeçalho {
   position: fixed;
@@ -23,7 +29,7 @@ body {
   width: 130px;
   text-align: right;
   font-size: 11px;
-  color: var(--vscode-sideBarTitle-foreground);
+  color: var(--vscode-foreground);
 }
 button:focus { outline: 0; }
 #cabeçalho button {
@@ -49,7 +55,7 @@ input {
   margin-left: 1em;
   padding: 4px 6px 4px 6px;
   background-color: var(--vscode-input-background);
-  color: rgba(255, 255, 255, 0.788);
+  color: var(--vscode-foreground);
   border: none;
 }
 input:focus {
@@ -61,7 +67,7 @@ select {
   margin-left: 1em;
   padding: 4px 6px 4px 6px;
   background-color: var(--vscode-input-background);
-  color: rgba(255, 255, 255, 0.788);
+  color: var(--vscode-foreground);
   border: none;
 }
 select:focus {
@@ -87,19 +93,19 @@ select:focus {
   padding-left: 1em;
   border-left-style: solid;
   border-left-width: 2px;
-  border-left-color: rgba(255, 255, 255, 0.160);
+  border-left-color: var(--eext-header-separador);
 }
 /* borda direita (right) */
 .rBorder {
   padding-right: 1em;
   border-right-style: solid;
   border-right-width: 2px;
-  border-right-color: rgba(255, 255, 255, 0.160);
+  border-right-color: var(--eext-header-separador);
 }
 pre {
   margin-top: 110px;
   font-family: Consolas, 'Courier New', monospace;
-  color:  rgba(255, 255, 255, 0.603);
+  color: var(--vscode-foreground);
   font-size: 14px;
 }
 #conteudoArquivo:focus { outline: 0; }
@@ -112,15 +118,17 @@ pre {
   white-space: normal;
   border-style: solid;
   border-width: 1px;
-  border-color: var(--vscode-window-activeBorder);
+  border-color: var(--vscode-focusBorder);
   background: var(--vscode-sideBar-background);
 }
 a {
-  color: rgba(255, 255, 255, 0.603);
+  color: var(--vscode-foreground);
   text-decoration: none;
+  opacity: 0.8;
 }
 a:hover {
-  color: white;
+  color: var(--vscode-panelTitle-activeForeground);
+  opacity: 1;
 }
 .lin {
   float: left;
@@ -129,15 +137,17 @@ a:hover {
 }
 .rubEntra {
   display: inline-block;
-  width: calc(100% - 48px);
-  background-color: rgba(0, 192, 48, 0.137);
-  color:  rgb(255, 255, 255);
+  width: fit-content;
+  padding-right: 1.6em;
+  background-color: rgba(0, 192, 48, 0.15);
+  color: var(--vscode-panelTitle-activeForeground);
 }
 .rubSai {
   display: inline-block;
-  width: calc(100% - 48px);
-  background-color: rgba(192, 48, 0, 0.137);
-  color:  rgb(255, 255, 255);
+  width: fit-content;
+  padding-right: 1.6em;
+  background-color: rgba(192, 48, 0, 0.15);
+  color: var(--vscode-panelTitle-activeForeground);
 }
 .nomeRubrica .tooltip, .periodo .tooltip {
   visibility: hidden;
@@ -162,23 +172,20 @@ a:hover {
   visibility: visible;
 }
 .tab {
-  margin-left: 3em;
+  margin-left: 4.25em;
 }
 .texto {
   white-space: pre;
+  opacity: 0.8;
 }
 /** campo */
 .c {
   margin-left: 1em;
   padding-left: 1em;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-left-color: rgba(255, 255, 255, 0.005);
 }
 /** campo sem borda */
 .csb {
-  color: rgba(255, 255, 255, 0.452);
-  border-left-style: none;
+  color: var(--vscode-focusBorder);
   margin: 0;
   padding: 0 1em 0 1em;
 }
@@ -193,7 +200,8 @@ a:hover {
   text-align: right;
 }
 .z {
-  color: rgba(255, 255, 255, 0.2);
+  color: var(--vscode-foreground);
+  opacity: 0.4;
 }
 .periodo {
   position: relative;
@@ -205,7 +213,8 @@ a:hover {
   float: left;
   width: 32px;
   margin-right: 1em;
-  color: rgba(255, 255, 255, 0.349);
+  color: var(--vscode-foreground);
+  opacity: 0.6;
   text-align: right;
 
   -webkit-touch-callout: none;
@@ -226,7 +235,7 @@ a:hover {
   padding-left: 32px;
   padding-right: 32px;
   text-align: center;
-  border: 1px solid var(--vscode-extensionBadge-remoteBackground);
+  border: 1px solid var(--vscode-focusBorder);
   background: var(--vscode-sideBar-background);
   visibility: hidden;
 }
@@ -266,7 +275,7 @@ table {
   border: 1px solid var(--vscode-focusBorder);
 }
 th {
-  color: white;
+  color: var(--vscode-panelTitle-activeForeground);
 }
 td, th {
   border: 1px solid var(--vscode-focusBorder);
