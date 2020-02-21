@@ -16,19 +16,9 @@ export class ES {
         return iconv.decode(await fs.readFile(caminho), charset);
     }
 
-    /** Lê arquivo de forma sincrona */
-    public static lerArquivoSync(caminho: string, charset: string = 'utf8'): string {
-        return iconv.decode(fs.readFileSync(caminho), charset);
-    }
-
     /** Escreve arquivo de forma asincrona */
     public static async escreverArquivo(caminho: string, conteudo: string, charset: string = 'utf8'): Promise<void> {
         await fs.writeFile(caminho, iconv.encode(conteudo, charset));
-    }
-    
-    /** Escreve arquivo de forma sincrona */
-    public static escreverArquivoSync(caminho: string, conteudo: string, charset: string = 'utf8'): void {
-        fs.writeFileSync(caminho, iconv.encode(conteudo, charset));
     }
 
     /** Envia conteudo para o webview */
