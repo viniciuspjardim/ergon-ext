@@ -233,8 +233,14 @@ export class Controlador {
         catch(e) {
             console.log(`Erro: ${e}`);
             this.caminhoArq = '';
-            const mensagemErr: string = '<span class="mensagemErr">Erro ao ler arquivo</span>';
+            const mensagemErr: string =
+                '<div class="mensagemErr">' +
+                    '<b>Erro ao abrir o arquivo!</b><br>' +
+                    'Verifique os campos do filtro e a pasta de execução da folha.<br>' +
+                    'Consulte a <u><a href="https://github.com/viniciuspjardim/ergon-ext#ergon-ext">documentação</a></u>.' +
+                '</div>';
             await ES.enviarParaWebviw(this.panel, 'parse_rubrica_err', mensagemErr);
+            vscode.window.showErrorMessage(`Erro ao abrir o arquivo! <${e.message}>`);
         }
     }
 
