@@ -16,7 +16,11 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.carregarArquivos"
+        "onCommand:extension.carregarArquivos",
+        "onCommand:extension.caminhoExecucao",
+        "onCommand:extension.charsetExecucao",
+        "onCommand:extension.caminhoRubricas",
+        "onCommand:extension.charsetRubricas"
     ],
     "main": "./out/extension",
     "contributes": {
@@ -24,6 +28,22 @@
             {
                 "command": "extension.carregarArquivos",
                 "title": "Ergon: Carregar arquivos"
+            },
+            {
+                "command": "extension.caminhoExecucao",
+                "title": "Ergon: Caminho da pasta de execução da folha"
+            },
+            {
+                "command": "extension.charsetExecucao",
+                "title": "Ergon: Codificação dos arquivos da folha"
+            },
+            {
+                "command": "extension.caminhoRubricas",
+                "title": "Ergon: Caminho do arquivo de rubricas"
+            },
+            {
+                "command": "extension.charsetRubricas",
+                "title": "Ergon: Codificação do arquivo de rubricas"
             }
         ]
     },

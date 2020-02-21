@@ -18,8 +18,7 @@ export class Controlador {
 
     private context: vscode.ExtensionContext;
     private panel: vscode.WebviewPanel;
-    /** Preferências do usuário */
-    private pref: vscode.WorkspaceConfiguration;
+    private pref: any = {};
 
     private ultimoFiltro: any = null;
 
@@ -32,9 +31,11 @@ export class Controlador {
 
     constructor(context: vscode.ExtensionContext) {
         this.context = context;
-
-        // Lendo variaveis do arquivo de configuração do usuario
-        this.pref = vscode.workspace.getConfiguration('ergonExt');
+        
+        this.pref.caminhoExecucao = this.context.globalState.get('caminhoExecucao', '<indefinido>');
+        this.pref.charsetExecucao = this.context.globalState.get('charsetExecucao', '1252');
+        this.pref.caminhoRubricas = this.context.globalState.get('caminhoRubricas', '<indefinido>');
+        this.pref.charsetRubricas = this.context.globalState.get('charsetRubricas', 'utf8');
 
         this.panel = vscode.window.createWebviewPanel(
             'rubricasPeriodo',
@@ -56,10 +57,17 @@ export class Controlador {
     }
 
     /** Carrega o arquivo html do webview e envia mensagem com os campos padrão */
-    public async carregarWebView(): Promise<void> {
+    public async carregarWebView(): Promise<boolean> {
 
         let cssPath: string = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'style.css')).path;
         let scriptPath: string = vscode.Uri.file(path.join(this.context.extensionPath, 'html', 'script.js')).path;
+
+        if(this.pref.caminhoExecucao === '<indefinido>') {
+            vscode.window.showErrorMessage(
+                'Erro ao abrir pasta de execução. Usar o comando <Ergon: Caminho da pasta de execução da folha>'
+            );
+            return false;
+        }
 
         let header: string = `
             <!DOCTYPE html>
@@ -88,7 +96,9 @@ export class Controlador {
         catch(e) {
             console.log(`Erro: ${e}`);
             vscode.window.showErrorMessage(`Erro ao gerar webview! <${e.message}>`);
+            return false;
         }
+        return true;
     }
 
     /** Carrega o arquivo com os nomes das rubricas */
@@ -107,7 +117,8 @@ export class Controlador {
             console.log(`Erro: ${e}`);
             this.rubricas.setNomeRubricas({});
             vscode.window.showWarningMessage(
-                `Arquivo de rubricas não encontrado em: ${this.pref.caminhoRubricas}`
+                `Arquivo de rubricas não encontrado em: ${this.pref.caminhoRubricas} ` +
+                `Use o comando <Ergon: Caminho do arquivo de rubricas>`
             );
         }
     }
@@ -128,7 +139,6 @@ export class Controlador {
 
     /** Percorre as pastas de execução buscando por dados para preecher os formulários */
     public async descobrirDados(): Promise<void> {
-        console.log('Descobrir...');
         try {
             await this.descobrir.percorrerPastas();
             if(this.descobrir.raiz) {
