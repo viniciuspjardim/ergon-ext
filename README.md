@@ -37,7 +37,7 @@ Exemplo: `C:\folha\execucao\Emp_01_TOCANTINS`;
 na etapa 1.
 
 > A codificação de caractere padrão para a pasta de execução é `Western (Windows 1252)`
-e para o arquivo de rubricas é `UTF-8`. Para altera-los use
+e para o arquivo de rubricas é `UTF-8`. Para alterar use
 `Ergon: Codificação dos arquivos da folha` ou `Ergon: Codificação do arquivo de rubricas`.
 
 ## Abrir a extensão
