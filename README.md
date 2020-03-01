@@ -1,4 +1,4 @@
-# Ergon Ext
+# Ergon EXT
 
 ![Ergon Ext](imagens/icone.png)
 
