@@ -274,7 +274,7 @@ a:hover {
 .autocomplete-active {
   /*when navigating through the items using the arrow keys:*/
   background-color: var(--vscode-input-background) !important; 
-  color: #fff; 
+  color: #fff;
 }
 table {
   margin-left: 16px;
