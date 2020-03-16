@@ -1,6 +1,6 @@
 # Ergon EXT
 
-<img src="imagens/icone.png" width="96">
+<img src="https://user-images.githubusercontent.com/1520962/76796833-0a69dd00-67ab-11ea-897b-a9d305146865.png" width="96">
 
 É uma extensão do VS Code que facilita a navegação pelos arquivos de log e debug do sistema
 de RH Ergon que é desenvolvido pela Techne.
