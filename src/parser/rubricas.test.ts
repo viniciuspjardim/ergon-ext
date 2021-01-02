@@ -1,3 +1,5 @@
+'use strict';
+
 import { Rubricas } from './rubricas';
 
 // Rodar testes no modo watch
