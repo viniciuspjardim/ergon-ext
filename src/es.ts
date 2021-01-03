@@ -11,17 +11,17 @@ export class ES {
         return iconv.decode(data, charset);
     }
 
-    /** Lê arquivo de forma assincrona */
+    /** Lê arquivo de forma assíncrona */
     public static async lerArquivo(caminho: string, charset: string = 'utf8'): Promise<string> {
         return iconv.decode(await fs.readFile(caminho), charset);
     }
 
-    /** Escreve arquivo de forma asincrona */
+    /** Escreve arquivo de forma assíncrona */
     public static async escreverArquivo(caminho: string, conteudo: string, charset: string = 'utf8'): Promise<void> {
         await fs.writeFile(caminho, iconv.encode(conteudo, charset));
     }
 
-    /** Envia conteudo para o webview */
+    /** Envia conteúdo para o webview */
     public static async enviarParaWebviw(panel: vscode.WebviewPanel, acao: string, conteudo: any): Promise<boolean> {
         const mensagem: any  = { acao, conteudo };
         return await panel.webview.postMessage(mensagem);

@@ -102,7 +102,7 @@ window.addEventListener('message', event => {
       window.carregandoArquivos = false;  
       mensagem();
 
-      // Quando não é nulo o arquivo mudou, então precisa alterar o conteudo
+      // Quando não é nulo o arquivo mudou, então precisa alterar o conteúdo
       // da página e voltar a barra de rolagem pro começo
       if (m.conteudo.texto !== null) {
 
@@ -155,7 +155,7 @@ window.addEventListener('message', event => {
         console.log('Elemento não econtrado!');
       }
 
-      // Colocando o foco no conteudo do arquivo para as teclas atalhos funcionarem
+      // Colocando o foco no conteúdo do arquivo para as teclas atalhos funcionarem
       document.getElementById('conteudoArquivo').focus();
 
       break;
