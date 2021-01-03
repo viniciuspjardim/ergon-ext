@@ -73,8 +73,8 @@ na linha correta;
 * `s` - selecionar linha de saída da rubrica (campo `E\S`);
 * `.` - ir para a próxima linha de cabeçalho;
 * `,` - ir para a linha de cabeçalho anterior;
-* `c` - forçar recarregar arquivo e campos do autocompletar. Útil quando há alterações.
-externas
+* `c` - forçar recarregar arquivo e campos do autocompletar. Útil quando há alterações
+externas.
 
 ## Galeria
 
